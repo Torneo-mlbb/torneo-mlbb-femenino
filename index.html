@@ -345,21 +345,25 @@
   </footer>
 
   <script>
+    // Configuración real de Firebase integrada
     const firebaseConfig = {
-      apiKey: "TU_API_KEY",
-      authDomain: "TU_PROJECT.firebaseapp.com",
-      databaseURL: "https://TU_PROJECT-default-rtdb.firebaseio.com",
-      projectId: "TU_PROJECT",
-      storageBucket: "TU_PROJECT.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abcdef"
+      apiKey: "AIzaSyDMZPDF-TeJ2O1SIxqmTBu8YKoAAfqwcko",
+      authDomain: "torneo-mlbb-femenino.firebaseapp.com",
+      databaseURL: "https://torneo-mlbb-femenino-default-rtdb.firebaseio.com",
+      projectId: "torneo-mlbb-femenino",
+      storageBucket: "torneo-mlbb-femenino.firebasestorage.app",
+      messagingSenderId: "1097699777057",
+      appId: "1:1097699777057:web:66c5102b0142b7466f6160",
+      measurementId: "G-LSLB74GHNE"
     };
 
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const auth = firebase.auth();
 
+    // Reemplaza con tu correo creado en Authentication de Firebase
     const CORREO_SUPER_ADMIN = "admincentral@torneo.com";
+
     let currentMode = null;
     let isAdmin = false;
     let isSuperAdmin = false;
@@ -393,7 +397,6 @@
       document.getElementById('back-menu-btn').classList.add('hidden');
     }
 
-    // INSCRIPCIÓN DIRECTA (SIN CÓDIGOS)
     function enviarInscripcionDirecta() {
       const nombreEquipo = document.getElementById('team-name').value.trim();
       const capNick = document.getElementById('cap-nick').value.trim();
