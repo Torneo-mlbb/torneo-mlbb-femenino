@@ -47,7 +47,7 @@
     .tree-scroll-wrapper { position: relative; overflow-x: auto; min-height: 650px; padding: 24px; }
     #arbol-esquematico-container { position: relative; display: flex; flex-direction: row; gap: 90px; align-items: stretch; min-width: max-content; z-index: 2; }
     .tree-column { display: flex; flex-direction: column; justify-content: space-around; min-width: 200px; }
-    .tree-match-wrapper { display: flex; align-items: center; justify-content: center; margin: 12px 0; min-height: 70px; }
+    .tree-match-wrapper { display: flex; items-center; justify-content: center; margin: 12px 0; min-height: 70px; }
     .tree-card { width: 190px; transition: transform 0.2s, box-shadow 0.2s; }
     .tree-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(236, 72, 153, 0.2); }
     #tree-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
@@ -224,6 +224,9 @@
         <button id="tab-btn-equipos" onclick="cambiarTab('equipos')" class="hidden px-4 py-2 text-xs font-bold rounded-lg bg-femDark-800 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap">👥 Jugadoras (<span id="count-registered-teams">0</span>)</button>
         <button id="tab-btn-bracket" onclick="cambiarTab('bracket')" class="px-4 py-2 text-xs font-bold rounded-lg bg-femDark-800 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap">⚔️ Enfrentamientos</button>
         <button id="tab-btn-arbol" onclick="cambiarTab('arbol')" class="px-4 py-2 text-xs font-bold rounded-lg bg-femDark-800 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap">🌳 Árbol Esquemático</button>
+        <button id="tab-btn-stream" onclick="cambiarTab('stream')" class="px-4 py-2 text-xs font-bold rounded-lg bg-femDark-800 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-1.5">
+          <i class="fa-brands fa-tiktok text-femPink-400"></i> Transmisión En Vivo
+        </button>
       </div>
 
       <!-- Formulario de Inscripción Libre y Directa -->
@@ -281,6 +284,34 @@
           <svg id="tree-svg-overlay"></svg>
           <div id="arbol-esquematico-container">
             <p class="text-xs text-slate-500 italic">Genera los enfrentamientos para ver el árbol.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña de Streaming TikTok -->
+      <div id="tab-content-stream" class="hidden bg-femDark-800/90 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="flex justify-between items-center border-b border-femPink-500/30 pb-3">
+          <h3 class="text-sm font-bold text-femPink-400 flex items-center gap-2">
+            <i class="fa-brands fa-tiktok text-femPink-400"></i> Transmisión Oficial del Torneo
+          </h3>
+          <span class="text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/40 px-2.5 py-1 rounded-full font-bold animate-pulse">● EN VIVO</span>
+        </div>
+
+        <div class="flex flex-col items-center justify-center space-y-4 py-4">
+          <p class="text-xs text-slate-300 text-center max-w-md">Sigue las partidas oficiales, narraciones en directo y la gran final desde nuestro canal de TikTok:</p>
+          
+          <div class="w-full max-w-md bg-femDark-900 border border-femPink-500/30 rounded-2xl p-6 text-center space-y-4 shadow-[0_0_30px_rgba(236,72,153,0.15)]">
+            <div class="w-20 h-20 mx-auto rounded-2xl bg-femPink-500/20 border border-femPink-500/50 flex items-center justify-center text-femPink-400 text-3xl shadow-lg shadow-femPink-500/20 animate-pulse">
+              <i class="fa-brands fa-tiktok"></i>
+            </div>
+            <div>
+              <h4 class="text-base font-black text-white uppercase tracking-wider">@TorneoFemeninoMLBB</h4>
+              <p class="text-xs text-slate-400 pt-1">Transmisión en directo &bull; Reacciones &bull; Bans & Picks</p>
+            </div>
+            
+            <a id="tiktok-live-link" href="https://www.tiktok.com/" target="_blank" class="inline-block w-full bg-gradient-to-r from-femPink-500 to-purple-600 hover:from-femPink-400 text-slate-950 font-black text-xs py-3 rounded-xl transition shadow-lg shadow-femPink-500/20 uppercase tracking-wider">
+              Abrir TikTok LIVE <i class="fa-solid fa-arrow-up-right-from-square ml-1.5"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -411,7 +442,7 @@
     }
 
     function cambiarTab(tab) {
-      ['registro', 'equipos', 'bracket', 'arbol'].forEach(t => {
+      ['registro', 'equipos', 'bracket', 'arbol', 'stream'].forEach(t => {
         document.getElementById(`tab-content-${t}`)?.classList.add('hidden');
         document.getElementById(`tab-btn-${t}`)?.classList.remove('bg-femPink-500', 'text-slate-950');
         document.getElementById(`tab-btn-${t}`)?.classList.add('bg-femDark-800', 'text-slate-400');
