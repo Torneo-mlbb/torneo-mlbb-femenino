@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Torneo Femenino MLBB - Plataforma Oficial</title>
+  <title>Torneo Femenino MLBB - Edición Cinemática</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -28,7 +28,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
-    body { background-color: #090514; color: #f3f4f6; font-family: 'Montserrat', sans-serif; background-attachment: fixed; }
+    body { background-color: #090514; color: #f3f4f6; font-family: 'Montserrat', sans-serif; background-attachment: fixed; overflow-x: hidden; }
     
     .fem-gradient-text {
       background: linear-gradient(135deg, #ffffff 0%, #f472b6 40%, #ec4899 70%, #c084fc 100%);
@@ -40,16 +40,19 @@
     .custom-scrollbar::-webkit-scrollbar-track { background: #090514; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #ec4899; border-radius: 4px; }
 
-    /* EFECTOS ESPECIALES TIPO EDIT GAMER */
-    .cyber-card {
-      clip-path: polygon(0 0, 96% 0, 100% 12%, 100% 100%, 4% 100%, 0 88%);
+    /* EFECTOS CINEMÁTICOS DE ESPORTS */
+    .hero-banner {
+      background: linear-gradient(to bottom, rgba(9, 5, 20, 0.4), rgba(9, 5, 20, 0.95)), 
+                  url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
     }
-    .cyber-btn {
-      clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
-    }
-    .scanline-overlay {
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+
+    .scanline {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
       background-size: 100% 4px;
+    }
+
+    .cyber-card-glow {
+      box-shadow: 0 0 30px rgba(236, 72, 153, 0.25), inset 0 0 20px rgba(236, 72, 153, 0.1);
     }
   </style>
 </head>
@@ -65,7 +68,7 @@
           <h1 class="font-black text-lg md:text-xl tracking-wide flex items-center gap-2">
             <span class="fem-gradient-text">TORNEO FEMENINO MLBB</span>
           </h1>
-          <p class="text-[11px] text-slate-400">Plataforma Oficial &bull; Inscripciones Libres & Gratuitas</p>
+          <p class="text-[11px] text-slate-400">Plataforma Oficial &bull; Edición Cinemática 1v1</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
@@ -82,74 +85,102 @@
   <main class="max-w-6xl mx-auto px-4 py-6 w-full flex-grow">
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- PORTADA PRINCIPAL TIPO EDIT / CINEMÁTICA DE ESPORTS -->
-    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border-2 border-femPink-500/40 shadow-[0_0_60px_rgba(236,72,153,0.35)] bg-femDark-900 min-h-[620px] flex flex-col justify-center items-center p-6 md:p-12">
+    <!-- PORTADA CINEMÁTICA CON PERSONAJES MLBB -->
+    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border-2 border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.35)] hero-banner min-h-[640px] flex flex-col justify-between p-6 md:p-12">
+      <div class="absolute inset-0 scanline pointer-events-none z-0 opacity-40"></div>
       
-      <!-- Fondo dinámico con resplandor neón -->
-      <div class="absolute inset-0 bg-gradient-to-tr from-femDark-900 via-femPurple-900/60 to-femDark-900 z-0"></div>
-      <div class="absolute inset-0 scanline-overlay pointer-events-none z-0 opacity-40"></div>
-      
-      <!-- Luces neón flotantes -->
-      <div class="absolute top-1/4 left-10 w-96 h-96 bg-femPink-500/20 rounded-full blur-[120px] animate-pulse"></div>
-      <div class="absolute bottom-10 right-10 w-96 h-96 bg-purple-600/30 rounded-full blur-[130px] animate-pulse delay-700"></div>
-
-      <!-- Contenido de Impacto -->
-      <div class="relative z-10 w-full max-w-2xl text-center space-y-7">
-        
-        <!-- Insignia "SEASON PASS / BATTLE READY" -->
-        <div class="inline-flex items-center gap-2 bg-gradient-to-r from-femPink-500/20 via-purple-500/20 to-femPink-500/20 border border-femPink-400/60 px-5 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.5)]">
+      <!-- Top Badge -->
+      <div class="relative z-10 flex justify-between items-center w-full">
+        <div class="inline-flex items-center gap-2 bg-femDark-900/80 border border-femPink-400/60 px-4 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.4)]">
           <span class="w-2 h-2 rounded-full bg-femPink-400 animate-ping"></span>
-          <span class="text-femPink-300 text-xs font-black uppercase tracking-[0.2em]">FASE DE REGISTRO ABIERTA &bull; 100% GRATIS</span>
+          <span class="text-femPink-300 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em]">MLBB CHAMPIONSHIP &bull; 100% GRATIS</span>
         </div>
+        <div class="hidden sm:flex gap-2">
+          <span class="px-3 py-1 rounded bg-femPink-500/20 text-femPink-300 text-xs font-bold border border-femPink-500/40">SERVER: GLOBAL</span>
+        </div>
+      </div>
 
-        <!-- TÍTULO EDIT ESTILO TRÁILER DE GAMEPLAY -->
+      <!-- Centro: Título Impactante + Tarjetas de Héroes MLBB -->
+      <div class="relative z-10 my-auto text-center space-y-6 py-6">
         <div class="space-y-2">
-          <h2 class="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none drop-shadow-[0_8px_25px_rgba(236,72,153,0.5)]">
-            DEMUESTRA TU <br>
-            <span class="fem-gradient-text tracking-normal">DOMINIO EN EL ARRECIFE</span>
+          <h2 class="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+            DUELO DE <span class="fem-gradient-text">LEYENDAS</span>
           </h2>
           <p class="text-xs sm:text-sm text-femPink-300 font-bold uppercase tracking-[0.3em] drop-shadow">
-            MOBILE LEGENDS: BANG BANG &bull; EDITION 1VS1
+            ELIGE TU GLORIA &bull; TORNEO FEMENINO 1VS1
           </p>
         </div>
 
-        <!-- CONTADOR REGRESIVO ESTILO RELOJ DE ARENA DE ARENA -->
-        <div class="bg-femDark-800/90 border border-femPink-500/40 p-4 rounded-2xl max-w-md mx-auto shadow-2xl backdrop-blur-lg">
-          <p class="text-[10px] font-black text-femPink-400 uppercase tracking-widest mb-2 flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-stopwatch text-femPink-400"></i> CIERRE DE INSCRIPCIONES EN:
-          </p>
-          <div class="grid grid-cols-4 gap-2 text-center">
-            <div class="bg-femDark-900/90 p-2.5 rounded-xl border border-femPink-500/20"><span id="cd-days" class="block font-black text-femPink-300 text-xl md:text-2xl">00</span><span class="text-[9px] text-slate-400 font-bold">DÍAS</span></div>
-            <div class="bg-femDark-900/90 p-2.5 rounded-xl border border-femPink-500/20"><span id="cd-hours" class="block font-black text-femPink-300 text-xl md:text-2xl">00</span><span class="text-[9px] text-slate-400 font-bold">HORAS</span></div>
-            <div class="bg-femDark-900/90 p-2.5 rounded-xl border border-femPink-500/20"><span id="cd-mins" class="block font-black text-femPink-300 text-xl md:text-2xl">00</span><span class="text-[9px] text-slate-400 font-bold">MINS</span></div>
-            <div class="bg-femDark-900/90 p-2.5 rounded-xl border border-femPink-500/20"><span id="cd-secs" class="block font-black text-femPink-300 text-xl md:text-2xl">00</span><span class="text-[9px] text-slate-400 font-bold">SEGS</span></div>
+        <!-- MURAL DE HÉROES / PERSONAJES MLBB (ESTILO SELECCIÓN DE CAMPEÓN) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto pt-2">
+          <!-- Héroe 1: Lancelot -->
+          <div class="bg-femDark-900/80 border border-femPink-500/40 rounded-2xl p-3 text-center backdrop-blur-md cyber-card-glow hover:scale-105 transition duration-300">
+            <div class="w-16 h-16 mx-auto rounded-xl bg-gradient-to-tr from-purple-600 to-femPink-500 p-0.5 mb-2 shadow-lg">
+              <div class="w-full h-full bg-femDark-900 rounded-[10px] flex items-center justify-center text-femPink-400 text-2xl font-black">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+            </div>
+            <h4 class="text-xs font-black text-white uppercase">Asesinas</h4>
+            <span class="text-[10px] text-femPink-400 font-bold">Velocidad & Daño</span>
+          </div>
+
+          <!-- Héroe 2: Mage / Kagura -->
+          <div class="bg-femDark-900/80 border border-femPink-500/40 rounded-2xl p-3 text-center backdrop-blur-md cyber-card-glow hover:scale-105 transition duration-300">
+            <div class="w-16 h-16 mx-auto rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 p-0.5 mb-2 shadow-lg">
+              <div class="w-full h-full bg-femDark-900 rounded-[10px] flex items-center justify-center text-purple-400 text-2xl font-black">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </div>
+            </div>
+            <h4 class="text-xs font-black text-white uppercase">Magas</h4>
+            <span class="text-[10px] text-purple-400 font-bold">Control & Burst</span>
+          </div>
+
+          <!-- Héroe 3: Marksman / Lesley -->
+          <div class="bg-femDark-900/80 border border-femPink-500/40 rounded-2xl p-3 text-center backdrop-blur-md cyber-card-glow hover:scale-105 transition duration-300">
+            <div class="w-16 h-16 mx-auto rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 p-0.5 mb-2 shadow-lg">
+              <div class="w-full h-full bg-femDark-900 rounded-[10px] flex items-center justify-center text-rose-400 text-2xl font-black">
+                <i class="fa-solid fa-crosshairs"></i>
+              </div>
+            </div>
+            <h4 class="text-xs font-black text-white uppercase">Tiradoras</h4>
+            <span class="text-[10px] text-rose-400 font-bold">Precisión & Rango</span>
+          </div>
+
+          <!-- Héroe 4: Fighter / Esmeralda -->
+          <div class="bg-femDark-900/80 border border-femPink-500/40 rounded-2xl p-3 text-center backdrop-blur-md cyber-card-glow hover:scale-105 transition duration-300">
+            <div class="w-16 h-16 mx-auto rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 p-0.5 mb-2 shadow-lg">
+              <div class="w-full h-full bg-femDark-900 rounded-[10px] flex items-center justify-center text-emerald-400 text-2xl font-black">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+            </div>
+            <h4 class="text-xs font-black text-white uppercase">Luchadoras</h4>
+            <span class="text-[10px] text-emerald-400 font-bold">Resistencia & 1v1</span>
           </div>
         </div>
+      </div>
 
-        <!-- BOTÓN PRINCIPAL ACCIÓN ESTILO "PRESS START / JOIN TOURNAMENT" -->
-        <div class="pt-2">
-          <div onclick="seleccionarModalidad('1v1')" class="group relative inline-block w-full max-w-md cursor-pointer">
-            <!-- Resplandor externo del botón al hacer hover -->
-            <div class="absolute -inset-1 bg-gradient-to-r from-femPink-500 via-purple-600 to-femPink-500 rounded-2xl blur-lg opacity-70 group-hover:opacity-100 group-hover:blur-xl transition duration-500 animate-pulse"></div>
-            
-            <div class="relative bg-gradient-to-r from-femPink-500 via-femPink-600 to-purple-600 p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-4 border border-white/20 shadow-2xl group-hover:scale-[1.02] transition duration-300">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-slate-950/40 border border-white/20 flex items-center justify-center text-white text-2xl group-hover:rotate-12 transition duration-300">
-                  <i class="fa-solid fa-gamepad"></i>
-                </div>
-                <div class="text-left">
-                  <span class="block text-slate-950 font-black text-lg sm:text-xl uppercase tracking-wider leading-none">ENTRAR AL TORNEO 1V1</span>
-                  <span class="text-[11px] text-slate-900 font-bold tracking-wide">Registro libre &bull; Clasificación Directa</span>
-                </div>
+      <!-- Bottom: Botón de Iniciar / Unirse Estilo Tráiler -->
+      <div class="relative z-10 w-full max-w-md mx-auto pt-2">
+        <div onclick="seleccionarModalidad('1v1')" class="group relative cursor-pointer">
+          <div class="absolute -inset-1 bg-gradient-to-r from-femPink-500 via-purple-600 to-femPink-500 rounded-2xl blur-lg opacity-75 group-hover:opacity-100 group-hover:blur-xl transition duration-500 animate-pulse"></div>
+          
+          <div class="relative bg-gradient-to-r from-femPink-500 via-femPink-600 to-purple-600 p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-4 border border-white/20 shadow-2xl group-hover:scale-[1.02] transition duration-300">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-slate-950/40 border border-white/20 flex items-center justify-center text-white text-2xl group-hover:rotate-12 transition duration-300">
+                <i class="fa-solid fa-gamepad"></i>
               </div>
-              <div class="w-10 h-10 rounded-full bg-slate-950 text-femPink-400 flex items-center justify-center text-sm group-hover:translate-x-1 transition">
-                <i class="fa-solid fa-arrow-right"></i>
+              <div class="text-left">
+                <span class="block text-slate-950 font-black text-base sm:text-lg uppercase tracking-wider leading-none">INSCRIBIRME AL TORNEO</span>
+                <span class="text-[11px] text-slate-900 font-bold tracking-wide">Acceso libre &bull; Inicia tu partida</span>
               </div>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-slate-950 text-femPink-400 flex items-center justify-center text-sm group-hover:translate-x-1 transition">
+              <i class="fa-solid fa-arrow-right"></i>
             </div>
           </div>
         </div>
-
       </div>
+
     </section>
 
     <!-- APLICACIÓN PRINCIPAL -->
@@ -330,23 +361,8 @@
         isSuperAdmin = user && user.email.toLowerCase() === CORREO_SUPER_ADMIN.toLowerCase();
         actualizarPermisosAdmin();
       });
-      iniciarCuentaRegresiva();
       escucharChat();
     });
-
-    function iniciarCuentaRegresiva() {
-      const fechaMeta = new Date('2026-11-20T20:30:00').getTime();
-      setInterval(() => {
-        const ahora = new Date().getTime();
-        const diff = fechaMeta - ahora;
-        if (diff > 0) {
-          document.getElementById('cd-days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-          document.getElementById('cd-hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          document.getElementById('cd-mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-          document.getElementById('cd-secs').innerText = Math.floor((diff % (1000 * 60)) / 1000);
-        }
-      }, 1000);
-    }
 
     function cerrarAnuncio() { document.getElementById('welcome-modal').classList.add('hidden'); }
     function seleccionarModalidad(modo) {
@@ -368,10 +384,10 @@
       const capServer = document.getElementById('cap-server').value.trim();
       const capPhone = document.getElementById('cap-phone').value.trim();
 
-      if (!nombreEquipo || !capNick || !capId || !capServer || !capPhone) return mostrarToast("Completa todos los campos", "warning");
+      if (!nombreEquipo || !capNick || !capId || !capServer || !capPhone) return alert("Completa todos los campos");
 
       db.ref(`torneos/1v1_femenino/equipos`).push({ nombreEquipo, jugadores: [{ nick: capNick, id: capId, server: capServer, telefono: capPhone }] }, () => {
-        mostrarToast("¡Inscripción registrada!", "success");
+        alert("¡Inscripción registrada!");
         cambiarTab('bracket');
       });
     }
@@ -393,7 +409,7 @@
       e.preventDefault();
       auth.signInWithEmailAndPassword(document.getElementById('admin-email').value, document.getElementById('admin-pass').value)
         .then(() => closeAuthModal())
-        .catch(() => mostrarToast("Datos incorrectos", "error"));
+        .catch(() => alert("Datos incorrectos"));
     }
     function actualizarPermisosAdmin() {
       if (isAdmin) {
@@ -489,7 +505,7 @@
     function iniciarSorteoMatematico() {
       db.ref(`torneos/1v1_femenino/equipos`).once('value', (snap) => {
         const data = snap.val();
-        if (!data || Object.keys(data).length < 2) return mostrarToast("Min. 2 jugadoras", "warning");
+        if (!data || Object.keys(data).length < 2) return alert("Min. 2 jugadoras");
         let keys = Object.keys(data);
         let partidos = [];
         for (let i = 0; i < keys.length; i += 2) {
@@ -505,7 +521,6 @@
 
     function reiniciarTorneo() { if (confirm("¿Reiniciar torneo?")) db.ref(`torneos/1v1_femenino`).remove(); }
     function escapeHTML(str) { return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-    function mostrarToast(msg) { alert(msg); }
   </script>
 </body>
 </html>
