@@ -86,30 +86,24 @@
     .perspective-1000 { perspective: 1000px; }
     .preserve-3d { transform-style: preserve-3d; transition: transform 0.15s ease-out; }
 
+    /* ESTILOS DE CORCHETES Y CONECTORES */
+    .bracket-line-v {
+      position: absolute;
+      width: 2px;
+      background: linear-gradient(180deg, #ec4899, #8b5cf6);
+      z-index: 1;
+    }
+    .bracket-line-h {
+      position: absolute;
+      height: 2px;
+      background: #ec4899;
+      z-index: 1;
+    }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #05030a; }
     ::-webkit-scrollbar-thumb { background: #db2777; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #ec4899; }
-
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.15); }
-    }
-    .animate-glow-pulse { animation: pulseGlow 6s infinite ease-in-out; }
-
-    @keyframes shineSweep {
-      0% { left: -100%; }
-      100% { left: 200%; }
-    }
-    .shine-effect {
-      position: absolute;
-      top: 0;
-      width: 40%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-      transform: skewX(-25deg);
-    }
-    .group:hover .shine-effect { animation: shineSweep 1s cubic-bezier(0.4, 0, 0.2, 1); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-femPink-500 selection:text-white">
@@ -157,9 +151,6 @@
       <div class="absolute inset-0 bg-gradient-to-br from-femDark-950 via-femPurple-900/50 to-femDark-950 z-0"></div>
       <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-30"></div>
       
-      <div class="absolute -top-40 -left-40 w-[450px] h-[450px] bg-femPink-500/20 rounded-full blur-[140px] animate-glow-pulse pointer-events-none"></div>
-      <div class="absolute -bottom-40 -right-40 w-[450px] h-[450px] bg-femPurple-500/25 rounded-full blur-[140px] animate-glow-pulse pointer-events-none" style="animation-delay: 3s;"></div>
-
       <div class="relative z-10 w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         
         <div class="lg:col-span-7 text-center lg:text-left space-y-6">
@@ -178,12 +169,11 @@
           </div>
 
           <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-            Torneo de demostración 1v1 sin costo de inscripción. Sistema automatizado con chat directo por partida y tablas de llaves capturables para enviar a WhatsApp.
+            Torneo de demostración 1v1 sin costo. Sistema de llaves compacto con fotos de jugadoras y botón de captura por bloque para WhatsApp.
           </p>
 
           <div class="pt-2 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <button onclick="seleccionarModalidad('1v1')" class="group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-femPink-500 via-femPink-600 to-femPurple-600 font-orbitron font-black text-slate-950 uppercase tracking-wider text-sm rounded-xl hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(236,72,153,0.5)] cursor-pointer overflow-hidden">
-              <span class="shine-effect"></span>
               <span class="relative z-10 flex items-center gap-3">
                 REGISTRARME GRATIS <i class="fa-solid fa-bolt text-slate-950 animate-pulse"></i>
               </span>
@@ -193,9 +183,7 @@
 
         <div class="lg:col-span-5 flex justify-center perspective-1000">
           <div id="hero-3d-card" class="preserve-3d w-full max-w-sm glass-panel rounded-3xl p-6 shadow-2xl relative border border-femPink-500/40 group cursor-pointer" onclick="seleccionarModalidad('1v1')">
-            <div class="shine-effect"></div>
             <div class="relative w-full h-64 rounded-2xl bg-gradient-to-tr from-femDark-950 via-femPurple-900 to-femDark-900 border border-femPink-500/30 overflow-hidden flex flex-col items-center justify-center shadow-inner">
-              <div class="absolute inset-0 bg-gradient-to-t from-femDark-950 via-transparent to-transparent z-10"></div>
               <div class="relative z-20 w-28 h-28 rounded-2xl bg-femPink-500/20 border-2 border-femPink-400/60 flex items-center justify-center text-femPink-400 text-5xl shadow-[0_0_40px_rgba(236,72,153,0.5)] group-hover:scale-110 group-hover:rotate-6 transition duration-500">
                 <i class="fa-solid fa-trophy"></i>
               </div>
@@ -235,7 +223,6 @@
           <span class="text-xs font-orbitron font-bold text-femPink-300 bg-femPink-500/20 border border-femPink-500/40 px-3 py-1 rounded-full">ADMINISTRADOR PRINCIPAL</span>
         </div>
 
-        <!-- CONFIGURACIÓN DE FECHA Y HORARIO CENTRALIZADO -->
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-femDark-950 p-4 rounded-2xl border border-slate-800">
           <div>
             <label class="block text-[11px] font-bold text-slate-400 mb-1">Fecha Inicio Torneo:</label>
@@ -255,7 +242,6 @@
           </div>
         </div>
 
-        <!-- ACCIONES DE ADMINISTRACIÓN -->
         <div class="flex flex-wrap gap-3 pt-2">
           <button onclick="agregar30Bots()" class="bg-indigo-600/80 hover:bg-indigo-600 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-robot"></i> Añadir Jugadoras Demo
@@ -288,14 +274,14 @@
         </button>
       </div>
 
-      <!-- TAB 1: FORMULARIO DIRECTO GRATUITO -->
+      <!-- TAB 1: FORMULARIO DIRECTO GRATUITO CON AVATAR -->
       <div id="tab-content-registro" class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl transition-all">
         <div class="max-w-2xl space-y-6">
           <div class="border-b border-slate-800 pb-4">
             <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase tracking-wide flex items-center gap-2">
               <i class="fa-solid fa-user-plus text-femPink-400"></i> Registro de Jugadora — 1v1 Femenino
             </h3>
-            <p class="text-xs text-slate-400 mt-1">Completa tus datos oficiales de Mobile Legends. La participación en esta edición es gratuita.</p>
+            <p class="text-xs text-slate-400 mt-1">Completa tus datos oficiales de Mobile Legends e incluye tu foto de perfil para el árbol esquemático.</p>
           </div>
 
           <div class="space-y-4">
@@ -305,7 +291,7 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Avatar / Imagen de Perfil (Opcional):</label>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Foto de Perfil / Avatar (Se mostrará en el Árbol):</label>
               <input type="file" id="cap-avatar-file" accept="image/*" class="w-full bg-femDark-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-slate-300 file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-femPink-500 file:text-slate-950 hover:file:bg-femPink-400 cursor-pointer">
             </div>
 
@@ -353,20 +339,15 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO POR BLOQUES PAREJOS -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO CON AVATARES Y CAPTURA INDIVIDUAL POR BLOQUE -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
-        <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
-          <div>
-            <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL DE ENFRENTAMIENTOS (VISTA DE CAPTURA)</h3>
-            <p class="text-xs text-slate-400">Dividido en bloques parejos (6 a la izquierda y 6 a la derecha) ideal para tomar captura de pantalla.</p>
-          </div>
-          <button onclick="tomarCapturaArbol()" class="bg-femPink-500 hover:bg-femPink-400 text-slate-950 font-orbitron font-bold text-xs px-4 py-2 rounded-xl transition cursor-pointer flex items-center gap-2">
-            <i class="fa-solid fa-camera"></i> Capturar para WhatsApp
-          </button>
+        <div class="border-b border-slate-800 pb-4">
+          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL DE ENFRENTAMIENTOS (FOTOS Y CORCHETES)</h3>
+          <p class="text-xs text-slate-400">Cada bloque contiene exactamente 6 partidas a la izquierda y 6 a la derecha con su propio botón de descarga individual.</p>
         </div>
 
-        <div id="arbol-esquematico-container" class="space-y-8 bg-femDark-950 p-6 rounded-2xl border border-slate-800">
-          <p class="text-xs text-slate-500 italic text-center col-span-full">Genera los enfrentamientos desde el panel de administración para ver el árbol por bloques.</p>
+        <div id="arbol-esquematico-container" class="space-y-10">
+          <p class="text-xs text-slate-500 italic text-center col-span-full py-6">Genera los enfrentamientos desde el panel de administración para ver el árbol por bloques.</p>
         </div>
       </div>
 
@@ -392,7 +373,6 @@
         </button>
       </div>
 
-      <!-- VISTA DE AUTENTICACIÓN -->
       <div id="chat-modal-auth-view" class="p-6 flex-1 flex flex-col items-center justify-center text-center space-y-4">
         <div class="w-16 h-16 rounded-2xl bg-femPink-500/10 border border-femPink-400/40 flex items-center justify-center text-femPink-400 text-2xl mb-1">
           <i class="fa-solid fa-lock-keyhole"></i>
@@ -409,9 +389,7 @@
         </div>
       </div>
 
-      <!-- VISTA PRINCIPAL DEL CHAT -->
       <div id="chat-modal-main-view" class="flex-1 flex flex-col hidden overflow-hidden">
-        
         <div class="bg-femDark-900/80 px-4 py-2 border-b border-slate-800 flex gap-2 text-xs">
           <button id="modal-subtab-gen" onclick="switchModalChatSubTab('general')" class="px-3 py-1.5 rounded-xl font-bold bg-femPink-500 text-slate-950 transition cursor-pointer flex items-center gap-1.5 font-orbitron">
             <i class="fa-solid fa-comments"></i> Chat Arena
@@ -431,7 +409,6 @@
             <i class="fa-solid fa-paper-plane text-sm"></i>
           </button>
         </div>
-
       </div>
 
     </div>
@@ -454,7 +431,7 @@
     </div>
   </div>
 
-  <!-- FOOTER (ACCESO SECRETO DE ADMIN EN EL LOGO) -->
+  <!-- FOOTER -->
   <footer class="bg-femDark-950 border-t border-slate-800/80 py-8 px-4 text-center text-xs text-slate-500 mt-12">
     <div class="max-w-6xl mx-auto space-y-3">
       <div class="flex flex-col items-center justify-center gap-2">
@@ -571,7 +548,7 @@
             document.getElementById('cap-server').value = '';
             document.getElementById('cap-phone').value = '';
             if (avatarInput) avatarInput.value = '';
-            cambiarTab('bracket');
+            cambiarTab('arbol');
           }
         });
       };
@@ -599,7 +576,7 @@
       nombresBots.forEach((nombre, index) => {
         db.ref(`${RUTA_TORNEO}/equipos`).push({
           nombreEquipo: nombre,
-          avatar: "",
+          avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${nombre}`,
           jugadores: [{ nick: nombre, id: String(10000000 + index), server: String(2000 + (index % 5)), telefono: "999999999" }]
         });
       });
@@ -665,11 +642,10 @@
 
         keys.forEach(k => {
           const eq = data[k];
-          jugadorasCacheObj[eq.nombreEquipo] = eq.jugadores;
+          jugadorasCacheObj[eq.nombreEquipo] = { ...eq, key: k };
           const j = eq.jugadores[0];
-          let avatarHtml = eq.avatar 
-            ? `<img src="${eq.avatar}" class="w-10 h-10 rounded-xl object-cover border border-femPink-400/50">` 
-            : `<div class="w-10 h-10 rounded-xl bg-femPink-500/20 border border-femPink-400 flex items-center justify-center text-femPink-400"><i class="fa-solid fa-user"></i></div>`;
+          let avatarUrl = eq.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${eq.nombreEquipo}`;
+          let avatarHtml = `<img src="${avatarUrl}" class="w-10 h-10 rounded-xl object-cover border border-femPink-400/50">`;
 
           let deleteBtn = isAdmin ? `<button onclick="eliminarJugadora('${k}')" class="text-rose-400 hover:text-rose-300 text-xs cursor-pointer"><i class="fa-solid fa-trash"></i></button>` : '';
           container.innerHTML += `
@@ -685,6 +661,8 @@
             </div>
           `;
         });
+
+        if(datosBracketServidor) renderizarArbolPorBloques();
       });
 
       db.ref(`${RUTA_TORNEO}/bracket`).on('value', (snap) => {
@@ -692,6 +670,15 @@
         renderizarBracket();
         renderizarArbolPorBloques();
       });
+    }
+
+    function getAvatarForTeam(nombreEquipo) {
+      if (!nombreEquipo || nombreEquipo === 'PASE DIRECTO 🏆' || nombreEquipo === 'Pendiente') {
+        return 'https://api.dicebear.com/7.x/bottts/svg?seed=placeholder';
+      }
+      return (jugadorasCacheObj[nombreEquipo] && jugadorasCacheObj[nombreEquipo].avatar) 
+        ? jugadorasCacheObj[nombreEquipo].avatar 
+        : `https://api.dicebear.com/7.x/bottts/svg?seed=${nombreEquipo}`;
     }
 
     function renderizarBracket() {
@@ -721,6 +708,9 @@
         let isFinished = p.ganador !== "Pendiente";
         let isPass = p.equipo2 === "PASE DIRECTO 🏆";
 
+        let img1 = getAvatarForTeam(p.equipo1);
+        let img2 = getAvatarForTeam(p.equipo2);
+
         let chatBtnHtml = !isPass ? `
           <button onclick="abrirChatWhatsAppModal(${rondaSeleccionada}, ${idx}, '${escapeHTML(p.equipo1)}', '${escapeHTML(p.equipo2)}')" class="w-full mt-2 bg-femPink-500/10 hover:bg-femPink-500/20 border border-femPink-500/30 text-femPink-300 font-bold text-xs py-2 px-3 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer font-orbitron">
             <i class="fa-solid fa-comments text-femPink-400"></i>
@@ -734,16 +724,21 @@
               <span>MATCH #${idx + 1}</span>
               <span>${isFinished ? 'GANADORA: ' + escapeHTML(p.ganador) : 'EN ESPERA'}</span>
             </div>
-            <div class="flex justify-between items-center bg-femDark-900 px-3 py-1.5 rounded-xl text-[11px] border border-slate-800 text-slate-300">
-              <div>📅 <b class="text-white">${escapeHTML(p.fechaDateStr) || 'S/F'}</b> &bull; <i class="fa-regular fa-clock text-femPink-400"></i> <b class="text-white">${escapeHTML(p.timeStr) || '--:--'}</b></div>
-              <div>W.O.: <b class="text-femPink-300">${escapeHTML(p.toleranceStr) || '--:--'}</b></div>
+            
+            <div class="p-2 rounded-xl bg-femDark-900 border border-slate-800 font-bold text-xs text-pink-300 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 truncate">
+                <img src="${img1}" class="w-7 h-7 rounded-full object-cover border border-femPink-400">
+                <span class="truncate">${p.ganador === p.equipo1 ? '🏆 ' : ''}${escapeHTML(p.equipo1)}</span>
+              </div>
             </div>
-            <div class="p-2.5 rounded-xl bg-femDark-900 border border-slate-800 font-bold text-xs text-pink-300 flex justify-between">
-              <span>${p.ganador === p.equipo1 ? '🏆 ' : ''}${escapeHTML(p.equipo1)}</span>
-            </div>
+
             <div class="text-[10px] text-slate-500 text-center font-bold">VS</div>
-            <div class="p-2.5 rounded-xl bg-femDark-900 border border-slate-800 font-bold text-xs text-purple-300 flex justify-between">
-              <span>${p.ganador === p.equipo2 ? '🏆 ' : ''}${escapeHTML(p.equipo2)}</span>
+
+            <div class="p-2 rounded-xl bg-femDark-900 border border-slate-800 font-bold text-xs text-purple-300 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 truncate">
+                <img src="${img2}" class="w-7 h-7 rounded-full object-cover border border-femPurple-500">
+                <span class="truncate">${p.ganador === p.equipo2 ? '🏆 ' : ''}${escapeHTML(p.equipo2)}</span>
+              </div>
             </div>
             ${chatBtnHtml}
             ${isAdmin && !isPass ? `
@@ -766,13 +761,16 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL EN BLOQUES PAREJOS DE 6 IZQUIERDA / 6 DERECHA PARA CAPTURA */
+    /* RENDERIZADO DEL ÁRBOL COMPACTO CON FOTOS, AVANCE DE RONDAS Y BOTÓN DE CAPTURA POR BLOQUE */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container || !datosBracketServidor) return;
 
       container.innerHTML = '';
       const partidosRonda1 = datosBracketServidor['ronda_1'] || [];
+      const partidosRonda2 = datosBracketServidor['ronda_2'] || [];
+      const partidosRonda3 = datosBracketServidor['ronda_3'] || [];
+
       if (partidosRonda1.length === 0) {
         container.innerHTML = `<p class="text-xs text-slate-500 italic text-center col-span-full">Aún no se han generado enfrentamientos.</p>`;
         return;
@@ -786,65 +784,149 @@
         let partidosBloque = partidosRonda1.slice(inicioIdx, inicioIdx + (BLOQUE_TAMANO * 2));
         
         let mitad = Math.ceil(partidosBloque.length / 2);
-        let ladoIzq = partidosBloque.slice(0, mitad);
-        let ladoDer = partidosBloque.slice(mitad);
+        let ladoIzqR1 = partidosBloque.slice(0, mitad);
+        let ladoDerR1 = partidosBloque.slice(mitad);
+
+        let bloqueId = `bloque-captura-${b+1}`;
 
         let htmlBloque = `
-          <div class="bg-femDark-900 border border-femPink-500/30 p-5 rounded-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span class="font-orbitron font-black text-xs text-femPink-400 uppercase">BLOQUE #${b + 1} — CAPTURA WHATSAPP</span>
-              <span class="text-[10px] text-slate-400 font-bold">Ronda 1</span>
+          <div class="glass-panel border border-femPink-500/40 p-5 rounded-3xl space-y-4 shadow-2xl relative">
+            
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 gap-2">
+              <div>
+                <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">BLOQUE DE ENFRENTAMIENTO #${b + 1}</span>
+                <p class="text-[10px] text-slate-400">6 Enfrentamientos Izquierda &bull; 6 Enfrentamientos Derecha</p>
+              </div>
+              <button onclick="tomarCapturaBloqueIndividual('${bloqueId}', ${b+1})" class="bg-gradient-to-r from-femPink-500 to-femPurple-600 hover:from-femPink-400 text-slate-950 font-orbitron font-black text-[11px] px-4 py-2 rounded-xl transition shadow-lg cursor-pointer flex items-center gap-2 uppercase">
+                <i class="fa-solid fa-camera text-slate-950"></i> Capturar Bloque #${b+1}
+              </button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+            <!-- CONTENEDOR ESPECÍFICO QUE SE CAPTURA PARA WHATSAPP -->
+            <div id="${bloqueId}" class="bg-femDark-950 p-5 rounded-2xl border border-slate-800/80 space-y-4">
               
-              <!-- Lado Izquierdo (Máximo 6) -->
-              <div class="space-y-2">
-                <h5 class="text-[10px] font-orbitron font-bold text-femPink-300 text-center uppercase mb-2">◀ Lado Izquierdo</h5>
+              <div class="text-center border-b border-slate-800/60 pb-2">
+                <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">CAMINO A LA FINAL &bull; BLOQUE #${b + 1}</h4>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-7 gap-2 items-center relative">
+                
+                <!-- 1. RONDA 1 IZQUIERDA (MÁXIMO 6) -->
+                <div class="md:col-span-2 space-y-2">
+                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ RONDA 1 (IZQ)</h5>
         `;
 
-        ladoIzq.forEach((p, i) => {
+        ladoIzqR1.forEach((p, i) => {
+          let img1 = getAvatarForTeam(p.equipo1);
+          let img2 = getAvatarForTeam(p.equipo2);
           htmlBloque += `
-            <div class="bg-femDark-950 border border-slate-800 p-2.5 rounded-xl text-xs space-y-1">
-              <div class="flex justify-between text-[9px] text-slate-400 font-bold"><span>MATCH #${inicioIdx + i + 1}</span><span>${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : 'PENDIENTE'}</span></div>
-              <div class="font-bold text-pink-300 truncate">${escapeHTML(p.equipo1)}</div>
-              <div class="text-[9px] text-slate-600 text-center font-bold">VS</div>
-              <div class="font-bold text-purple-300 truncate">${escapeHTML(p.equipo2)}</div>
+            <div class="bg-femDark-900 border border-slate-800 p-1.5 rounded-xl text-[10px] space-y-1 shadow">
+              <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${inicioIdx + i + 1}</span><span class="text-femPink-400">${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : ''}</span></div>
+              <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
+                <img src="${img1}" class="w-5 h-5 rounded-full object-cover border border-femPink-400 shrink-0">
+                <span class="truncate">${escapeHTML(p.equipo1)}</span>
+              </div>
+              <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
+                <img src="${img2}" class="w-5 h-5 rounded-full object-cover border border-femPurple-500 shrink-0">
+                <span class="truncate">${escapeHTML(p.equipo2)}</span>
+              </div>
             </div>
           `;
         });
 
         htmlBloque += `
-              </div>
-
-              <!-- Centro (Final de Bloque) -->
-              <div class="flex flex-col items-center justify-center p-3 bg-femDark-950 border border-femPink-500/30 rounded-xl text-center space-y-2">
-                <div class="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-400/60 flex items-center justify-center text-amber-400 text-xl shadow">
-                  <i class="fa-solid fa-trophy"></i>
                 </div>
-                <div>
-                  <h6 class="font-orbitron font-black text-white text-xs uppercase">CLASIFICATORIA</h6>
-                  <p class="text-[9px] text-slate-400">Pase a Fase Central</p>
-                </div>
-              </div>
 
-              <!-- Lado Derecho (Máximo 6) -->
-              <div class="space-y-2">
-                <h5 class="text-[10px] font-orbitron font-bold text-femPink-300 text-center uppercase mb-2">Lado Derecho ▶</h5>
+                <!-- 2. RONDA 2 IZQUIERDA (AVANCE) -->
+                <div class="hidden md:flex flex-col justify-around h-full py-6 space-y-4">
+                  <h5 class="text-[8px] font-orbitron font-bold text-slate-400 text-center uppercase">RONDA 2</h5>
         `;
 
-        ladoDer.forEach((p, i) => {
+        // Render R2 Izquierda simulada/servidor
+        for(let r2=0; r2 < Math.ceil(ladoIzqR1.length/2); r2++) {
+          let matchR2 = (partidosRonda2[Math.floor(inicioIdx/2) + r2]) || { equipo1: "Por Definir", equipo2: "Por Definir", ganador: "Pendiente" };
+          let imgR2_1 = getAvatarForTeam(matchR2.equipo1);
+          let imgR2_2 = getAvatarForTeam(matchR2.equipo2);
           htmlBloque += `
-            <div class="bg-femDark-950 border border-slate-800 p-2.5 rounded-xl text-xs space-y-1">
-              <div class="flex justify-between text-[9px] text-slate-400 font-bold"><span>MATCH #${inicioIdx + mitad + i + 1}</span><span>${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : 'PENDIENTE'}</span></div>
-              <div class="font-bold text-pink-300 truncate">${escapeHTML(p.equipo1)}</div>
-              <div class="text-[9px] text-slate-600 text-center font-bold">VS</div>
-              <div class="font-bold text-purple-300 truncate">${escapeHTML(p.equipo2)}</div>
+            <div class="bg-femDark-900/90 border border-femPink-500/30 p-1.5 rounded-xl text-[9px] space-y-1 shadow">
+              <div class="flex items-center gap-1 font-bold text-slate-200 truncate">
+                <img src="${imgR2_1}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                <span class="truncate">${escapeHTML(matchR2.equipo1)}</span>
+              </div>
+              <div class="flex items-center gap-1 font-bold text-slate-400 truncate">
+                <img src="${imgR2_2}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                <span class="truncate">${escapeHTML(matchR2.equipo2)}</span>
+              </div>
+            </div>
+          `;
+        }
+
+        htmlBloque += `
+                </div>
+
+                <!-- 3. CENTRO / TROFEO -->
+                <div class="flex flex-col items-center justify-center p-3 bg-femDark-900 border border-femPink-500/40 rounded-2xl text-center space-y-2 shadow-inner">
+                  <div class="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow">
+                    <i class="fa-solid fa-trophy"></i>
+                  </div>
+                  <div>
+                    <h6 class="font-orbitron font-black text-white text-[10px] uppercase">CLASIFICATORIA</h6>
+                    <p class="text-[8px] text-slate-400">Pase a Fase Central</p>
+                  </div>
+                </div>
+
+                <!-- 4. RONDA 2 DERECHA (AVANCE) -->
+                <div class="hidden md:flex flex-col justify-around h-full py-6 space-y-4">
+                  <h5 class="text-[8px] font-orbitron font-bold text-slate-400 text-center uppercase">RONDA 2</h5>
+        `;
+
+        for(let r2=0; r2 < Math.ceil(ladoDerR1.length/2); r2++) {
+          let matchR2 = (partidosRonda2[Math.floor((inicioIdx + mitad)/2) + r2]) || { equipo1: "Por Definir", equipo2: "Por Definir", ganador: "Pendiente" };
+          let imgR2_1 = getAvatarForTeam(matchR2.equipo1);
+          let imgR2_2 = getAvatarForTeam(matchR2.equipo2);
+          htmlBloque += `
+            <div class="bg-femDark-900/90 border border-femPink-500/30 p-1.5 rounded-xl text-[9px] space-y-1 shadow">
+              <div class="flex items-center gap-1 font-bold text-slate-200 truncate">
+                <img src="${imgR2_1}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                <span class="truncate">${escapeHTML(matchR2.equipo1)}</span>
+              </div>
+              <div class="flex items-center gap-1 font-bold text-slate-400 truncate">
+                <img src="${imgR2_2}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                <span class="truncate">${escapeHTML(matchR2.equipo2)}</span>
+              </div>
+            </div>
+          `;
+        }
+
+        htmlBloque += `
+                </div>
+
+                <!-- 5. RONDA 1 DERECHA (MÁXIMO 6) -->
+                <div class="md:col-span-2 space-y-2">
+                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">RONDA 1 (DER) ▶</h5>
+        `;
+
+        ladoDerR1.forEach((p, i) => {
+          let img1 = getAvatarForTeam(p.equipo1);
+          let img2 = getAvatarForTeam(p.equipo2);
+          htmlBloque += `
+            <div class="bg-femDark-900 border border-slate-800 p-1.5 rounded-xl text-[10px] space-y-1 shadow">
+              <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${inicioIdx + mitad + i + 1}</span><span class="text-femPink-400">${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : ''}</span></div>
+              <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
+                <img src="${img1}" class="w-5 h-5 rounded-full object-cover border border-femPink-400 shrink-0">
+                <span class="truncate">${escapeHTML(p.equipo1)}</span>
+              </div>
+              <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
+                <img src="${img2}" class="w-5 h-5 rounded-full object-cover border border-femPurple-500 shrink-0">
+                <span class="truncate">${escapeHTML(p.equipo2)}</span>
+              </div>
             </div>
           `;
         });
 
         htmlBloque += `
+                </div>
+
               </div>
             </div>
           </div>
@@ -854,14 +936,22 @@
       }
     }
 
-    function tomarCapturaArbol() {
-      const area = document.getElementById('arbol-esquematico-container');
-      html2canvas(area).then(canvas => {
+    /* DESCARGA INDIVIDUAL DE CADA BLOQUE PARA ENVIAR POR WHATSAPP */
+    function tomarCapturaBloqueIndividual(containerId, numBloque) {
+      const area = document.getElementById(containerId);
+      if(!area) return;
+
+      mostrarToast(`Generando imagen limpia del Bloque #${numBloque}...`, "info");
+
+      html2canvas(area, {
+        backgroundColor: '#05030a',
+        scale: 2
+      }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `Arbol-TorneoFemenino-MLBB.png`;
-        link.href = canvas.toDataURL();
+        link.download = `Bloque-${numBloque}-TorneoFemenino.png`;
+        link.href = canvas.toDataURL('image/png');
         link.click();
-        mostrarToast("¡Imagen de árbol generada para guardar y enviar!", "success");
+        mostrarToast(`¡Bloque #${numBloque} capturado y descargado!`, "success");
       });
     }
 
@@ -903,7 +993,8 @@
       } else {
         const { equipo1, equipo2 } = activeChatMatchInfo;
         [equipo1, equipo2].forEach(eqNombre => {
-          const jugadores = jugadorasCacheObj[eqNombre] || [];
+          const item = jugadorasCacheObj[eqNombre];
+          const jugadores = item ? item.jugadores || [] : [];
           jugadores.forEach(j => {
             if (j.id && j.id.toString().trim().toLowerCase() === inputVal) {
               tienePermiso = true;
@@ -1008,31 +1099,11 @@
         let keys = Object.keys(data).sort(() => Math.random() - 0.5);
         let partidos = [];
 
-        const fechaBaseStr = document.getElementById('cfg-match-date').value || '2026-11-15';
-        const startTimeStr = document.getElementById('cfg-start-time').value || '20:00';
-        const duration = parseInt(document.getElementById('cfg-match-dur').value) || 20;
-        const tolerance = parseInt(document.getElementById('cfg-tolerance').value) || 5;
-
-        let [hours, minutes] = startTimeStr.split(':').map(Number);
-        let formatTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
         for (let i = 0; i < keys.length; i += 2) {
-          let partidoIndex = Math.floor(i / 2);
-          let baseTime = new Date();
-          baseTime.setHours(hours, minutes, 0, 0);
-
-          let matchStart = new Date(baseTime.getTime() + (partidoIndex * duration * 60000));
-          let toleranceStart = new Date(matchStart.getTime() + (tolerance * 60000));
-
           partidos.push({
             equipo1: data[keys[i]].nombreEquipo,
-            equipo1Key: keys[i],
             equipo2: keys[i+1] ? data[keys[i+1]].nombreEquipo : "PASE DIRECTO 🏆",
-            equipo2Key: keys[i+1] ? keys[i+1] : "PASE_DIRECTO",
-            ganador: keys[i+1] ? "Pendiente" : data[keys[i]].nombreEquipo,
-            fechaDateStr: fechaBaseStr,
-            timeStr: formatTime(matchStart),
-            toleranceStr: keys[i+1] ? formatTime(toleranceStart) : '-'
+            ganador: keys[i+1] ? "Pendiente" : data[keys[i]].nombreEquipo
           });
         }
         db.ref(`${RUTA_TORNEO}/bracket/ronda_1`).set(partidos, () => {
@@ -1060,39 +1131,18 @@
         let siguientesPartidos = [];
         let nuevaRondaNum = ultimaRondaNum + 1;
 
-        const fechaBaseStr = document.getElementById('cfg-match-date').value || '2026-11-15';
-        const startTimeStr = document.getElementById('cfg-start-time').value || '20:00';
-        const duration = parseInt(document.getElementById('cfg-match-dur').value) || 20;
-        const tolerance = parseInt(document.getElementById('cfg-tolerance').value) || 5;
-
-        let [hours, minutes] = startTimeStr.split(':').map(Number);
-        let formatTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
         for (let i = 0; i < ganadores.length; i += 2) {
-          let partidoIndex = Math.floor(i / 2);
-          let baseTime = new Date();
-          baseTime.setHours(hours, minutes, 0, 0);
-
-          let matchStart = new Date(baseTime.getTime() + (partidoIndex * duration * 60000));
-          let toleranceStart = new Date(matchStart.getTime() + (tolerance * 60000));
-
           if (ganadores[i + 1]) {
             siguientesPartidos.push({
               equipo1: ganadores[i],
               equipo2: ganadores[i + 1],
-              ganador: "Pendiente",
-              fechaDateStr: fechaBaseStr,
-              timeStr: formatTime(matchStart),
-              toleranceStr: formatTime(toleranceStart)
+              ganador: "Pendiente"
             });
           } else {
             siguientesPartidos.push({
               equipo1: ganadores[i],
               equipo2: "PASE DIRECTO 🏆",
-              ganador: ganadores[i],
-              fechaDateStr: fechaBaseStr,
-              timeStr: formatTime(matchStart),
-              toleranceStr: '-'
+              ganador: ganadores[i]
             });
           }
         }
