@@ -25,9 +25,36 @@
       theme: {
         extend: {
           colors: {
-            femPink: { 300: '#f472b6', 400: '#f472b6', 500: '#ec4899', 600: '#db2777', 700: '#be185d' },
-            femPurple: { 950: '#0a0518', 900: '#14092a', 800: '#230f47', 700: '#3b1578', 500: '#8b5cf6' },
-            femDark: { 950: '#05030a', 900: '#0c0716', 800: '#160d27', 700: '#25173e' }
+            femPink: {
+              100: '#fce7f3',
+              200: '#fbcfe8',
+              300: '#f472b6',
+              400: '#f472b6',
+              500: '#ec4899',
+              600: '#db2777',
+              700: '#be185d',
+              800: '#9d174d',
+              900: '#831843',
+              950: '#500724'
+            },
+            femPurple: {
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#230f47',
+              900: '#14092a',
+              950: '#0a0518'
+            },
+            femDark: {
+              700: '#25173e',
+              800: '#160d27',
+              900: '#0c0716',
+              950: '#05030a'
+            }
           },
           fontFamily: {
             sans: ['Montserrat', 'sans-serif'],
@@ -86,20 +113,41 @@
     .perspective-1000 { perspective: 1000px; }
     .preserve-3d { transform-style: preserve-3d; transition: transform 0.15s ease-out; }
 
-    /* ESTILOS DE CORCHETES Y CONECTORES DEL ÁRBOL */
-    .bracket-connector-left {
-      border-right: 2px solid #ec4899;
-      border-top: 2px solid #ec4899;
-      border-bottom: 2px solid #ec4899;
-      border-top-right-radius: 6px;
-      border-bottom-right-radius: 6px;
+    /* ESTILOS DE CORCHETES EXACTOS A LA PIZARRA */
+    .bracket-pair-left {
+      border-right: 3px solid #ec4899;
+      border-top: 3px solid #ec4899;
+      border-bottom: 3px solid #ec4899;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      position: relative;
     }
-    .bracket-connector-right {
-      border-left: 2px solid #ec4899;
-      border-top: 2px solid #ec4899;
-      border-bottom: 2px solid #ec4899;
-      border-top-left-radius: 6px;
-      border-bottom-left-radius: 6px;
+    .bracket-pair-left::after {
+      content: '';
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      width: 12px;
+      height: 3px;
+      background-color: #ec4899;
+    }
+
+    .bracket-pair-right {
+      border-left: 3px solid #ec4899;
+      border-top: 3px solid #ec4899;
+      border-bottom: 3px solid #ec4899;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      position: relative;
+    }
+    .bracket-pair-right::after {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 50%;
+      width: 12px;
+      height: 3px;
+      background-color: #ec4899;
     }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -171,7 +219,7 @@
           </div>
 
           <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-            Torneo 1v1 con filtrado de rondas independiente por bloque, corchetes conectores y captura limpia para WhatsApp.
+            Torneo de demostración 1v1 sin costo. Árbol esquemático con corchetes pareados estilo pizarra, avatares dinámicos y salas de chat protegidas.
           </p>
 
           <div class="pt-2 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -341,11 +389,11 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO CON FILTRADO DE RONDAS POR BLOQUE Y CORCHETES -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO POR BLOQUES PAREADOS CON CORCHETES -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
-          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO POR BLOQUES (CON FILTRO DE RONDA Y CORCHETES)</h3>
-          <p class="text-xs text-slate-400">Selecciona la ronda en cada bloque para alternar entre enfrentamientos activos y clasificadas. Espacio compacto optimizado para captura de pantalla.</p>
+          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO PAREADO (DIAGRAMA EXACTO)</h3>
+          <p class="text-xs text-slate-400">Cada 2 enfrentamientos se unen por un corchete directo para formar a los 2 clasificados que disputarán el siguiente match.</p>
         </div>
 
         <div id="arbol-esquematico-container" class="space-y-10">
@@ -473,7 +521,6 @@
     let activeChatMatchInfo = null;
     let activeChatSubTab = 'general';
 
-    // Almacena la ronda activa de selección para cada bloque del árbol
     let rondasBloquesCache = {};
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -773,7 +820,7 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO CON BOTONES DE RONDA Y CORCHETES POR BLOQUE */
+    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO CON CORCHETES EXACTOS PAREADOS (DIAGRAMA PIZARRA) */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container || !datosBracketServidor) return;
@@ -787,7 +834,7 @@
         return;
       }
 
-      const BLOQUE_TAMANO = 6; 
+      const BLOQUE_TAMANO = 4; // 4 partidos a la izq y 4 a la der por bloque (Estructura de la pizarra)
       const totalBloques = Math.ceil(partidosRonda1.length / (BLOQUE_TAMANO * 2)) || 1;
 
       for (let b = 0; b < totalBloques; b++) {
@@ -805,9 +852,11 @@
         let ladoIzq = partidosBloqueActual.slice(0, mitad);
         let ladoDer = partidosBloqueActual.slice(mitad);
 
+        let partidosSiguienteRonda = datosBracketServidor[`ronda_${rActivaBloque + 1}`] || [];
+
         let bloqueId = `bloque-captura-${numBloque}`;
 
-        // Generar botones de filtro de ronda dentro de la tarjeta
+        // Botones de ronda
         let botonesRondaHtml = '';
         for (let r = 1; r <= totalRondas; r++) {
           let btnActive = r === rActivaBloque;
@@ -823,8 +872,8 @@
             
             <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 gap-2">
               <div>
-                <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">BLOQUE DE ENFRENTAMIENTO #${numBloque}</span>
-                <p class="text-[10px] text-slate-400">Selecciona la ronda para alternar las partidas de este bloque</p>
+                <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">TABLA / BLOQUE #${numBloque}</span>
+                <p class="text-[10px] text-slate-400">Diagrama pareado 2:1 con corchete central</p>
               </div>
 
               <div class="flex items-center gap-2">
@@ -832,7 +881,7 @@
                   ${botonesRondaHtml}
                 </div>
                 <button onclick="tomarCapturaBloqueIndividual('${bloqueId}', ${numBloque}, ${rActivaBloque})" class="bg-gradient-to-r from-femPink-500 to-femPurple-600 hover:from-femPink-400 text-slate-950 font-orbitron font-black text-[11px] px-3.5 py-2 rounded-xl transition shadow-lg cursor-pointer flex items-center gap-1.5 uppercase shrink-0">
-                  <i class="fa-solid fa-camera text-slate-950"></i> Capturar R${rActivaBloque}
+                  <i class="fa-solid fa-camera text-slate-950"></i> Capturar Tabla #${numBloque}
                 </button>
               </div>
             </div>
@@ -842,100 +891,143 @@
               
               <div class="text-center border-b border-slate-800/60 pb-2 flex justify-between items-center px-2">
                 <span class="font-orbitron font-black text-[10px] text-femPink-400">MINIONS FEMALE</span>
-                <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">CAMINO A LA FINAL &bull; BLOQUE #${numBloque} (RONDA ${rActivaBloque})</h4>
+                <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">TABLA #${numBloque} &bull; RONDA ${rActivaBloque}</h4>
                 <span class="font-orbitron font-black text-[10px] text-femPurple-400">FASE ACTIVA</span>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-7 gap-2 items-center relative">
                 
-                <!-- 1. LADO IZQUIERDO: ENFRENTAMIENTOS ACTIVOS -->
-                <div class="md:col-span-2 space-y-3">
-                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ VS RONDA ${rActivaBloque} (IZQ)</h5>
+                <!-- 1. LADO IZQUIERDO: COLUMNA DE ENFRENTAMIENTOS ACTIVOS PAREADOS -->
+                <div class="md:col-span-2 space-y-6">
+                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ ENFRENTAMIENTOS R${rActivaBloque}</h5>
         `;
 
-        ladoIzq.forEach((p, i) => {
-          let img1 = getAvatarForTeam(p.equipo1);
-          let img2 = getAvatarForTeam(p.equipo2);
+        for (let i = 0; i < ladoIzq.length; i += 2) {
+          let p1 = ladoIzq[i];
+          let p2 = ladoIzq[i + 1];
+
+          let matchSiguiente = partidosSiguienteRonda[Math.floor(i / 2)] || { equipo1: p1 ? p1.ganador : "Pendiente", equipo2: p2 ? p2.ganador : "Pendiente" };
+
           htmlBloque += `
-            <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow relative">
-              <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${i + 1}</span><span class="text-femPink-400">${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : ''}</span></div>
-              <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
-                <img src="${img1}" class="w-5 h-5 rounded-full object-cover border border-femPink-400 shrink-0">
-                <span class="truncate">${escapeHTML(p.equipo1)}</span>
+            <div class="flex items-center gap-2">
+              <!-- PAREJA DE MATCHES -->
+              <div class="flex-1 space-y-2">
+                ${p1 ? `
+                  <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow">
+                    <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${i + 1}</span><span class="text-femPink-400">${p1.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p1.ganador) : ''}</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
+                      <img src="${getAvatarForTeam(p1.equipo1)}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                      <span class="truncate">${escapeHTML(p1.equipo1)}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
+                      <img src="${getAvatarForTeam(p1.equipo2)}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                      <span class="truncate">${escapeHTML(p1.equipo2)}</span>
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${p2 ? `
+                  <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow">
+                    <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${i + 2}</span><span class="text-femPink-400">${p2.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p2.ganador) : ''}</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
+                      <img src="${getAvatarForTeam(p2.equipo1)}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                      <span class="truncate">${escapeHTML(p2.equipo1)}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
+                      <img src="${getAvatarForTeam(p2.equipo2)}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                      <span class="truncate">${escapeHTML(p2.equipo2)}</span>
+                    </div>
+                  </div>
+                ` : ''}
               </div>
-              <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
-                <img src="${img2}" class="w-5 h-5 rounded-full object-cover border border-femPurple-500 shrink-0">
-                <span class="truncate">${escapeHTML(p.equipo2)}</span>
-              </div>
+
+              <!-- CORCHETE QUE CONECTA ESTA PAREJA -->
+              <div class="w-4 h-24 bracket-pair-left shrink-0 hidden md:block"></div>
             </div>
           `;
-        });
-
-        htmlBloque += `
-                </div>
-
-                <!-- 2. CORCHETE CONECTOR IZQUIERDA -->
-                <div class="hidden md:flex flex-col justify-center items-center h-full">
-                  <div class="w-full h-3/4 bracket-connector-left my-auto opacity-70"></div>
-                </div>
-
-                <!-- 3. CENTRO: CLASIFICADAS A SIGUIENTE RONDA / GRAN FINAL -->
-                <div class="flex flex-col items-center justify-center p-3 bg-femDark-900 border border-femPink-500/40 rounded-2xl text-center space-y-3 shadow-inner">
-                  <div class="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow animate-pulse">
-                    <i class="fa-solid fa-trophy"></i>
-                  </div>
-                  <div>
-                    <h6 class="font-orbitron font-black text-white text-[10px] uppercase">${rActivaBloque === totalRondas ? 'CAMPEONA' : 'CLASIFICAN A R' + (rActivaBloque + 1)}</h6>
-                    <div class="mt-2 space-y-1">
-        `;
-
-        let ganadoresBloque = partidosBloqueActual.map(p => p.ganador).filter(g => g !== 'Pendiente');
-        if (ganadoresBloque.length === 0) {
-          htmlBloque += `<p class="text-[9px] text-slate-500 italic">Esperando resultados...</p>`;
-        } else {
-          ganadoresBloque.forEach(g => {
-            let imgG = getAvatarForTeam(g);
-            htmlBloque += `
-              <div class="flex items-center gap-1.5 bg-femDark-950 border border-amber-400/30 px-2 py-1 rounded-lg text-[9px] font-bold text-amber-300 shadow">
-                <img src="${imgG}" class="w-4 h-4 rounded-full object-cover shrink-0">
-                <span class="truncate max-w-[100px]">${escapeHTML(g)}</span>
-              </div>
-            `;
-          });
         }
 
         htmlBloque += `
+                </div>
+
+                <!-- 2. CENTRO: MATCH RESULTANTE EN SIGUIENTE RONDA (PROPORCIÓN 2:1) -->
+                <div class="md:col-span-3 flex flex-col items-center justify-center p-4 bg-femDark-900 border border-femPink-500/40 rounded-2xl text-center space-y-3 shadow-inner">
+                  <div class="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow animate-pulse">
+                    <i class="fa-solid fa-trophy"></i>
+                  </div>
+                  <div class="w-full">
+                    <h6 class="font-orbitron font-black text-white text-[10px] uppercase mb-2">${rActivaBloque === totalRondas ? '🏆 CAMPEONA DEL TORNEO' : 'ENFRENTAMIENTOS RESULTANTES (RONDA ' + (rActivaBloque + 1) + ')'}</h6>
+                    
+                    <div class="bg-femDark-950 border border-slate-700/80 p-3 rounded-xl text-[10px] space-y-2 shadow">
+                      <div class="flex items-center justify-between font-bold text-pink-300">
+                        <div class="flex items-center gap-1.5 truncate">
+                          <img src="${getAvatarForTeam(ladoIzq[0] ? ladoIzq[0].ganador : '')}" class="w-5 h-5 rounded-full object-cover shrink-0">
+                          <span class="truncate">${escapeHTML(ladoIzq[0] ? ladoIzq[0].ganador : 'Pendiente')}</span>
+                        </div>
+                        <span class="text-[8px] bg-femPink-500/20 px-2 py-0.5 rounded text-femPink-300">Ganador Izq</span>
+                      </div>
+
+                      <div class="text-[8px] text-slate-500 font-black">VS</div>
+
+                      <div class="flex items-center justify-between font-bold text-purple-300">
+                        <div class="flex items-center gap-1.5 truncate">
+                          <img src="${getAvatarForTeam(ladoDer[0] ? ladoDer[0].ganador : '')}" class="w-5 h-5 rounded-full object-cover shrink-0">
+                          <span class="truncate">${escapeHTML(ladoDer[0] ? ladoDer[0].ganador : 'Pendiente')}</span>
+                        </div>
+                        <span class="text-[8px] bg-femPurple-500/20 px-2 py-0.5 rounded text-femPurple-300">Ganador Der</span>
+                      </div>
                     </div>
+
                   </div>
                 </div>
 
-                <!-- 4. CORCHETE CONECTOR DERECHA -->
-                <div class="hidden md:flex flex-col justify-center items-center h-full">
-                  <div class="w-full h-3/4 bracket-connector-right my-auto opacity-70"></div>
-                </div>
-
-                <!-- 5. LADO DERECHO: ENFRENTAMIENTOS ACTIVOS -->
-                <div class="md:col-span-2 space-y-3">
-                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">VS RONDA ${rActivaBloque} (DER) ▶</h5>
+                <!-- 3. LADO DERECHO: COLUMNA DE ENFRENTAMIENTOS ACTIVOS PAREADOS -->
+                <div class="md:col-span-2 space-y-6">
+                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">ENFRENTAMIENTOS R${rActivaBloque} (DER) ▶</h5>
         `;
 
-        ladoDer.forEach((p, i) => {
-          let img1 = getAvatarForTeam(p.equipo1);
-          let img2 = getAvatarForTeam(p.equipo2);
+        for (let i = 0; i < ladoDer.length; i += 2) {
+          let p1 = ladoDer[i];
+          let p2 = ladoDer[i + 1];
+
           htmlBloque += `
-            <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow relative">
-              <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${mitad + i + 1}</span><span class="text-femPink-400">${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : ''}</span></div>
-              <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
-                <img src="${img1}" class="w-5 h-5 rounded-full object-cover border border-femPink-400 shrink-0">
-                <span class="truncate">${escapeHTML(p.equipo1)}</span>
-              </div>
-              <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
-                <img src="${img2}" class="w-5 h-5 rounded-full object-cover border border-femPurple-500 shrink-0">
-                <span class="truncate">${escapeHTML(p.equipo2)}</span>
+            <div class="flex items-center gap-2">
+              <!-- CORCHETE QUE CONECTA ESTA PAREJA -->
+              <div class="w-4 h-24 bracket-pair-right shrink-0 hidden md:block"></div>
+
+              <!-- PAREJA DE MATCHES -->
+              <div class="flex-1 space-y-2">
+                ${p1 ? `
+                  <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow">
+                    <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${mitad + i + 1}</span><span class="text-femPink-400">${p1.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p1.ganador) : ''}</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
+                      <img src="${getAvatarForTeam(p1.equipo1)}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                      <span class="truncate">${escapeHTML(p1.equipo1)}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
+                      <img src="${getAvatarForTeam(p1.equipo2)}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                      <span class="truncate">${escapeHTML(p1.equipo2)}</span>
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${p2 ? `
+                  <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow">
+                    <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${mitad + i + 2}</span><span class="text-femPink-400">${p2.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p2.ganador) : ''}</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
+                      <img src="${getAvatarForTeam(p2.equipo1)}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                      <span class="truncate">${escapeHTML(p2.equipo1)}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
+                      <img src="${getAvatarForTeam(p2.equipo2)}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                      <span class="truncate">${escapeHTML(p2.equipo2)}</span>
+                    </div>
+                  </div>
+                ` : ''}
               </div>
             </div>
           `;
-        });
+        }
 
         htmlBloque += `
                 </div>
@@ -954,17 +1046,17 @@
       const area = document.getElementById(containerId);
       if(!area) return;
 
-      mostrarToast(`Generando imagen limpia del Bloque #${numBloque} - Ronda ${numRonda}...`, "info");
+      mostrarToast(`Generando imagen limpia de Tabla #${numBloque} - Ronda ${numRonda}...`, "info");
 
       html2canvas(area, {
         backgroundColor: '#05030a',
         scale: 2
       }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `Bloque-${numBloque}-Ronda-${numRonda}-TorneoFemenino.png`;
+        link.download = `Tabla-${numBloque}-Ronda-${numRonda}-TorneoFemenino.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-        mostrarToast(`¡Bloque #${numBloque} (R${numRonda}) descargado!`, "success");
+        mostrarToast(`¡Tabla #${numBloque} (R${numRonda}) descargada!`, "success");
       });
     }
 
