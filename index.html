@@ -165,7 +165,7 @@
         <div class="lg:col-span-7 text-center lg:text-left space-y-6">
           <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-femPink-500/20 via-femPurple-500/20 to-femPink-500/20 border border-femPink-400/50 px-4 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.3)]">
             <span class="w-2.5 h-2.5 rounded-full bg-femPink-400 animate-ping"></span>
-            <span class="text-femPink-300 text-xs font-orbitron font-bold uppercase tracking-widest">DEMO FEMENINA &bull; REGISTRO CON CÓDIGO</span>
+            <span class="text-femPink-300 text-xs font-orbitron font-bold uppercase tracking-widest">INSCRIPCIÓN LIBRE Y GRATUITA</span>
           </div>
 
           <div class="space-y-2">
@@ -178,14 +178,14 @@
           </div>
 
           <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-            Arena 1v1 oficial exclusiva para jugadoras. Enfrentamientos en tiempo real, chat privado por partida y cuadro por bloques de captura listo para compartir en WhatsApp.
+            Torneo de demostración 1v1 sin costo de inscripción. Sistema automatizado con chat directo por partida y tablas de llaves capturables para enviar a WhatsApp.
           </p>
 
           <div class="pt-2 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <button onclick="seleccionarModalidad('1v1')" class="group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-femPink-500 via-femPink-600 to-femPurple-600 font-orbitron font-black text-slate-950 uppercase tracking-wider text-sm rounded-xl hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(236,72,153,0.5)] cursor-pointer overflow-hidden">
               <span class="shine-effect"></span>
               <span class="relative z-10 flex items-center gap-3">
-                INGRESAR A LA PLATAFORMA <i class="fa-solid fa-bolt text-slate-950 animate-pulse"></i>
+                REGISTRARME GRATIS <i class="fa-solid fa-bolt text-slate-950 animate-pulse"></i>
               </span>
             </button>
           </div>
@@ -199,7 +199,7 @@
               <div class="relative z-20 w-28 h-28 rounded-2xl bg-femPink-500/20 border-2 border-femPink-400/60 flex items-center justify-center text-femPink-400 text-5xl shadow-[0_0_40px_rgba(236,72,153,0.5)] group-hover:scale-110 group-hover:rotate-6 transition duration-500">
                 <i class="fa-solid fa-trophy"></i>
               </div>
-              <span class="absolute top-3 right-3 z-20 text-[10px] font-orbitron font-bold bg-femPink-500 text-slate-950 px-3 py-1 rounded-full uppercase shadow">MODO FEMENINO 1v1</span>
+              <span class="absolute top-3 right-3 z-20 text-[10px] font-orbitron font-bold bg-femPink-500 text-slate-950 px-3 py-1 rounded-full uppercase shadow">TORNEO GRATUITO</span>
             </div>
 
             <div class="mt-5 space-y-3 text-left">
@@ -208,7 +208,7 @@
                 <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">ADMIN ÚNICO</span>
               </div>
               <p class="text-xs text-slate-400 leading-relaxed">
-                Torneo individual administrado de forma centralizada con registro seguro mediante código consumible.
+                Administración centralizada y registro directo habilitado para todas las competidoras.
               </p>
             </div>
           </div>
@@ -229,37 +229,36 @@
             </div>
             <div>
               <h2 class="font-orbitron font-black text-sm text-femPink-300 uppercase tracking-wider">PANEL DE ADMINISTRACIÓN ÚNICA</h2>
-              <p class="text-[11px] text-slate-400">Generación de códigos de inscripción, emparejamientos y control del torneo.</p>
+              <p class="text-[11px] text-slate-400">Control centralizado del torneo, asignación de llaves y gestión de partidas.</p>
             </div>
           </div>
           <span class="text-xs font-orbitron font-bold text-femPink-300 bg-femPink-500/20 border border-femPink-500/40 px-3 py-1 rounded-full">ADMINISTRADOR PRINCIPAL</span>
         </div>
 
-        <!-- GENERADOR DE CÓDIGOS DE INSCRIPCIÓN ÚNICOS -->
-        <div class="bg-femDark-950 border border-femPink-500/30 p-4 rounded-2xl space-y-3">
-          <h4 class="text-xs font-orbitron font-bold text-femPink-400 flex items-center gap-2">
-            <i class="fa-solid fa-ticket"></i> Generador Privado de Códigos de Invitación (Un Solo Uso)
-          </h4>
-          <p class="text-[11px] text-slate-400">Crea códigos consumibles para las jugadoras tras validar su cuota. Cada código queda inhabilitado tras registrarse.</p>
-          <div class="flex flex-wrap gap-3 items-center">
-            <button onclick="generarCodigoAdmin()" class="bg-femPink-500 hover:bg-femPink-400 text-slate-950 font-orbitron font-black text-xs px-4 py-2.5 rounded-xl transition cursor-pointer uppercase shadow-md">
-              <i class="fa-solid fa-plus mr-1"></i> Generar Código Único
-            </button>
-            <input type="text" id="admin-generated-code-display" readonly placeholder="Código generado..." class="bg-femDark-900 border border-slate-700 text-xs px-3.5 py-2.5 rounded-xl text-femPink-300 font-mono w-52 text-center font-bold">
+        <!-- CONFIGURACIÓN DE FECHA Y HORARIO CENTRALIZADO -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-femDark-950 p-4 rounded-2xl border border-slate-800">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1">Fecha Inicio Torneo:</label>
+            <input type="date" id="cfg-match-date" value="2026-11-15" class="w-full bg-femDark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
           </div>
-
-          <div class="pt-3 border-t border-slate-800">
-            <h5 class="text-[11px] font-bold text-slate-300 mb-2"><i class="fa-solid fa-clock-rotate-left mr-1 text-femPink-400"></i> Historial de Códigos Generados</h5>
-            <div id="my-codes-history-container" class="max-h-36 overflow-y-auto custom-scrollbar space-y-1.5 text-xs">
-              <p class="text-[11px] text-slate-500 italic">Cargando lista de códigos...</p>
-            </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1">Hora Inicio Ronda:</label>
+            <input type="time" id="cfg-start-time" value="20:00" class="w-full bg-femDark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1">Duración Partida (m):</label>
+            <input type="number" id="cfg-match-dur" value="20" min="10" class="w-full bg-femDark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 mb-1">Tolerancia W.O. (m):</label>
+            <input type="number" id="cfg-tolerance" value="5" min="1" class="w-full bg-femDark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
           </div>
         </div>
 
         <!-- ACCIONES DE ADMINISTRACIÓN -->
         <div class="flex flex-wrap gap-3 pt-2">
           <button onclick="agregar30Bots()" class="bg-indigo-600/80 hover:bg-indigo-600 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-robot"></i> Añadir 12 Jugadoras Demo
+            <i class="fa-solid fa-robot"></i> Añadir Jugadoras Demo
           </button>
           <button onclick="iniciarSorteoMatematico()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-calculator"></i> Sortear Ronda 1
@@ -289,14 +288,14 @@
         </button>
       </div>
 
-      <!-- TAB 1: FORMULARIO CON VALIDACIÓN DE CÓDIGO ÚNICO -->
+      <!-- TAB 1: FORMULARIO DIRECTO GRATUITO -->
       <div id="tab-content-registro" class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl transition-all">
         <div class="max-w-2xl space-y-6">
           <div class="border-b border-slate-800 pb-4">
             <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase tracking-wide flex items-center gap-2">
-              <i class="fa-solid fa-user-plus text-femPink-400"></i> Registro Oficial de Jugadora — 1v1 Femenino
+              <i class="fa-solid fa-user-plus text-femPink-400"></i> Registro de Jugadora — 1v1 Femenino
             </h3>
-            <p class="text-xs text-slate-400 mt-1">Ingresa tu código de invitación entregado por la administración para validar tu cuota.</p>
+            <p class="text-xs text-slate-400 mt-1">Completa tus datos oficiales de Mobile Legends. La participación en esta edición es gratuita.</p>
           </div>
 
           <div class="space-y-4">
@@ -322,14 +321,8 @@
               <input type="tel" id="cap-phone" placeholder="WhatsApp de Contacto" class="w-full bg-femDark-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-femPink-500">
             </div>
 
-            <div class="bg-femDark-950 border border-femPink-500/40 p-4 rounded-2xl space-y-2">
-              <label class="block text-xs font-bold text-femPink-400 uppercase tracking-wider">🔑 Código de Inscripción Único:</label>
-              <input type="text" id="entry-code-input" placeholder="Ej: MLBB-FEM1" class="w-full bg-femDark-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-femPink-300 font-mono font-bold uppercase focus:outline-none focus:border-femPink-500">
-              <p class="text-[10px] text-slate-500">* El código queda inhabilitado automáticamente tras presionar registrar.</p>
-            </div>
-
-            <button onclick="enviarInscripcionConCodigo()" class="w-full bg-gradient-to-r from-femPink-500 to-femPurple-600 hover:from-femPink-400 text-slate-950 font-orbitron font-black text-xs py-4 rounded-2xl transition-all shadow-lg shadow-femPink-500/20 cursor-pointer uppercase tracking-wider">
-              ✨ Validar Código e Inscribirme
+            <button onclick="enviarInscripcionDirecta()" class="w-full bg-gradient-to-r from-femPink-500 to-femPurple-600 hover:from-femPink-400 text-slate-950 font-orbitron font-black text-xs py-4 rounded-2xl transition-all shadow-lg shadow-femPink-500/20 cursor-pointer uppercase tracking-wider">
+              ✨ Confirmar Inscripción Gratuita
             </button>
           </div>
         </div>
@@ -346,7 +339,7 @@
         </div>
       </div>
 
-      <!-- TAB 3: PARTIDAS & BRACKET CON CHAT DE ENFRENTAMIENTO -->
+      <!-- TAB 3: PARTIDAS & BRACKET -->
       <div id="tab-content-bracket" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
           <div>
@@ -360,12 +353,12 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO POR BLOQUES PAREJOS (LISTO PARA CAPTURA DE WHATSAPP) -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO POR BLOQUES PAREJOS -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
           <div>
             <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL DE ENFRENTAMIENTOS (VISTA DE CAPTURA)</h3>
-            <p class="text-xs text-slate-400">Dividido exactamente en 6 partidas por bloque (Lado Izquierdo / Lado Derecho) para tomar captura limpia.</p>
+            <p class="text-xs text-slate-400">Dividido en bloques parejos (6 a la izquierda y 6 a la derecha) ideal para tomar captura de pantalla.</p>
           </div>
           <button onclick="tomarCapturaArbol()" class="bg-femPink-500 hover:bg-femPink-400 text-slate-950 font-orbitron font-bold text-xs px-4 py-2 rounded-xl transition cursor-pointer flex items-center gap-2">
             <i class="fa-solid fa-camera"></i> Capturar para WhatsApp
@@ -449,7 +442,7 @@
     <div class="glass-panel border border-femPink-500/40 rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
       <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
       <div class="text-center mb-5">
-        <h3 class="font-orbitron font-bold text-sm text-white uppercase tracking-wider"><i class="fa-solid fa-user-shield text-femPink-400 mr-2"></i> Ingreso Administrador Único</h3>
+        <h3 class="font-orbitron font-bold text-sm text-white uppercase tracking-wider"><i class="fa-solid fa-user-shield text-femPink-400 mr-2"></i> Ingreso Administrador</h3>
       </div>
       <form onsubmit="handleAdminAuth(event)" class="space-y-3.5">
         <input type="email" id="admin-email" placeholder="Correo de Admin" required class="w-full bg-femDark-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:border-femPink-500 focus:outline-none">
@@ -503,7 +496,6 @@
       auth.onAuthStateChanged((user) => {
         isAdmin = !!user;
         actualizarPermisosAdmin();
-        if (isAdmin) escucharMisCodigos();
       });
 
       setup3DTilt();
@@ -545,7 +537,6 @@
       document.getElementById('tournament-app-container').classList.remove('hidden');
       document.getElementById('back-menu-btn').classList.remove('hidden');
       sincronizarDatosFirebase();
-      if (isAdmin) escucharMisCodigos();
     }
 
     function volverMenu() {
@@ -554,66 +545,7 @@
       document.getElementById('back-menu-btn').classList.add('hidden');
     }
 
-    function generarCodigoAdmin() {
-      const currentUser = auth.currentUser;
-      if (!currentUser) return mostrarToast("Debes iniciar sesión como Admin", "error");
-
-      const randomCode = "MLBB-FEM-" + Date.now().toString(36).substring(4).toUpperCase();
-      
-      db.ref(`${RUTA_TORNEO}/codigos_invitacion/${randomCode}`).set({
-        usado: false,
-        creadoPorUID: currentUser.uid,
-        creadoPorEmail: currentUser.email,
-        fechaCreacion: Date.now()
-      }, (err) => {
-        if (!err) {
-          document.getElementById('admin-generated-code-display').value = randomCode;
-          mostrarToast("¡Código único generado!", "success");
-        } else {
-          mostrarToast("Error al generar código: " + err.message, "error");
-        }
-      });
-    }
-
-    function escucharMisCodigos() {
-      const currentUser = auth.currentUser;
-      const historyContainer = document.getElementById('my-codes-history-container');
-      const codeDisplay = document.getElementById('admin-generated-code-display');
-      
-      if (!currentUser || !historyContainer) return;
-
-      db.ref(`${RUTA_TORNEO}/codigos_invitacion`).on('value', (snap) => {
-        const data = snap.val();
-        historyContainer.innerHTML = '';
-
-        if (!data) {
-          historyContainer.innerHTML = `<p class="text-[11px] text-slate-500 italic">No hay códigos generados aún...</p>`;
-          if (codeDisplay) codeDisplay.value = '';
-          return;
-        }
-
-        const keys = Object.keys(data).reverse();
-        if (codeDisplay && keys.length > 0) codeDisplay.value = keys[0];
-
-        keys.forEach(codeKey => {
-          const item = data[codeKey];
-          const isUsed = item.usado;
-          const statusBadge = isUsed 
-            ? `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">Consumido</span>`
-            : `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold">Disponible</span>`;
-
-          historyContainer.innerHTML += `
-            <div class="bg-femDark-900 p-2 rounded-lg border border-slate-800 flex justify-between items-center font-mono">
-              <span class="text-femPink-300 font-bold tracking-wide">${codeKey}</span>
-              ${statusBadge}
-            </div>
-          `;
-        });
-      });
-    }
-
-    function enviarInscripcionConCodigo() {
-      const entryCode = document.getElementById('entry-code-input').value.trim().toUpperCase();
+    function enviarInscripcionDirecta() {
       const nombreEquipo = document.getElementById('team-name').value.trim();
       const capNick = document.getElementById('cap-nick').value.trim();
       const capId = document.getElementById('cap-id').value.trim();
@@ -621,48 +553,36 @@
       const capPhone = document.getElementById('cap-phone').value.trim();
       const avatarInput = document.getElementById('cap-avatar-file');
 
-      if (!entryCode) return mostrarToast("Ingresa tu código de invitación", "warning");
       if (!nombreEquipo || !capNick || !capId || !capServer || !capPhone) {
         return mostrarToast("Completa todos los campos requeridos", "warning");
       }
 
-      db.ref(`${RUTA_TORNEO}/codigos_invitacion/${entryCode}`).once('value', (snap) => {
-        const dataCode = snap.val();
-        
-        if (!dataCode) return mostrarToast("⚠️ El código ingresado no existe", "error");
-        if (dataCode.usado) return mostrarToast("❌ Este código de inscripción ya fue utilizado", "error");
+      const guardarRegistro = (avatarBase64 = "") => {
+        db.ref(`${RUTA_TORNEO}/equipos`).push({
+          nombreEquipo,
+          avatar: avatarBase64,
+          jugadores: [{ nick: capNick, id: capId, server: capServer, telefono: capPhone }]
+        }, (err) => {
+          if (!err) {
+            mostrarToast("¡Inscripción confirmada con éxito!", "success");
+            document.getElementById('team-name').value = '';
+            document.getElementById('cap-nick').value = '';
+            document.getElementById('cap-id').value = '';
+            document.getElementById('cap-server').value = '';
+            document.getElementById('cap-phone').value = '';
+            if (avatarInput) avatarInput.value = '';
+            cambiarTab('bracket');
+          }
+        });
+      };
 
-        const guardarRegistro = (avatarBase64 = "") => {
-          db.ref(`${RUTA_TORNEO}/codigos_invitacion/${entryCode}`).update({ usado: true, fechaUso: Date.now() });
-
-          db.ref(`${RUTA_TORNEO}/equipos`).push({
-            nombreEquipo,
-            avatar: avatarBase64,
-            jugadores: [{ nick: capNick, id: capId, server: capServer, telefono: capPhone }],
-            codigoUsado: entryCode
-          }, (err) => {
-            if (!err) {
-              mostrarToast("¡Inscripción confirmada con éxito!", "success");
-              document.getElementById('entry-code-input').value = '';
-              document.getElementById('team-name').value = '';
-              document.getElementById('cap-nick').value = '';
-              document.getElementById('cap-id').value = '';
-              document.getElementById('cap-server').value = '';
-              document.getElementById('cap-phone').value = '';
-              if (avatarInput) avatarInput.value = '';
-              cambiarTab('bracket');
-            }
-          });
-        };
-
-        if (avatarInput && avatarInput.files && avatarInput.files[0]) {
-          const reader = new FileReader();
-          reader.onload = (e) => guardarRegistro(e.target.result);
-          reader.readAsDataURL(avatarInput.files[0]);
-        } else {
-          guardarRegistro("");
-        }
-      });
+      if (avatarInput && avatarInput.files && avatarInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => guardarRegistro(e.target.result);
+        reader.readAsDataURL(avatarInput.files[0]);
+      } else {
+        guardarRegistro("");
+      }
     }
 
     function agregar30Bots() {
@@ -677,11 +597,9 @@
       mostrarToast("Añadiendo jugadoras de prueba...", "info");
 
       nombresBots.forEach((nombre, index) => {
-        const botCode = "MLBB-BOT-" + index;
         db.ref(`${RUTA_TORNEO}/equipos`).push({
           nombreEquipo: nombre,
           avatar: "",
-          codigoUsado: botCode,
           jugadores: [{ nick: nombre, id: String(10000000 + index), server: String(2000 + (index % 5)), telefono: "999999999" }]
         });
       });
@@ -816,6 +734,10 @@
               <span>MATCH #${idx + 1}</span>
               <span>${isFinished ? 'GANADORA: ' + escapeHTML(p.ganador) : 'EN ESPERA'}</span>
             </div>
+            <div class="flex justify-between items-center bg-femDark-900 px-3 py-1.5 rounded-xl text-[11px] border border-slate-800 text-slate-300">
+              <div>📅 <b class="text-white">${escapeHTML(p.fechaDateStr) || 'S/F'}</b> &bull; <i class="fa-regular fa-clock text-femPink-400"></i> <b class="text-white">${escapeHTML(p.timeStr) || '--:--'}</b></div>
+              <div>W.O.: <b class="text-femPink-300">${escapeHTML(p.toleranceStr) || '--:--'}</b></div>
+            </div>
             <div class="p-2.5 rounded-xl bg-femDark-900 border border-slate-800 font-bold text-xs text-pink-300 flex justify-between">
               <span>${p.ganador === p.equipo1 ? '🏆 ' : ''}${escapeHTML(p.equipo1)}</span>
             </div>
@@ -844,7 +766,7 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL EN BLOQUES PAREJOS (6 IZQUIERDA / 6 DERECHA) CORTOS PARA CAPTURA */
+    /* RENDERIZADO DEL ÁRBOL EN BLOQUES PAREJOS DE 6 IZQUIERDA / 6 DERECHA PARA CAPTURA */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container || !datosBracketServidor) return;
@@ -1077,7 +999,7 @@
       });
     }
 
-    /* GESTIÓN DE SORTEO Y AVANCE DE RONDAS */
+    /* GESTIÓN DE SORTEO CON HORARIOS Y AVANCE DE RONDAS */
     function iniciarSorteoMatematico() {
       db.ref(`${RUTA_TORNEO}/equipos`).once('value', (snap) => {
         const data = snap.val();
@@ -1085,13 +1007,32 @@
 
         let keys = Object.keys(data).sort(() => Math.random() - 0.5);
         let partidos = [];
+
+        const fechaBaseStr = document.getElementById('cfg-match-date').value || '2026-11-15';
+        const startTimeStr = document.getElementById('cfg-start-time').value || '20:00';
+        const duration = parseInt(document.getElementById('cfg-match-dur').value) || 20;
+        const tolerance = parseInt(document.getElementById('cfg-tolerance').value) || 5;
+
+        let [hours, minutes] = startTimeStr.split(':').map(Number);
+        let formatTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
         for (let i = 0; i < keys.length; i += 2) {
+          let partidoIndex = Math.floor(i / 2);
+          let baseTime = new Date();
+          baseTime.setHours(hours, minutes, 0, 0);
+
+          let matchStart = new Date(baseTime.getTime() + (partidoIndex * duration * 60000));
+          let toleranceStart = new Date(matchStart.getTime() + (tolerance * 60000));
+
           partidos.push({
             equipo1: data[keys[i]].nombreEquipo,
             equipo1Key: keys[i],
             equipo2: keys[i+1] ? data[keys[i+1]].nombreEquipo : "PASE DIRECTO 🏆",
             equipo2Key: keys[i+1] ? keys[i+1] : "PASE_DIRECTO",
-            ganador: keys[i+1] ? "Pendiente" : data[keys[i]].nombreEquipo
+            ganador: keys[i+1] ? "Pendiente" : data[keys[i]].nombreEquipo,
+            fechaDateStr: fechaBaseStr,
+            timeStr: formatTime(matchStart),
+            toleranceStr: keys[i+1] ? formatTime(toleranceStart) : '-'
           });
         }
         db.ref(`${RUTA_TORNEO}/bracket/ronda_1`).set(partidos, () => {
@@ -1119,18 +1060,39 @@
         let siguientesPartidos = [];
         let nuevaRondaNum = ultimaRondaNum + 1;
 
+        const fechaBaseStr = document.getElementById('cfg-match-date').value || '2026-11-15';
+        const startTimeStr = document.getElementById('cfg-start-time').value || '20:00';
+        const duration = parseInt(document.getElementById('cfg-match-dur').value) || 20;
+        const tolerance = parseInt(document.getElementById('cfg-tolerance').value) || 5;
+
+        let [hours, minutes] = startTimeStr.split(':').map(Number);
+        let formatTime = (d) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
         for (let i = 0; i < ganadores.length; i += 2) {
+          let partidoIndex = Math.floor(i / 2);
+          let baseTime = new Date();
+          baseTime.setHours(hours, minutes, 0, 0);
+
+          let matchStart = new Date(baseTime.getTime() + (partidoIndex * duration * 60000));
+          let toleranceStart = new Date(matchStart.getTime() + (tolerance * 60000));
+
           if (ganadores[i + 1]) {
             siguientesPartidos.push({
               equipo1: ganadores[i],
               equipo2: ganadores[i + 1],
-              ganador: "Pendiente"
+              ganador: "Pendiente",
+              fechaDateStr: fechaBaseStr,
+              timeStr: formatTime(matchStart),
+              toleranceStr: formatTime(toleranceStart)
             });
           } else {
             siguientesPartidos.push({
               equipo1: ganadores[i],
               equipo2: "PASE DIRECTO 🏆",
-              ganador: ganadores[i]
+              ganador: ganadores[i],
+              fechaDateStr: fechaBaseStr,
+              timeStr: formatTime(matchStart),
+              toleranceStr: '-'
             });
           }
         }
