@@ -86,20 +86,6 @@
     .perspective-1000 { perspective: 1000px; }
     .preserve-3d { transform-style: preserve-3d; transition: transform 0.15s ease-out; }
 
-    /* ESTILOS DE CORCHETES Y CONECTORES */
-    .bracket-line-v {
-      position: absolute;
-      width: 2px;
-      background: linear-gradient(180deg, #ec4899, #8b5cf6);
-      z-index: 1;
-    }
-    .bracket-line-h {
-      position: absolute;
-      height: 2px;
-      background: #ec4899;
-      z-index: 1;
-    }
-
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #05030a; }
     ::-webkit-scrollbar-thumb { background: #db2777; border-radius: 4px; }
@@ -169,7 +155,7 @@
           </div>
 
           <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-            Torneo de demostración 1v1 sin costo. Sistema de llaves compacto con fotos de jugadoras y botón de captura por bloque para WhatsApp.
+            Torneo de demostración 1v1 sin costo. Árbol de llaves multi-ronda con fotos de perfil y salas de chat protegidas con autenticación por ID.
           </p>
 
           <div class="pt-2 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -339,11 +325,11 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO CON AVATARES Y CAPTURA INDIVIDUAL POR BLOQUE -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO MULTI-RONDA CON AVATARES Y CAPTURA INDIVIDUAL -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
-          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL DE ENFRENTAMIENTOS (FOTOS Y CORCHETES)</h3>
-          <p class="text-xs text-slate-400">Cada bloque contiene exactamente 6 partidas a la izquierda y 6 a la derecha con su propio botón de descarga individual.</p>
+          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL DE ENFRENTAMIENTOS DINÁMICO (DESDE R1 HASTA LA FINAL)</h3>
+          <p class="text-xs text-slate-400">Cada bloque se expande automáticamente según el avance de rondas en el torneo. Descarga individual habilitada para WhatsApp.</p>
         </div>
 
         <div id="arbol-esquematico-container" class="space-y-10">
@@ -354,7 +340,7 @@
     </div>
   </main>
 
-  <!-- MODAL: CHAT PRIVADO POR PARTIDA -->
+  <!-- MODAL: CHAT PRIVADO POR PARTIDA CON AUTENTICACIÓN POR ID -->
   <div id="whatsapp-chat-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden">
     <div class="glass-panel border border-femPink-500/40 rounded-3xl w-full max-w-xl h-[85vh] flex flex-col shadow-2xl overflow-hidden relative">
       
@@ -373,22 +359,24 @@
         </button>
       </div>
 
+      <!-- VISTA DE AUTENTICACIÓN PROTEGIDA (PIDE ID DE MLBB COMO CLAVE) -->
       <div id="chat-modal-auth-view" class="p-6 flex-1 flex flex-col items-center justify-center text-center space-y-4">
         <div class="w-16 h-16 rounded-2xl bg-femPink-500/10 border border-femPink-400/40 flex items-center justify-center text-femPink-400 text-2xl mb-1">
           <i class="fa-solid fa-lock-keyhole"></i>
         </div>
         <div>
-          <h3 class="text-sm font-bold text-white font-orbitron">Acceso al Chat del Enfrentamiento</h3>
-          <p class="text-xs text-slate-400 mt-1 max-w-xs">Ingresa tu ID de MLBB registrada o la contraseña de Admin para ingresar a la sala.</p>
+          <h3 class="text-sm font-bold text-white font-orbitron">Acceso Privado a Sala de Chat</h3>
+          <p class="text-xs text-slate-400 mt-1 max-w-xs">Ingresa tu ID de MLBB registrada en esta partida o tu clave de Admin para desbloquear.</p>
         </div>
         <div class="w-full max-w-xs space-y-2">
-          <input type="text" id="chat-modal-auth-input" placeholder="ID de MLBB o Clave de Admin" class="w-full bg-femDark-950 border border-slate-700 text-xs px-3 py-2.5 rounded-xl text-white font-bold text-center focus:outline-none focus:border-femPink-500">
+          <input type="text" id="chat-modal-auth-input" placeholder="Tu ID de MLBB registrada" class="w-full bg-femDark-950 border border-slate-700 text-xs px-3 py-2.5 rounded-xl text-white font-bold text-center focus:outline-none focus:border-femPink-500">
           <button onclick="validarAccesoChatWhatsApp()" class="w-full bg-femPink-500 hover:bg-femPink-400 text-slate-950 font-orbitron font-bold text-xs py-2.5 rounded-xl transition cursor-pointer uppercase">
-            Entrar al Chat
+            🔑 Validar e Ingresar
           </button>
         </div>
       </div>
 
+      <!-- VISTA PRINCIPAL DEL CHAT -->
       <div id="chat-modal-main-view" class="flex-1 flex flex-col hidden overflow-hidden">
         <div class="bg-femDark-900/80 px-4 py-2 border-b border-slate-800 flex gap-2 text-xs">
           <button id="modal-subtab-gen" onclick="switchModalChatSubTab('general')" class="px-3 py-1.5 rounded-xl font-bold bg-femPink-500 text-slate-950 transition cursor-pointer flex items-center gap-1.5 font-orbitron">
@@ -643,7 +631,7 @@
         keys.forEach(k => {
           const eq = data[k];
           jugadorasCacheObj[eq.nombreEquipo] = { ...eq, key: k };
-          const j = eq.jugadores[0];
+          const j = eq.jugadores ? eq.jugadores[0] : { id: 'N/A', server: 'N/A' };
           let avatarUrl = eq.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${eq.nombreEquipo}`;
           let avatarHtml = `<img src="${avatarUrl}" class="w-10 h-10 rounded-xl object-cover border border-femPink-400/50">`;
 
@@ -673,7 +661,7 @@
     }
 
     function getAvatarForTeam(nombreEquipo) {
-      if (!nombreEquipo || nombreEquipo === 'PASE DIRECTO 🏆' || nombreEquipo === 'Pendiente') {
+      if (!nombreEquipo || nombreEquipo === 'PASE DIRECTO 🏆' || nombreEquipo === 'Pendiente' || nombreEquipo === 'Por Definir') {
         return 'https://api.dicebear.com/7.x/bottts/svg?seed=placeholder';
       }
       return (jugadorasCacheObj[nombreEquipo] && jugadorasCacheObj[nombreEquipo].avatar) 
@@ -761,15 +749,14 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL COMPACTO CON FOTOS, AVANCE DE RONDAS Y BOTÓN DE CAPTURA POR BLOQUE */
+    /* RENDERIZADO DEL ÁRBOL DINÁMICO DESDE RONDA 1 HASTA LA FINAL POR BLOQUES */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container || !datosBracketServidor) return;
 
       container.innerHTML = '';
+      const totalRondas = Object.keys(datosBracketServidor).length;
       const partidosRonda1 = datosBracketServidor['ronda_1'] || [];
-      const partidosRonda2 = datosBracketServidor['ronda_2'] || [];
-      const partidosRonda3 = datosBracketServidor['ronda_3'] || [];
 
       if (partidosRonda1.length === 0) {
         container.innerHTML = `<p class="text-xs text-slate-500 italic text-center col-span-full">Aún no se han generado enfrentamientos.</p>`;
@@ -781,11 +768,11 @@
 
       for (let b = 0; b < totalBloques; b++) {
         let inicioIdx = b * (BLOQUE_TAMANO * 2);
-        let partidosBloque = partidosRonda1.slice(inicioIdx, inicioIdx + (BLOQUE_TAMANO * 2));
+        let partidosBloqueR1 = partidosRonda1.slice(inicioIdx, inicioIdx + (BLOQUE_TAMANO * 2));
         
-        let mitad = Math.ceil(partidosBloque.length / 2);
-        let ladoIzqR1 = partidosBloque.slice(0, mitad);
-        let ladoDerR1 = partidosBloque.slice(mitad);
+        let mitad = Math.ceil(partidosBloqueR1.length / 2);
+        let ladoIzqR1 = partidosBloqueR1.slice(0, mitad);
+        let ladoDerR1 = partidosBloqueR1.slice(mitad);
 
         let bloqueId = `bloque-captura-${b+1}`;
 
@@ -795,7 +782,7 @@
             <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 gap-2">
               <div>
                 <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">BLOQUE DE ENFRENTAMIENTO #${b + 1}</span>
-                <p class="text-[10px] text-slate-400">6 Enfrentamientos Izquierda &bull; 6 Enfrentamientos Derecha</p>
+                <p class="text-[10px] text-slate-400">6 Enfrentamientos Izquierda &bull; 6 Enfrentamientos Derecha &bull; Fotos y Avance</p>
               </div>
               <button onclick="tomarCapturaBloqueIndividual('${bloqueId}', ${b+1})" class="bg-gradient-to-r from-femPink-500 to-femPurple-600 hover:from-femPink-400 text-slate-950 font-orbitron font-black text-[11px] px-4 py-2 rounded-xl transition shadow-lg cursor-pointer flex items-center gap-2 uppercase">
                 <i class="fa-solid fa-camera text-slate-950"></i> Capturar Bloque #${b+1}
@@ -805,13 +792,15 @@
             <!-- CONTENEDOR ESPECÍFICO QUE SE CAPTURA PARA WHATSAPP -->
             <div id="${bloqueId}" class="bg-femDark-950 p-5 rounded-2xl border border-slate-800/80 space-y-4">
               
-              <div class="text-center border-b border-slate-800/60 pb-2">
+              <div class="text-center border-b border-slate-800/60 pb-2 flex justify-between items-center px-2">
+                <span class="font-orbitron font-black text-[10px] text-femPink-400">MINIONS FEMALE</span>
                 <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">CAMINO A LA FINAL &bull; BLOQUE #${b + 1}</h4>
+                <span class="font-orbitron font-black text-[10px] text-femPurple-500">RONDA ACTIVA: #${totalRondas}</span>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-7 gap-2 items-center relative">
                 
-                <!-- 1. RONDA 1 IZQUIERDA (MÁXIMO 6) -->
+                <!-- 1. RONDA 1 IZQUIERDA (6 PARTIDAS) -->
                 <div class="md:col-span-2 space-y-2">
                   <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ RONDA 1 (IZQ)</h5>
         `;
@@ -837,62 +826,70 @@
         htmlBloque += `
                 </div>
 
-                <!-- 2. RONDA 2 IZQUIERDA (AVANCE) -->
-                <div class="hidden md:flex flex-col justify-around h-full py-6 space-y-4">
-                  <h5 class="text-[8px] font-orbitron font-bold text-slate-400 text-center uppercase">RONDA 2</h5>
+                <!-- 2. RONDAS INTERMEDIAS IZQUIERDA (R2 / R3 / R4 / R5) -->
+                <div class="hidden md:flex flex-col justify-around h-full py-4 space-y-3">
+                  <h5 class="text-[8px] font-orbitron font-bold text-slate-400 text-center uppercase">CLASIFICADAS</h5>
         `;
 
-        // Render R2 Izquierda simulada/servidor
-        for(let r2=0; r2 < Math.ceil(ladoIzqR1.length/2); r2++) {
-          let matchR2 = (partidosRonda2[Math.floor(inicioIdx/2) + r2]) || { equipo1: "Por Definir", equipo2: "Por Definir", ganador: "Pendiente" };
-          let imgR2_1 = getAvatarForTeam(matchR2.equipo1);
-          let imgR2_2 = getAvatarForTeam(matchR2.equipo2);
+        for(let r=2; r<=totalRondas; r++) {
+          let partidosR = datosBracketServidor[`ronda_${r}`] || [];
+          let matchR = partidosR[Math.floor(b * (partidosR.length / totalBloques))] || { equipo1: "Por Definir", equipo2: "Por Definir" };
+          let imgR1 = getAvatarForTeam(matchR.equipo1);
+          let imgR2 = getAvatarForTeam(matchR.equipo2);
+
           htmlBloque += `
             <div class="bg-femDark-900/90 border border-femPink-500/30 p-1.5 rounded-xl text-[9px] space-y-1 shadow">
+              <div class="text-[7px] text-femPink-400 font-orbitron font-bold">RONDA ${r}</div>
               <div class="flex items-center gap-1 font-bold text-slate-200 truncate">
-                <img src="${imgR2_1}" class="w-4 h-4 rounded-full object-cover shrink-0">
-                <span class="truncate">${escapeHTML(matchR2.equipo1)}</span>
+                <img src="${imgR1}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                <span class="truncate">${escapeHTML(matchR.equipo1)}</span>
               </div>
               <div class="flex items-center gap-1 font-bold text-slate-400 truncate">
-                <img src="${imgR2_2}" class="w-4 h-4 rounded-full object-cover shrink-0">
-                <span class="truncate">${escapeHTML(matchR2.equipo2)}</span>
+                <img src="${imgR2}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                <span class="truncate">${escapeHTML(matchR.equipo2)}</span>
               </div>
             </div>
           `;
         }
 
+        let partidosUltima = datosBracketServidor[`ronda_${totalRondas}`] || [];
+        let campeonaActual = partidosUltima.length > 0 && partidosUltima[0].ganador !== 'Pendiente' ? partidosUltima[0].ganador : "En Competencia";
+
         htmlBloque += `
                 </div>
 
-                <!-- 3. CENTRO / TROFEO -->
+                <!-- 3. CENTRO / TROFEO O CAMPEONA DEFINITIVA -->
                 <div class="flex flex-col items-center justify-center p-3 bg-femDark-900 border border-femPink-500/40 rounded-2xl text-center space-y-2 shadow-inner">
-                  <div class="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow">
+                  <div class="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow animate-pulse">
                     <i class="fa-solid fa-trophy"></i>
                   </div>
                   <div>
-                    <h6 class="font-orbitron font-black text-white text-[10px] uppercase">CLASIFICATORIA</h6>
-                    <p class="text-[8px] text-slate-400">Pase a Fase Central</p>
+                    <h6 class="font-orbitron font-black text-white text-[10px] uppercase">GRAN FINAL</h6>
+                    <p class="text-[8px] text-amber-300 font-bold mt-0.5">${campeonaActual !== 'En Competencia' ? '🏆 ' + escapeHTML(campeonaActual) : 'Pase a la Gloria'}</p>
                   </div>
                 </div>
 
-                <!-- 4. RONDA 2 DERECHA (AVANCE) -->
-                <div class="hidden md:flex flex-col justify-around h-full py-6 space-y-4">
-                  <h5 class="text-[8px] font-orbitron font-bold text-slate-400 text-center uppercase">RONDA 2</h5>
+                <!-- 4. RONDAS INTERMEDIAS DERECHA (R2 / R3 / R4 / R5) -->
+                <div class="hidden md:flex flex-col justify-around h-full py-4 space-y-3">
+                  <h5 class="text-[8px] font-orbitron font-bold text-slate-400 text-center uppercase">CLASIFICADAS</h5>
         `;
 
-        for(let r2=0; r2 < Math.ceil(ladoDerR1.length/2); r2++) {
-          let matchR2 = (partidosRonda2[Math.floor((inicioIdx + mitad)/2) + r2]) || { equipo1: "Por Definir", equipo2: "Por Definir", ganador: "Pendiente" };
-          let imgR2_1 = getAvatarForTeam(matchR2.equipo1);
-          let imgR2_2 = getAvatarForTeam(matchR2.equipo2);
+        for(let r=2; r<=totalRondas; r++) {
+          let partidosR = datosBracketServidor[`ronda_${r}`] || [];
+          let matchR = partidosR[Math.floor(b * (partidosR.length / totalBloques)) + 1] || partidosR[0] || { equipo1: "Por Definir", equipo2: "Por Definir" };
+          let imgR1 = getAvatarForTeam(matchR.equipo1);
+          let imgR2 = getAvatarForTeam(matchR.equipo2);
+
           htmlBloque += `
             <div class="bg-femDark-900/90 border border-femPink-500/30 p-1.5 rounded-xl text-[9px] space-y-1 shadow">
+              <div class="text-[7px] text-femPink-400 font-orbitron font-bold">RONDA ${r}</div>
               <div class="flex items-center gap-1 font-bold text-slate-200 truncate">
-                <img src="${imgR2_1}" class="w-4 h-4 rounded-full object-cover shrink-0">
-                <span class="truncate">${escapeHTML(matchR2.equipo1)}</span>
+                <img src="${imgR1}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                <span class="truncate">${escapeHTML(matchR.equipo1)}</span>
               </div>
               <div class="flex items-center gap-1 font-bold text-slate-400 truncate">
-                <img src="${imgR2_2}" class="w-4 h-4 rounded-full object-cover shrink-0">
-                <span class="truncate">${escapeHTML(matchR2.equipo2)}</span>
+                <img src="${imgR2}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                <span class="truncate">${escapeHTML(matchR.equipo2)}</span>
               </div>
             </div>
           `;
@@ -901,7 +898,7 @@
         htmlBloque += `
                 </div>
 
-                <!-- 5. RONDA 1 DERECHA (MÁXIMO 6) -->
+                <!-- 5. RONDA 1 DERECHA (6 PARTIDAS) -->
                 <div class="md:col-span-2 space-y-2">
                   <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">RONDA 1 (DER) ▶</h5>
         `;
@@ -955,7 +952,7 @@
       });
     }
 
-    /* SISTEMA DE CHAT PRIVADO POR PARTIDA */
+    /* SISTEMA DE CHAT PRIVADO POR PARTIDA CON AUTENTICACIÓN */
     function abrirChatWhatsAppModal(rondaNum, idx, equipo1, equipo2) {
       activeChatMatchInfo = { rondaNum, idx, equipo1, equipo2 };
       
@@ -982,7 +979,7 @@
       if (!activeChatMatchInfo) return;
       const inputVal = document.getElementById('chat-modal-auth-input').value.trim().toLowerCase();
 
-      if (!inputVal) return mostrarToast("Ingresa tu ID de MLBB o Clave de Admin", "warning");
+      if (!inputVal) return mostrarToast("Ingresa tu ID de MLBB o Nick registrado", "warning");
 
       let tienePermiso = false;
       let nickNombre = "";
@@ -996,7 +993,8 @@
           const item = jugadorasCacheObj[eqNombre];
           const jugadores = item ? item.jugadores || [] : [];
           jugadores.forEach(j => {
-            if (j.id && j.id.toString().trim().toLowerCase() === inputVal) {
+            if ((j.id && j.id.toString().trim().toLowerCase() === inputVal) || 
+                (j.nick && j.nick.toString().trim().toLowerCase() === inputVal)) {
               tienePermiso = true;
               nickNombre = j.nick;
             }
@@ -1011,7 +1009,7 @@
         escucharMensajesChatWhatsApp();
         mostrarToast(`Acceso permitido como ${nickNombre}`, "success");
       } else {
-        mostrarToast("⚠️ La ID ingresada no pertenece a las participantes de esta partida", "error");
+        mostrarToast("⚠️ La ID o Nick no pertenece a las participantes de esta partida", "error");
       }
     }
 
@@ -1050,7 +1048,7 @@
         }
 
         Object.values(data).forEach(m => {
-          const miNick = usuarioIdAutenticado ? usuarioIdAutenticado.nick : (isAdmin ? "🛡️ Admin Oficial" : "");
+          const miNick = usuarioIdAutenticado ? usuarioIdAutenticado.nick : (isAdmin ? "🛡️ Admin Oficial" : "Jugadora");
           const esMio = miNick && m.nick === miNick;
           const alignClass = esMio ? "ml-auto bg-femPink-950/80 border-femPink-700 text-right" : "mr-auto bg-femDark-900 border-slate-700 text-left";
 
@@ -1071,9 +1069,7 @@
       const texto = input.value.trim();
       if (!texto) return;
 
-      let nickRemitente = usuarioIdAutenticado ? usuarioIdAutenticado.nick : (isAdmin ? "🛡️ Admin Oficial" : "");
-
-      if (!nickRemitente) return mostrarToast("Debes ingresar con tu ID de MLBB o clave de Admin para hablar", "warning");
+      let nickRemitente = usuarioIdAutenticado ? usuarioIdAutenticado.nick : (isAdmin ? "🛡️ Admin Oficial" : "Jugadora");
 
       const { rondaNum, idx } = activeChatMatchInfo;
       const pathFirebase = activeChatSubTab === 'general' ? 
@@ -1090,7 +1086,7 @@
       });
     }
 
-    /* GESTIÓN DE SORTEO CON HORARIOS Y AVANCE DE RONDAS */
+    /* GESTIÓN DE SORTEO Y AVANCE DE RONDAS */
     function iniciarSorteoMatematico() {
       db.ref(`${RUTA_TORNEO}/equipos`).once('value', (snap) => {
         const data = snap.val();
