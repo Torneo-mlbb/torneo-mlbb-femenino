@@ -267,8 +267,9 @@
         </div>
 
         <div class="flex flex-wrap gap-3 pt-2">
+          <!-- AHORA AÑADE BOTS INFINITOS SIN LÍMITE DE 16 -->
           <button onclick="agregar30Bots()" class="bg-indigo-600/80 hover:bg-indigo-600 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-robot"></i> Añadir Jugadoras Demo (16 Únicas)
+            <i class="fa-solid fa-robot"></i> +16 Jugadoras Demo (Acumulable)
           </button>
           <button onclick="iniciarSorteoMatematico()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-calculator"></i> Sortear Ronda 1
@@ -349,24 +350,31 @@
         </div>
       </div>
 
-      <!-- TAB 3: PARTIDAS & BRACKET -->
+      <!-- TAB 3: PARTIDAS & BRACKET (CON SISTEMA DE OCULTAR / MOSTRAR COMPLETADOS) -->
       <div id="tab-content-bracket" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
           <div>
             <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">ENFRENTAMIENTOS DE CAMPEONATO</h3>
-            <p class="text-xs text-slate-400">Selecciona la ronda para ver la distribución de partidas y chats de arena.</p>
+            <p class="text-xs text-slate-400">Selecciona la ronda para administrar los enfrentamientos.</p>
           </div>
-          <div id="rounds-filter-container" class="flex gap-2 text-xs font-orbitron font-bold"></div>
+          
+          <div class="flex items-center gap-3">
+            <!-- BOTÓN PARA ALTERNAR MOSTRAR/OCULTAR PARTIDOS JUGADOS -->
+            <button onclick="toggleMostrarCompletados()" id="btn-toggle-completados" class="bg-femDark-900 hover:bg-slate-800 text-femPink-300 border border-femPink-500/40 px-3.5 py-1.5 rounded-xl text-xs font-orbitron font-bold transition flex items-center gap-1.5">
+              <i class="fa-solid fa-eye"></i> <span id="text-toggle-completados">Mostrar Completadas</span>
+            </button>
+            <div id="rounds-filter-container" class="flex gap-2 text-xs font-orbitron font-bold"></div>
+          </div>
         </div>
         <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <p class="text-xs text-slate-500 italic col-span-full py-8 text-center">Aún no se han generado enfrentamientos.</p>
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO REAL AJUSTADO -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO REAL -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
-          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO PAREADO (LÓGICA ADAPTADA)</h3>
+          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO PAREADO</h3>
           <p class="text-xs text-slate-400">Ronda 1 a 3 muestran el avance interno. En la Ronda 4 se realiza la Gran Final de Tabla.</p>
         </div>
 
@@ -494,6 +502,7 @@
     let usuarioIdAutenticado = null;
     let activeChatMatchInfo = null;
     let activeChatSubTab = 'general';
+    let mostrarCompletados = false; // ESTADO PARA OCULTAR O MOSTRAR MATCHES JUGADOS
 
     let rondasBloquesCache = {};
 
@@ -579,28 +588,29 @@
       }
     }
 
+    // BOTÓN DE BOTS MEJORADO: GENERA JUGADORAS EN MASA SIN LÍMITE DE 16
     function agregar30Bots() {
       if (!isAdmin) return mostrarToast("Acceso reservado para Admin", "error");
 
-      const nombresBots = [
+      const nombresBase = [
         "QueenLancelot", "FannyGod", "KaguraQueen", "EsmeraldaX", "MiyaAssassin",
         "LaylaSniper", "GuineverePro", "RubyVamp", "AngelaHeal", "OdetteMagic",
         "LunoxCosmic", "VexanaCurse", "LesleyDead", "WanwanAgile", "BeatrixGun", "KarinaSlayer"
       ];
 
-      mostrarToast("Añadiendo 16 jugadoras únicas...", "info");
+      const cantidadActual = Object.keys(jugadorasCacheObj).length;
+      mostrarToast("Añadiendo +16 jugadoras de prueba...", "info");
 
-      nombresBots.forEach((nombre, index) => {
-        if (!jugadorasCacheObj[nombre]) {
-          db.ref(`${RUTA_TORNEO}/equipos`).push({
-            nombreEquipo: nombre,
-            avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${nombre}`,
-            jugadores: [{ nick: nombre, id: String(10000000 + index), server: String(2000 + (index % 5)), telefono: "999999999" }]
-          });
-        }
+      nombresBase.forEach((nombre, index) => {
+        let aliasUnico = `${nombre}_${cantidadActual + index + 1}`;
+        db.ref(`${RUTA_TORNEO}/equipos`).push({
+          nombreEquipo: aliasUnico,
+          avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${aliasUnico}`,
+          jugadores: [{ nick: nombre, id: String(10000000 + cantidadActual + index), server: String(2000 + (index % 5)), telefono: "999999999" }]
+        });
       });
 
-      setTimeout(() => mostrarToast("¡16 jugadoras listas para el torneo!", "success"), 1200);
+      setTimeout(() => mostrarToast("¡16 jugadoras añadidas con éxito!", "success"), 1000);
     }
 
     function cambiarTab(tab) {
@@ -704,6 +714,16 @@
         : `https://api.dicebear.com/7.x/bottts/svg?seed=${nombreEquipo}`;
     }
 
+    function toggleMostrarCompletados() {
+      mostrarCompletados = !mostrarCompletados;
+      const textBtn = document.getElementById('text-toggle-completados');
+      if (textBtn) {
+        textBtn.innerText = mostrarCompletados ? "Ocultar Completadas" : "Mostrar Completadas";
+      }
+      renderizarBracket();
+    }
+
+    /* RENDERIZADO DE BRACKET CON OCULTACIÓN DE PARTIDOS JUGADOS */
     function renderizarBracket() {
       const matchesContainer = document.getElementById('matches-container');
       const roundsFilter = document.getElementById('rounds-filter-container');
@@ -728,9 +748,18 @@
       }
 
       const partidosRonda = datosBracketServidor[`ronda_${rondaSeleccionada}`] || [];
+      let visiblesCount = 0;
+
       partidosRonda.forEach((p, idx) => {
         let isFinished = p.ganador !== "Pendiente";
         let isPass = p.equipo2 === "PASE DIRECTO 🏆";
+
+        // SI YA TIENE GANADORA Y NO HEMOS ACTIVADO EL BOTÓN DE "MOSTRAR COMPLETADAS", SE OCULTA
+        if (isFinished && !mostrarCompletados) {
+          return;
+        }
+
+        visiblesCount++;
 
         let img1 = getAvatarForTeam(p.equipo1);
         let img2 = getAvatarForTeam(p.equipo2);
@@ -774,6 +803,15 @@
           </div>
         `;
       });
+
+      if (visiblesCount === 0 && partidosRonda.length > 0) {
+        matchesContainer.innerHTML = `
+          <div class="col-span-full py-8 text-center space-y-2">
+            <p class="text-xs text-emerald-400 font-orbitron font-bold">¡Todas las partidas de la Ronda ${rondaSeleccionada} han sido completadas!</p>
+            <p class="text-[11px] text-slate-400">Haz clic en "Mostrar Completadas" arriba si deseas volver a verlas o cambiarlas.</p>
+          </div>
+        `;
+      }
     }
 
     function seleccionarRonda(r) { rondaSeleccionada = r; renderizarBracket(); }
@@ -790,7 +828,7 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO CON LÓGICA DE SEMIFINAL Y FINAL ADAPTADA */
+    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container) return;
@@ -863,11 +901,9 @@
           `;
         };
 
-        // LÓGICA DE DIBUJO ADAPTADA SEGÚN LA RONDA
         let cuerpoGraficoHtml = '';
 
         if (rActivaBloque === 4) {
-          // RONDA 4: GRAN FINAL DE TABLA (1 VS 1 DIRECTO)
           let pFinal = partidosBloqueActual[0] || { equipo1: 'Pendiente', equipo2: 'Pendiente', ganador: 'Pendiente' };
           cuerpoGraficoHtml = `
             <div class="flex flex-col items-center justify-center p-6 bg-femDark-900 border border-amber-400/60 rounded-2xl text-center space-y-4 shadow-inner">
@@ -890,7 +926,6 @@
             </div>
           `;
         } else if (rActivaBloque === 3) {
-          // RONDA 3: SEMIFINAL (1 MATCH EN IZQ Y 1 MATCH EN DER -> SALEN 2 FINALISTAS ÚNICOS)
           let pIzq = ladoIzq[0];
           let pDer = ladoDer[0];
           let ganIzq = pIzq && pIzq.ganador !== 'Pendiente' ? pIzq.ganador : 'Pendiente';
@@ -898,8 +933,6 @@
 
           cuerpoGraficoHtml = `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-              
-              <!-- SEMIFINAL LADO IZQUIERDO -->
               <div class="space-y-3">
                 <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase">◀ SEMIFINAL IZQUIERDA</h5>
                 <div class="flex items-center gap-2">
@@ -915,7 +948,6 @@
                 </div>
               </div>
 
-              <!-- SEMIFINAL LADO DERECHO -->
               <div class="space-y-3">
                 <h5 class="text-[9px] font-orbitron font-bold text-femPurple-400 text-center uppercase">SEMIFINAL DERECHA ▶</h5>
                 <div class="flex items-center gap-2">
@@ -930,11 +962,9 @@
                   <div class="flex-1">${renderMatchCard(pDer, 2)}</div>
                 </div>
               </div>
-
             </div>
           `;
         } else {
-          // RONDA 1 Y RONDA 2: DIBUJO ESTÁNDAR PAREADO (2 CLASIFICADAS POR LADO)
           cuerpoGraficoHtml = `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start relative">
               <div class="space-y-4">
@@ -1025,7 +1055,7 @@
             <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 gap-2">
               <div>
                 <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">TABLA / BLOQUE #${numBloque}</span>
-                <p class="text-[10px] text-slate-400">Esquema de avaces en tiempo real (Ronda ${rActivaBloque})</p>
+                <p class="text-[10px] text-slate-400">Esquema de avances en tiempo real (Ronda ${rActivaBloque})</p>
               </div>
 
               <div class="flex items-center gap-2">
