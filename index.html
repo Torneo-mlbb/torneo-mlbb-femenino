@@ -86,6 +86,22 @@
     .perspective-1000 { perspective: 1000px; }
     .preserve-3d { transform-style: preserve-3d; transition: transform 0.15s ease-out; }
 
+    /* ESTILOS DE CORCHETES Y CONECTORES DEL ÁRBOL */
+    .bracket-connector-left {
+      border-right: 2px solid #ec4899;
+      border-top: 2px solid #ec4899;
+      border-bottom: 2px solid #ec4899;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+    .bracket-connector-right {
+      border-left: 2px solid #ec4899;
+      border-top: 2px solid #ec4899;
+      border-bottom: 2px solid #ec4899;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+    }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #05030a; }
     ::-webkit-scrollbar-thumb { background: #db2777; border-radius: 4px; }
@@ -155,7 +171,7 @@
           </div>
 
           <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-            Torneo de demostración 1v1 sin costo. Árbol de llaves multi-ronda con fotos de perfil y salas de chat protegidas con autenticación por ID.
+            Torneo 1v1 con filtrado de rondas independiente por bloque, corchetes conectores y captura limpia para WhatsApp.
           </p>
 
           <div class="pt-2 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -325,11 +341,11 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO MULTI-RONDA CON AVATARES Y CAPTURA INDIVIDUAL -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO CON FILTRADO DE RONDAS POR BLOQUE Y CORCHETES -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
-          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL DE ENFRENTAMIENTOS DINÁMICO (DESDE R1 HASTA LA FINAL)</h3>
-          <p class="text-xs text-slate-400">Cada bloque se expande automáticamente según el avance de rondas en el torneo. Descarga individual habilitada para WhatsApp.</p>
+          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO POR BLOQUES (CON FILTRO DE RONDA Y CORCHETES)</h3>
+          <p class="text-xs text-slate-400">Selecciona la ronda en cada bloque para alternar entre enfrentamientos activos y clasificadas. Espacio compacto optimizado para captura de pantalla.</p>
         </div>
 
         <div id="arbol-esquematico-container" class="space-y-10">
@@ -359,7 +375,7 @@
         </button>
       </div>
 
-      <!-- VISTA DE AUTENTICACIÓN PROTEGIDA (PIDE ID DE MLBB COMO CLAVE) -->
+      <!-- VISTA DE AUTENTICACIÓN PROTEGIDA -->
       <div id="chat-modal-auth-view" class="p-6 flex-1 flex flex-col items-center justify-center text-center space-y-4">
         <div class="w-16 h-16 rounded-2xl bg-femPink-500/10 border border-femPink-400/40 flex items-center justify-center text-femPink-400 text-2xl mb-1">
           <i class="fa-solid fa-lock-keyhole"></i>
@@ -456,6 +472,9 @@
     let usuarioIdAutenticado = null;
     let activeChatMatchInfo = null;
     let activeChatSubTab = 'general';
+
+    // Almacena la ronda activa de selección para cada bloque del árbol
+    let rondasBloquesCache = {};
 
     document.addEventListener('DOMContentLoaded', () => {
       auth.onAuthStateChanged((user) => {
@@ -742,6 +761,11 @@
 
     function seleccionarRonda(r) { rondaSeleccionada = r; renderizarBracket(); }
 
+    function cambiarRondaBloqueArbol(numBloque, nuevaRonda) {
+      rondasBloquesCache[numBloque] = nuevaRonda;
+      renderizarArbolPorBloques();
+    }
+
     function declararGanadora(ronda, idx, ganadora) {
       db.ref(`${RUTA_TORNEO}/bracket/ronda_${ronda}/${idx}`).update({ ganador: ganadora }, () => {
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
@@ -749,7 +773,7 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL DINÁMICO DESDE RONDA 1 HASTA LA FINAL POR BLOQUES */
+    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO CON BOTONES DE RONDA Y CORCHETES POR BLOQUE */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container || !datosBracketServidor) return;
@@ -767,26 +791,50 @@
       const totalBloques = Math.ceil(partidosRonda1.length / (BLOQUE_TAMANO * 2)) || 1;
 
       for (let b = 0; b < totalBloques; b++) {
-        let inicioIdx = b * (BLOQUE_TAMANO * 2);
-        let partidosBloqueR1 = partidosRonda1.slice(inicioIdx, inicioIdx + (BLOQUE_TAMANO * 2));
-        
-        let mitad = Math.ceil(partidosBloqueR1.length / 2);
-        let ladoIzqR1 = partidosBloqueR1.slice(0, mitad);
-        let ladoDerR1 = partidosBloqueR1.slice(mitad);
+        let numBloque = b + 1;
+        let rActivaBloque = rondasBloquesCache[numBloque] || 1;
+        if (rActivaBloque > totalRondas) rActivaBloque = totalRondas;
 
-        let bloqueId = `bloque-captura-${b+1}`;
+        let partidosRondaSel = datosBracketServidor[`ronda_${rActivaBloque}`] || [];
+        let inicioIdx = b * (BLOQUE_TAMANO * 2);
+        
+        let partidosBloqueActual = partidosRondaSel.slice(Math.floor(inicioIdx / Math.pow(2, rActivaBloque - 1)), Math.floor((inicioIdx + (BLOQUE_TAMANO * 2)) / Math.pow(2, rActivaBloque - 1)));
+        if(partidosBloqueActual.length === 0) partidosBloqueActual = partidosRondaSel;
+
+        let mitad = Math.ceil(partidosBloqueActual.length / 2) || 1;
+        let ladoIzq = partidosBloqueActual.slice(0, mitad);
+        let ladoDer = partidosBloqueActual.slice(mitad);
+
+        let bloqueId = `bloque-captura-${numBloque}`;
+
+        // Generar botones de filtro de ronda dentro de la tarjeta
+        let botonesRondaHtml = '';
+        for (let r = 1; r <= totalRondas; r++) {
+          let btnActive = r === rActivaBloque;
+          botonesRondaHtml += `
+            <button onclick="cambiarRondaBloqueArbol(${numBloque}, ${r})" class="px-2.5 py-1 rounded-lg text-[10px] font-orbitron font-bold transition ${btnActive ? 'bg-femPink-500 text-slate-950 shadow' : 'bg-femDark-900 text-slate-400 hover:text-white'}">
+              Ronda ${r}
+            </button>
+          `;
+        }
 
         let htmlBloque = `
           <div class="glass-panel border border-femPink-500/40 p-5 rounded-3xl space-y-4 shadow-2xl relative">
             
             <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 gap-2">
               <div>
-                <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">BLOQUE DE ENFRENTAMIENTO #${b + 1}</span>
-                <p class="text-[10px] text-slate-400">6 Enfrentamientos Izquierda &bull; 6 Enfrentamientos Derecha &bull; Fotos y Avance</p>
+                <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">BLOQUE DE ENFRENTAMIENTO #${numBloque}</span>
+                <p class="text-[10px] text-slate-400">Selecciona la ronda para alternar las partidas de este bloque</p>
               </div>
-              <button onclick="tomarCapturaBloqueIndividual('${bloqueId}', ${b+1})" class="bg-gradient-to-r from-femPink-500 to-femPurple-600 hover:from-femPink-400 text-slate-950 font-orbitron font-black text-[11px] px-4 py-2 rounded-xl transition shadow-lg cursor-pointer flex items-center gap-2 uppercase">
-                <i class="fa-solid fa-camera text-slate-950"></i> Capturar Bloque #${b+1}
-              </button>
+
+              <div class="flex items-center gap-2">
+                <div class="flex gap-1 bg-femDark-950 p-1 rounded-xl border border-slate-800">
+                  ${botonesRondaHtml}
+                </div>
+                <button onclick="tomarCapturaBloqueIndividual('${bloqueId}', ${numBloque}, ${rActivaBloque})" class="bg-gradient-to-r from-femPink-500 to-femPurple-600 hover:from-femPink-400 text-slate-950 font-orbitron font-black text-[11px] px-3.5 py-2 rounded-xl transition shadow-lg cursor-pointer flex items-center gap-1.5 uppercase shrink-0">
+                  <i class="fa-solid fa-camera text-slate-950"></i> Capturar R${rActivaBloque}
+                </button>
+              </div>
             </div>
 
             <!-- CONTENEDOR ESPECÍFICO QUE SE CAPTURA PARA WHATSAPP -->
@@ -794,23 +842,23 @@
               
               <div class="text-center border-b border-slate-800/60 pb-2 flex justify-between items-center px-2">
                 <span class="font-orbitron font-black text-[10px] text-femPink-400">MINIONS FEMALE</span>
-                <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">CAMINO A LA FINAL &bull; BLOQUE #${b + 1}</h4>
-                <span class="font-orbitron font-black text-[10px] text-femPurple-500">RONDA ACTIVA: #${totalRondas}</span>
+                <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">CAMINO A LA FINAL &bull; BLOQUE #${numBloque} (RONDA ${rActivaBloque})</h4>
+                <span class="font-orbitron font-black text-[10px] text-femPurple-400">FASE ACTIVA</span>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-7 gap-2 items-center relative">
                 
-                <!-- 1. RONDA 1 IZQUIERDA (6 PARTIDAS) -->
-                <div class="md:col-span-2 space-y-2">
-                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ RONDA 1 (IZQ)</h5>
+                <!-- 1. LADO IZQUIERDO: ENFRENTAMIENTOS ACTIVOS -->
+                <div class="md:col-span-2 space-y-3">
+                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ VS RONDA ${rActivaBloque} (IZQ)</h5>
         `;
 
-        ladoIzqR1.forEach((p, i) => {
+        ladoIzq.forEach((p, i) => {
           let img1 = getAvatarForTeam(p.equipo1);
           let img2 = getAvatarForTeam(p.equipo2);
           htmlBloque += `
-            <div class="bg-femDark-900 border border-slate-800 p-1.5 rounded-xl text-[10px] space-y-1 shadow">
-              <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${inicioIdx + i + 1}</span><span class="text-femPink-400">${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : ''}</span></div>
+            <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow relative">
+              <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${i + 1}</span><span class="text-femPink-400">${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : ''}</span></div>
               <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
                 <img src="${img1}" class="w-5 h-5 rounded-full object-cover border border-femPink-400 shrink-0">
                 <span class="truncate">${escapeHTML(p.equipo1)}</span>
@@ -826,89 +874,57 @@
         htmlBloque += `
                 </div>
 
-                <!-- 2. RONDAS INTERMEDIAS IZQUIERDA (R2 / R3 / R4 / R5) -->
-                <div class="hidden md:flex flex-col justify-around h-full py-4 space-y-3">
-                  <h5 class="text-[8px] font-orbitron font-bold text-slate-400 text-center uppercase">CLASIFICADAS</h5>
-        `;
-
-        for(let r=2; r<=totalRondas; r++) {
-          let partidosR = datosBracketServidor[`ronda_${r}`] || [];
-          let matchR = partidosR[Math.floor(b * (partidosR.length / totalBloques))] || { equipo1: "Por Definir", equipo2: "Por Definir" };
-          let imgR1 = getAvatarForTeam(matchR.equipo1);
-          let imgR2 = getAvatarForTeam(matchR.equipo2);
-
-          htmlBloque += `
-            <div class="bg-femDark-900/90 border border-femPink-500/30 p-1.5 rounded-xl text-[9px] space-y-1 shadow">
-              <div class="text-[7px] text-femPink-400 font-orbitron font-bold">RONDA ${r}</div>
-              <div class="flex items-center gap-1 font-bold text-slate-200 truncate">
-                <img src="${imgR1}" class="w-4 h-4 rounded-full object-cover shrink-0">
-                <span class="truncate">${escapeHTML(matchR.equipo1)}</span>
-              </div>
-              <div class="flex items-center gap-1 font-bold text-slate-400 truncate">
-                <img src="${imgR2}" class="w-4 h-4 rounded-full object-cover shrink-0">
-                <span class="truncate">${escapeHTML(matchR.equipo2)}</span>
-              </div>
-            </div>
-          `;
-        }
-
-        let partidosUltima = datosBracketServidor[`ronda_${totalRondas}`] || [];
-        let campeonaActual = partidosUltima.length > 0 && partidosUltima[0].ganador !== 'Pendiente' ? partidosUltima[0].ganador : "En Competencia";
-
-        htmlBloque += `
+                <!-- 2. CORCHETE CONECTOR IZQUIERDA -->
+                <div class="hidden md:flex flex-col justify-center items-center h-full">
+                  <div class="w-full h-3/4 bracket-connector-left my-auto opacity-70"></div>
                 </div>
 
-                <!-- 3. CENTRO / TROFEO O CAMPEONA DEFINITIVA -->
-                <div class="flex flex-col items-center justify-center p-3 bg-femDark-900 border border-femPink-500/40 rounded-2xl text-center space-y-2 shadow-inner">
+                <!-- 3. CENTRO: CLASIFICADAS A SIGUIENTE RONDA / GRAN FINAL -->
+                <div class="flex flex-col items-center justify-center p-3 bg-femDark-900 border border-femPink-500/40 rounded-2xl text-center space-y-3 shadow-inner">
                   <div class="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow animate-pulse">
                     <i class="fa-solid fa-trophy"></i>
                   </div>
                   <div>
-                    <h6 class="font-orbitron font-black text-white text-[10px] uppercase">GRAN FINAL</h6>
-                    <p class="text-[8px] text-amber-300 font-bold mt-0.5">${campeonaActual !== 'En Competencia' ? '🏆 ' + escapeHTML(campeonaActual) : 'Pase a la Gloria'}</p>
-                  </div>
-                </div>
-
-                <!-- 4. RONDAS INTERMEDIAS DERECHA (R2 / R3 / R4 / R5) -->
-                <div class="hidden md:flex flex-col justify-around h-full py-4 space-y-3">
-                  <h5 class="text-[8px] font-orbitron font-bold text-slate-400 text-center uppercase">CLASIFICADAS</h5>
+                    <h6 class="font-orbitron font-black text-white text-[10px] uppercase">${rActivaBloque === totalRondas ? 'CAMPEONA' : 'CLASIFICAN A R' + (rActivaBloque + 1)}</h6>
+                    <div class="mt-2 space-y-1">
         `;
 
-        for(let r=2; r<=totalRondas; r++) {
-          let partidosR = datosBracketServidor[`ronda_${r}`] || [];
-          let matchR = partidosR[Math.floor(b * (partidosR.length / totalBloques)) + 1] || partidosR[0] || { equipo1: "Por Definir", equipo2: "Por Definir" };
-          let imgR1 = getAvatarForTeam(matchR.equipo1);
-          let imgR2 = getAvatarForTeam(matchR.equipo2);
-
-          htmlBloque += `
-            <div class="bg-femDark-900/90 border border-femPink-500/30 p-1.5 rounded-xl text-[9px] space-y-1 shadow">
-              <div class="text-[7px] text-femPink-400 font-orbitron font-bold">RONDA ${r}</div>
-              <div class="flex items-center gap-1 font-bold text-slate-200 truncate">
-                <img src="${imgR1}" class="w-4 h-4 rounded-full object-cover shrink-0">
-                <span class="truncate">${escapeHTML(matchR.equipo1)}</span>
+        let ganadoresBloque = partidosBloqueActual.map(p => p.ganador).filter(g => g !== 'Pendiente');
+        if (ganadoresBloque.length === 0) {
+          htmlBloque += `<p class="text-[9px] text-slate-500 italic">Esperando resultados...</p>`;
+        } else {
+          ganadoresBloque.forEach(g => {
+            let imgG = getAvatarForTeam(g);
+            htmlBloque += `
+              <div class="flex items-center gap-1.5 bg-femDark-950 border border-amber-400/30 px-2 py-1 rounded-lg text-[9px] font-bold text-amber-300 shadow">
+                <img src="${imgG}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                <span class="truncate max-w-[100px]">${escapeHTML(g)}</span>
               </div>
-              <div class="flex items-center gap-1 font-bold text-slate-400 truncate">
-                <img src="${imgR2}" class="w-4 h-4 rounded-full object-cover shrink-0">
-                <span class="truncate">${escapeHTML(matchR.equipo2)}</span>
-              </div>
-            </div>
-          `;
+            `;
+          });
         }
 
         htmlBloque += `
+                    </div>
+                  </div>
                 </div>
 
-                <!-- 5. RONDA 1 DERECHA (6 PARTIDAS) -->
-                <div class="md:col-span-2 space-y-2">
-                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">RONDA 1 (DER) ▶</h5>
+                <!-- 4. CORCHETE CONECTOR DERECHA -->
+                <div class="hidden md:flex flex-col justify-center items-center h-full">
+                  <div class="w-full h-3/4 bracket-connector-right my-auto opacity-70"></div>
+                </div>
+
+                <!-- 5. LADO DERECHO: ENFRENTAMIENTOS ACTIVOS -->
+                <div class="md:col-span-2 space-y-3">
+                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">VS RONDA ${rActivaBloque} (DER) ▶</h5>
         `;
 
-        ladoDerR1.forEach((p, i) => {
+        ladoDer.forEach((p, i) => {
           let img1 = getAvatarForTeam(p.equipo1);
           let img2 = getAvatarForTeam(p.equipo2);
           htmlBloque += `
-            <div class="bg-femDark-900 border border-slate-800 p-1.5 rounded-xl text-[10px] space-y-1 shadow">
-              <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${inicioIdx + mitad + i + 1}</span><span class="text-femPink-400">${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : ''}</span></div>
+            <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow relative">
+              <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${mitad + i + 1}</span><span class="text-femPink-400">${p.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p.ganador) : ''}</span></div>
               <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
                 <img src="${img1}" class="w-5 h-5 rounded-full object-cover border border-femPink-400 shrink-0">
                 <span class="truncate">${escapeHTML(p.equipo1)}</span>
@@ -934,21 +950,21 @@
     }
 
     /* DESCARGA INDIVIDUAL DE CADA BLOQUE PARA ENVIAR POR WHATSAPP */
-    function tomarCapturaBloqueIndividual(containerId, numBloque) {
+    function tomarCapturaBloqueIndividual(containerId, numBloque, numRonda) {
       const area = document.getElementById(containerId);
       if(!area) return;
 
-      mostrarToast(`Generando imagen limpia del Bloque #${numBloque}...`, "info");
+      mostrarToast(`Generando imagen limpia del Bloque #${numBloque} - Ronda ${numRonda}...`, "info");
 
       html2canvas(area, {
         backgroundColor: '#05030a',
         scale: 2
       }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `Bloque-${numBloque}-TorneoFemenino.png`;
+        link.download = `Bloque-${numBloque}-Ronda-${numRonda}-TorneoFemenino.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-        mostrarToast(`¡Bloque #${numBloque} capturado y descargado!`, "success");
+        mostrarToast(`¡Bloque #${numBloque} (R${numRonda}) descargado!`, "success");
       });
     }
 
