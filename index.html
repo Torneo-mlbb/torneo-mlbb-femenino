@@ -26,34 +26,15 @@
         extend: {
           colors: {
             femPink: {
-              100: '#fce7f3',
-              200: '#fbcfe8',
-              300: '#f472b6',
-              400: '#f472b6',
-              500: '#ec4899',
-              600: '#db2777',
-              700: '#be185d',
-              800: '#9d174d',
-              900: '#831843',
-              950: '#500724'
+              100: '#fce7f3', 200: '#fbcfe8', 300: '#f472b6', 400: '#f472b6',
+              500: '#ec4899', 600: '#db2777', 700: '#be185d', 800: '#9d174d', 900: '#831843', 950: '#500724'
             },
             femPurple: {
-              100: '#f3e8ff',
-              200: '#e9d5ff',
-              300: '#d8b4fe',
-              400: '#c084fc',
-              500: '#8b5cf6',
-              600: '#7c3aed',
-              700: '#6d28d9',
-              800: '#230f47',
-              900: '#14092a',
-              950: '#0a0518'
+              100: '#f3e8ff', 200: '#e9d5ff', 300: '#d8b4fe', 400: '#c084fc',
+              500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9', 800: '#230f47', 900: '#14092a', 950: '#0a0518'
             },
             femDark: {
-              700: '#25173e',
-              800: '#160d27',
-              900: '#0c0716',
-              950: '#05030a'
+              700: '#25173e', 800: '#160d27', 900: '#0c0716', 950: '#05030a'
             }
           },
           fontFamily: {
@@ -110,8 +91,16 @@
       background-size: 100% 4px;
     }
 
-    .perspective-1000 { perspective: 1000px; }
-    .preserve-3d { transform-style: preserve-3d; transition: transform 0.15s ease-out; }
+    /* EFECTO DE LEVITACIÓN / FLOTACIÓN DEL PERSONAJE 3D */
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(1.5deg); }
+    }
+
+    .hero-character-anim {
+      animation: heroFloat 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.5));
+    }
 
     /* ESTILOS DE CORCHETES EXACTOS A LA PIZARRA */
     .bracket-pair-left {
@@ -196,60 +185,49 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow relative z-10">
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
-    <!-- HERO SHOWCASE SECTION -->
-    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[660px] flex flex-col justify-center items-center p-6 sm:p-10 md:p-14 transition-all duration-500">
+    <!-- NUEVO HERO SHOWCASE CON PERSONAJE MLBB 3D Y BOTÓN DEBAJO -->
+    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[660px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
       <div class="absolute inset-0 bg-gradient-to-br from-femDark-950 via-femPurple-900/50 to-femDark-950 z-0"></div>
       <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-30"></div>
       
-      <div class="relative z-10 w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div class="relative z-10 w-full max-w-3xl text-center space-y-6 flex flex-col items-center">
         
-        <div class="lg:col-span-7 text-center lg:text-left space-y-6">
-          <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-femPink-500/20 via-femPurple-500/20 to-femPink-500/20 border border-femPink-400/50 px-4 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.3)]">
-            <span class="w-2.5 h-2.5 rounded-full bg-femPink-400 animate-ping"></span>
-            <span class="text-femPink-300 text-xs font-orbitron font-bold uppercase tracking-widest">INSCRIPCIÓN LIBRE Y GRATUITA</span>
-          </div>
-
-          <div class="space-y-2">
-            <h2 id="scramble-title" class="text-4xl sm:text-6xl lg:text-7xl font-orbitron font-black text-white tracking-tight uppercase leading-none drop-shadow-[0_10px_30px_rgba(236,72,153,0.5)]">
-              TORNEO FEMENINO
-            </h2>
-            <p class="text-xs sm:text-sm font-orbitron font-bold text-femPink-400 glitch-subtext uppercase">
-              MOBILE LEGENDS: BANG BANG &bull; EDITION 1VS1
-            </p>
-          </div>
-
-          <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-            Torneo de demostración 1v1 sin costo. Árbol esquemático con corchetes pareados estilo pizarra, avatares dinámicos y salas de chat protegidas.
-          </p>
-
-          <div class="pt-2 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <button onclick="seleccionarModalidad('1v1')" class="group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-femPink-500 via-femPink-600 to-femPurple-600 font-orbitron font-black text-slate-950 uppercase tracking-wider text-sm rounded-xl hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(236,72,153,0.5)] cursor-pointer overflow-hidden">
-              <span class="relative z-10 flex items-center gap-3">
-                REGISTRARME GRATIS <i class="fa-solid fa-bolt text-slate-950 animate-pulse"></i>
-              </span>
-            </button>
-          </div>
+        <!-- INSIGNIA DE TORNEO -->
+        <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-femPink-500/20 via-femPurple-500/20 to-femPink-500/20 border border-femPink-400/50 px-5 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.3)]">
+          <span class="w-2.5 h-2.5 rounded-full bg-femPink-400 animate-ping"></span>
+          <span class="text-femPink-300 text-xs font-orbitron font-bold uppercase tracking-widest">INSCRIPCIÓN LIBRE Y GRATUITA</span>
         </div>
 
-        <div class="lg:col-span-5 flex justify-center perspective-1000">
-          <div id="hero-3d-card" class="preserve-3d w-full max-w-sm glass-panel rounded-3xl p-6 shadow-2xl relative border border-femPink-500/40 group cursor-pointer" onclick="seleccionarModalidad('1v1')">
-            <div class="relative w-full h-64 rounded-2xl bg-gradient-to-tr from-femDark-950 via-femPurple-900 to-femDark-900 border border-femPink-500/30 overflow-hidden flex flex-col items-center justify-center shadow-inner">
-              <div class="relative z-20 w-28 h-28 rounded-2xl bg-femPink-500/20 border-2 border-femPink-400/60 flex items-center justify-center text-femPink-400 text-5xl shadow-[0_0_40px_rgba(236,72,153,0.5)] group-hover:scale-110 group-hover:rotate-6 transition duration-500">
-                <i class="fa-solid fa-trophy"></i>
-              </div>
-              <span class="absolute top-3 right-3 z-20 text-[10px] font-orbitron font-bold bg-femPink-500 text-slate-950 px-3 py-1 rounded-full uppercase shadow">TORNEO GRATUITO</span>
-            </div>
+        <!-- TÍTULOS -->
+        <div class="space-y-2">
+          <h2 id="scramble-title" class="text-4xl sm:text-6xl lg:text-7xl font-orbitron font-black text-white tracking-tight uppercase leading-none drop-shadow-[0_10px_30px_rgba(236,72,153,0.5)]">
+            TORNEO FEMENINO
+          </h2>
+          <p class="text-xs sm:text-sm font-orbitron font-bold text-femPink-400 glitch-subtext uppercase">
+            MOBILE LEGENDS: BANG BANG &bull; EDITION 1VS1
+          </p>
+        </div>
 
-            <div class="mt-5 space-y-3 text-left">
-              <div class="flex justify-between items-center">
-                <h3 class="font-orbitron font-black text-lg text-white uppercase group-hover:text-femPink-300 transition">FORMATO DEMO</h3>
-                <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">ADMIN ÚNICO</span>
-              </div>
-              <p class="text-xs text-slate-400 leading-relaxed">
-                Administración centralizada y registro directo habilitado para todas las competidoras.
-              </p>
-            </div>
-          </div>
+        <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto font-medium leading-relaxed">
+          Demuestra tu nivel competitivo. Registra tus datos de MLBB, accede a tu sala de chat privada y compite en el árbol esquemático oficial.
+        </p>
+
+        <!-- PERSONAJE MODELO 3D DE MLBB -->
+        <div class="relative my-2 w-full max-w-xs sm:max-w-sm flex items-center justify-center">
+          <div class="absolute inset-0 bg-femPink-500/20 rounded-full blur-3xl -z-10 transform scale-110"></div>
+          <img src="https://akmweb.gamedev.moonton.com/hero/hero_png/layla.png" 
+               alt="MLBB Hero Render 3D" 
+               class="hero-character-anim max-h-72 sm:max-h-80 object-contain cursor-pointer transition-transform duration-300 hover:scale-105"
+               onclick="seleccionarModalidad('1v1')">
+        </div>
+
+        <!-- BOTÓN ÚNICO DE REGISTRO ABAJO DEL PERSONAJE -->
+        <div class="w-full max-w-md pt-2">
+          <button onclick="seleccionarModalidad('1v1')" class="w-full group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-femPink-500 via-femPink-600 to-femPurple-600 font-orbitron font-black text-slate-950 uppercase tracking-wider text-sm sm:text-base rounded-2xl hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(236,72,153,0.6)] cursor-pointer overflow-hidden border border-femPink-300/40">
+            <span class="relative z-10 flex items-center gap-3">
+              ✨ REGISTRARME GRATIS <i class="fa-solid fa-bolt text-slate-950 animate-pulse"></i>
+            </span>
+          </button>
         </div>
 
       </div>
@@ -529,23 +507,8 @@
         actualizarPermisosAdmin();
       });
 
-      setup3DTilt();
       scrambleTextEffect();
     });
-
-    function setup3DTilt() {
-      const card = document.getElementById('hero-3d-card');
-      if (!card) return;
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        card.style.transform = `rotateY(${x / 15}deg) rotateX(${-y / 15}deg)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'rotateY(0deg) rotateX(0deg)';
-      });
-    }
 
     function scrambleTextEffect() {
       const title = document.getElementById('scramble-title');
@@ -834,7 +797,7 @@
         return;
       }
 
-      const BLOQUE_TAMANO = 4; // 4 partidos a la izq y 4 a la der por bloque (Estructura de la pizarra)
+      const BLOQUE_TAMANO = 4;
       const totalBloques = Math.ceil(partidosRonda1.length / (BLOQUE_TAMANO * 2)) || 1;
 
       for (let b = 0; b < totalBloques; b++) {
@@ -856,7 +819,6 @@
 
         let bloqueId = `bloque-captura-${numBloque}`;
 
-        // Botones de ronda
         let botonesRondaHtml = '';
         for (let r = 1; r <= totalRondas; r++) {
           let btnActive = r === rActivaBloque;
@@ -897,7 +859,7 @@
 
               <div class="grid grid-cols-1 md:grid-cols-7 gap-2 items-center relative">
                 
-                <!-- 1. LADO IZQUIERDO: COLUMNA DE ENFRENTAMIENTOS ACTIVOS PAREADOS -->
+                <!-- LADO IZQUIERDO: COLUMNA DE ENFRENTAMIENTOS ACTIVOS PAREADOS -->
                 <div class="md:col-span-2 space-y-6">
                   <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ ENFRENTAMIENTOS R${rActivaBloque}</h5>
         `;
@@ -906,11 +868,8 @@
           let p1 = ladoIzq[i];
           let p2 = ladoIzq[i + 1];
 
-          let matchSiguiente = partidosSiguienteRonda[Math.floor(i / 2)] || { equipo1: p1 ? p1.ganador : "Pendiente", equipo2: p2 ? p2.ganador : "Pendiente" };
-
           htmlBloque += `
             <div class="flex items-center gap-2">
-              <!-- PAREJA DE MATCHES -->
               <div class="flex-1 space-y-2">
                 ${p1 ? `
                   <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow">
@@ -941,7 +900,6 @@
                 ` : ''}
               </div>
 
-              <!-- CORCHETE QUE CONECTA ESTA PAREJA -->
               <div class="w-4 h-24 bracket-pair-left shrink-0 hidden md:block"></div>
             </div>
           `;
@@ -950,7 +908,7 @@
         htmlBloque += `
                 </div>
 
-                <!-- 2. CENTRO: MATCH RESULTANTE EN SIGUIENTE RONDA (PROPORCIÓN 2:1) -->
+                <!-- CENTRO: MATCH RESULTANTE EN SIGUIENTE RONDA (PROPORCIÓN 2:1) -->
                 <div class="md:col-span-3 flex flex-col items-center justify-center p-4 bg-femDark-900 border border-femPink-500/40 rounded-2xl text-center space-y-3 shadow-inner">
                   <div class="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow animate-pulse">
                     <i class="fa-solid fa-trophy"></i>
@@ -981,7 +939,7 @@
                   </div>
                 </div>
 
-                <!-- 3. LADO DERECHO: COLUMNA DE ENFRENTAMIENTOS ACTIVOS PAREADOS -->
+                <!-- LADO DERECHO: COLUMNA DE ENFRENTAMIENTOS ACTIVOS PAREADOS -->
                 <div class="md:col-span-2 space-y-6">
                   <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">ENFRENTAMIENTOS R${rActivaBloque} (DER) ▶</h5>
         `;
@@ -992,10 +950,8 @@
 
           htmlBloque += `
             <div class="flex items-center gap-2">
-              <!-- CORCHETE QUE CONECTA ESTA PAREJA -->
               <div class="w-4 h-24 bracket-pair-right shrink-0 hidden md:block"></div>
 
-              <!-- PAREJA DE MATCHES -->
               <div class="flex-1 space-y-2">
                 ${p1 ? `
                   <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow">
