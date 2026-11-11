@@ -6,6 +6,7 @@
   <title>MLBB 1v1 Female Championship &bull; Official eSports Edition</title>
   
   <!-- Tailwind CSS & Fonts -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- O Tailwind CDN estándar -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
   
@@ -75,27 +76,7 @@
     .glass-card-hover:hover {
       border-color: rgba(236, 72, 153, 0.6);
       box-shadow: 0 10px 40px -10px rgba(236, 72, 153, 0.45), 0 0 20px rgba(192, 132, 252, 0.3);
-      transform: translateY(-6px) scale(1.02);
-    }
-
-    /* 3D Hero Role Cards Effect */
-    .role-card-3d {
-      perspective: 1000px;
-      transition: all 0.4s ease;
-    }
-    .role-card-inner {
-      transition: transform 0.5s ease;
-      transform-style: preserve-3d;
-    }
-    .role-card-3d:hover .role-card-inner {
-      transform: translateY(-8px) rotateX(4deg) rotateY(-4deg);
-    }
-    .hero-render-img {
-      filter: drop-shadow(0 15px 25px rgba(236, 72, 153, 0.4));
-      transition: transform 0.5s ease;
-    }
-    .role-card-3d:hover .hero-render-img {
-      transform: scale(1.1) translateY(-6px);
+      transform: translateY(-4px) scale(1.01);
     }
 
     .scanline-bg {
@@ -169,14 +150,11 @@
   </header>
 
   <!-- MAIN CONTAINER -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow relative z-10 space-y-12">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow relative z-10">
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
-    <!-- =================================================================== -->
     <!-- 1. HERO SHOWCASE SECTION -->
-    <!-- =================================================================== -->
     <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[660px] flex flex-col justify-center items-center p-6 sm:p-10 md:p-14 transition-all duration-500">
-      
       <div class="absolute inset-0 bg-gradient-to-br from-femDark-950 via-femPurple-900/50 to-femDark-950 z-0"></div>
       <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-30"></div>
       
@@ -243,20 +221,16 @@
               <i class="fa-brands fa-tiktok text-femPink-400 text-base"></i> Transmisión LIVE
             </button>
           </div>
-
         </div>
 
         <div class="lg:col-span-5 flex justify-center perspective-1000">
           <div id="hero-3d-card" class="preserve-3d w-full max-w-sm glass-panel rounded-3xl p-6 shadow-2xl relative border border-femPink-500/40 group cursor-pointer" onclick="seleccionarModalidad('1v1')">
             <div class="shine-effect"></div>
-
             <div class="relative w-full h-64 rounded-2xl bg-gradient-to-tr from-femDark-950 via-femPurple-900 to-femDark-900 border border-femPink-500/30 overflow-hidden flex flex-col items-center justify-center shadow-inner">
               <div class="absolute inset-0 bg-gradient-to-t from-femDark-950 via-transparent to-transparent z-10"></div>
-              
               <div class="relative z-20 w-28 h-28 rounded-2xl bg-femPink-500/20 border-2 border-femPink-400/60 flex items-center justify-center text-femPink-400 text-5xl shadow-[0_0_40px_rgba(236,72,153,0.5)] group-hover:scale-110 group-hover:rotate-6 transition duration-500">
                 <i class="fa-solid fa-trophy"></i>
               </div>
-
               <span class="absolute top-3 right-3 z-20 text-[10px] font-orbitron font-bold bg-femPink-500 text-slate-950 px-3 py-1 rounded-full uppercase shadow">MODO 1v1</span>
             </div>
 
@@ -268,7 +242,6 @@
               <p class="text-xs text-slate-400 leading-relaxed">
                 Mapas de duelo directo 1v1. Eliminación sencilla con avance en tiempo real a rondas finales.
               </p>
-              
               <div class="pt-2 flex items-center justify-between border-t border-slate-800/80 text-xs text-slate-300">
                 <span><i class="fa-solid fa-shield-halved text-femPink-400 mr-1"></i> Inscripción: <b>Gratis</b></span>
                 <span class="text-femPink-400 font-bold uppercase group-hover:translate-x-1 transition flex items-center gap-1">
@@ -276,143 +249,17 @@
                 </span>
               </div>
             </div>
-
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- =================================================================== -->
-    <!-- NUEVA SECCIÓN: MODELOS Y ROLES 3D ESPORTS -->
-    <!-- =================================================================== -->
-    <section id="roles-3d-showcase" class="space-y-6">
-      <div class="text-center space-y-2">
-        <h3 class="font-orbitron font-black text-2xl md:text-3xl text-white uppercase tracking-wider flex items-center justify-center gap-3">
-          <i class="fa-solid fa-shield-cat text-femPink-400"></i> ROLES Y HÉROES DESTACADOS MLBB
-        </h3>
-        <p class="text-xs md:text-sm text-slate-400 max-w-2xl mx-auto">
-          Demuestra tu dominio en cada línea del mapa. Diseños con profundidad 3D para cada especialidad de combate.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-        
-        <!-- ROL 1: EXP LANE (Chou / Benedetta) -->
-        <div class="role-card-3d group cursor-pointer" onclick="seleccionarModalidad('1v1')">
-          <div class="role-card-inner glass-panel border border-femPink-500/30 rounded-3xl p-4 text-center relative overflow-hidden h-full flex flex-col justify-between">
-            <div class="absolute inset-0 bg-gradient-to-b from-femPink-500/10 via-transparent to-femDark-950/90"></div>
-            
-            <div class="relative z-10">
-              <span class="text-[9px] font-orbitron font-bold text-femPink-300 bg-femPink-500/20 border border-femPink-400/40 px-3 py-1 rounded-full uppercase tracking-wider">EXP LANE</span>
-              <h4 class="font-orbitron font-black text-white text-base mt-2">COMBATIENTE</h4>
-            </div>
-
-            <div class="relative z-10 my-4 flex justify-center items-center h-44">
-              <img src="https://moba-v2.cdn.moonton.com/hero/hero_head_108.png" alt="EXP Lane Hero" class="hero-render-img w-36 h-36 object-contain rounded-2xl border-2 border-femPink-500/40 bg-femDark-950 p-1">
-            </div>
-
-            <div class="relative z-10 space-y-1">
-              <p class="text-[11px] text-slate-300 font-semibold">Duelos 1v1 & Control</p>
-              <span class="text-[10px] text-femPink-400 font-bold block">Dominio de Línea</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ROL 2: JUNGLA (Ling / Fanny) -->
-        <div class="role-card-3d group cursor-pointer" onclick="seleccionarModalidad('1v1')">
-          <div class="role-card-inner glass-panel border border-purple-500/30 rounded-3xl p-4 text-center relative overflow-hidden h-full flex flex-col justify-between">
-            <div class="absolute inset-0 bg-gradient-to-b from-purple-500/10 via-transparent to-femDark-950/90"></div>
-            
-            <div class="relative z-10">
-              <span class="text-[9px] font-orbitron font-bold text-purple-300 bg-purple-500/20 border border-purple-400/40 px-3 py-1 rounded-full uppercase tracking-wider">JUNGLA</span>
-              <h4 class="font-orbitron font-black text-white text-base mt-2">ASESINO</h4>
-            </div>
-
-            <div class="relative z-10 my-4 flex justify-center items-center h-44">
-              <img src="https://moba-v2.cdn.moonton.com/hero/hero_head_84.png" alt="Jungler Hero" class="hero-render-img w-36 h-36 object-contain rounded-2xl border-2 border-purple-500/40 bg-femDark-950 p-1">
-            </div>
-
-            <div class="relative z-10 space-y-1">
-              <p class="text-[11px] text-slate-300 font-semibold">Velocidad & Ejecución</p>
-              <span class="text-[10px] text-purple-400 font-bold block">Emboscada Rápida</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ROL 3: MID LANE (Kagura / Lunox) -->
-        <div class="role-card-3d group cursor-pointer" onclick="seleccionarModalidad('1v1')">
-          <div class="role-card-inner glass-panel border border-indigo-500/30 rounded-3xl p-4 text-center relative overflow-hidden h-full flex flex-col justify-between">
-            <div class="absolute inset-0 bg-gradient-to-b from-indigo-500/10 via-transparent to-femDark-950/90"></div>
-            
-            <div class="relative z-10">
-              <span class="text-[9px] font-orbitron font-bold text-indigo-300 bg-indigo-500/20 border border-indigo-400/40 px-3 py-1 rounded-full uppercase tracking-wider">MID LANE</span>
-              <h4 class="font-orbitron font-black text-white text-base mt-2">MAGO</h4>
-            </div>
-
-            <div class="relative z-10 my-4 flex justify-center items-center h-44">
-              <img src="https://moba-v2.cdn.moonton.com/hero/hero_head_34.png" alt="Mid Lane Hero" class="hero-render-img w-36 h-36 object-contain rounded-2xl border-2 border-indigo-500/40 bg-femDark-950 p-1">
-            </div>
-
-            <div class="relative z-10 space-y-1">
-              <p class="text-[11px] text-slate-300 font-semibold">Daño Mágico Explosivo</p>
-              <span class="text-[10px] text-indigo-400 font-bold block">Rotación Estratégica</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ROL 4: ORO (Beatrix / Brody) -->
-        <div class="role-card-3d group cursor-pointer" onclick="seleccionarModalidad('1v1')">
-          <div class="role-card-inner glass-panel border border-amber-500/30 rounded-3xl p-4 text-center relative overflow-hidden h-full flex flex-col justify-between">
-            <div class="absolute inset-0 bg-gradient-to-b from-amber-500/10 via-transparent to-femDark-950/90"></div>
-            
-            <div class="relative z-10">
-              <span class="text-[9px] font-orbitron font-bold text-amber-300 bg-amber-500/20 border border-amber-400/40 px-3 py-1 rounded-full uppercase tracking-wider">LÍNEA DE ORO</span>
-              <h4 class="font-orbitron font-black text-white text-base mt-2">TIRADOR</h4>
-            </div>
-
-            <div class="relative z-10 my-4 flex justify-center items-center h-44">
-              <img src="https://moba-v2.cdn.moonton.com/hero/hero_head_105.png" alt="Gold Lane Hero" class="hero-render-img w-36 h-36 object-contain rounded-2xl border-2 border-amber-500/40 bg-femDark-950 p-1">
-            </div>
-
-            <div class="relative z-10 space-y-1">
-              <p class="text-[11px] text-slate-300 font-semibold">Daño Continuo en Rango</p>
-              <span class="text-[10px] text-amber-400 font-bold block">Ataque Físico</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ROL 5: TANK / ROAM (Tigreal / Angela) -->
-        <div class="role-card-3d group cursor-pointer" onclick="seleccionarModalidad('1v1')">
-          <div class="role-card-inner glass-panel border border-emerald-500/30 rounded-3xl p-4 text-center relative overflow-hidden h-full flex flex-col justify-between">
-            <div class="absolute inset-0 bg-gradient-to-b from-emerald-500/10 via-transparent to-femDark-950/90"></div>
-            
-            <div class="relative z-10">
-              <span class="text-[9px] font-orbitron font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-400/40 px-3 py-1 rounded-full uppercase tracking-wider">ROAM / TANK</span>
-              <h4 class="font-orbitron font-black text-white text-base mt-2">TANQUE / APOYO</h4>
-            </div>
-
-            <div class="relative z-10 my-4 flex justify-center items-center h-44">
-              <img src="https://moba-v2.cdn.moonton.com/hero/hero_head_6.png" alt="Tank Hero" class="hero-render-img w-36 h-36 object-contain rounded-2xl border-2 border-emerald-500/40 bg-femDark-950 p-1">
-            </div>
-
-            <div class="relative z-10 space-y-1">
-              <p class="text-[11px] text-slate-300 font-semibold">Resistencia & Iniciación</p>
-              <span class="text-[10px] text-emerald-400 font-bold block">Protección Total</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 2. MAIN TOURNAMENT APP CONTAINER (TABS & CONTENT) -->
-    <!-- =================================================================== -->
+    <!-- 2. MAIN TOURNAMENT APP CONTAINER -->
     <div id="tournament-app-container" class="hidden space-y-8 transition-all duration-500">
       
       <!-- SUPER ADMIN CONTROL PANEL -->
-      <section id="super-admin-panel" class="hidden glass-panel border border-femPink-500/60 rounded-3xl p-6 shadow-2xl space-y-5 animate-fade-in">
+      <section id="super-admin-panel" class="hidden glass-panel border border-femPink-500/60 rounded-3xl p-6 shadow-2xl space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-femPink-500/30 pb-4">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-femPink-500/20 border border-femPink-400 flex items-center justify-center text-femPink-400 font-bold">
@@ -428,7 +275,7 @@
 
         <div class="flex flex-wrap gap-3">
           <button onclick="iniciarSorteoMatematico()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-calculator"></i> Sortear y Generar Brackets
+            <i class="fa-solid fa-calculator"></i> Sortear y Generar Brackets Divididos
           </button>
           <button onclick="reiniciarTorneo()" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 text-xs font-orbitron font-bold py-3 px-5 rounded-xl transition flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-rotate-right"></i> Reiniciar Torneo Completo
@@ -447,6 +294,9 @@
         <button id="tab-btn-bracket" onclick="cambiarTab('bracket')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
           <i class="fa-solid fa-sitemap"></i> Partidas & Bracket
         </button>
+        <button id="tab-btn-arbol" onclick="cambiarTab('arbol')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
+          <i class="fa-solid fa-network-wired"></i> Árbol Esquemático
+        </button>
         <button id="tab-btn-chat" onclick="cambiarTab('chat')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
           <i class="fa-solid fa-comments"></i> Chat en Vivo
         </button>
@@ -458,20 +308,26 @@
         </button>
       </div>
 
-      <!-- TAB 1: FORMULARIO DE INSCRIPCIÓN DIRECTA -->
+      <!-- TAB 1: FORMULARIO DE INSCRIPCIÓN DIRECTA (CON AVATAR) -->
       <div id="tab-content-registro" class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl transition-all">
         <div class="max-w-2xl space-y-6">
           <div class="border-b border-slate-800 pb-4">
             <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase tracking-wide flex items-center gap-2">
               <i class="fa-solid fa-user-plus text-femPink-400"></i> Registro de Jugadora — 1v1 Femenino
             </h3>
-            <p class="text-xs text-slate-400 mt-1">Completa tus datos exactos de Mobile Legends para asignarte en los enfrentamientos en vivo.</p>
+            <p class="text-xs text-slate-400 mt-1">Completa tus datos exactos de Mobile Legends y añade tu imagen o avatar de perfil.</p>
           </div>
 
           <div class="space-y-4">
             <div>
               <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Nombre o Alias de Competidora:</label>
               <input type="text" id="team-name" placeholder="Ej: QueenLancelot" class="w-full bg-femDark-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-femPink-500 transition shadow-inner">
+            </div>
+
+            <!-- Campo Avatar / Imagen -->
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Avatar / Imagen de la Jugadora:</label>
+              <input type="file" id="cap-avatar-file" accept="image/*" class="w-full bg-femDark-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-slate-300 file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-femPink-500 file:text-slate-950 hover:file:bg-femPink-400 cursor-pointer">
             </div>
 
             <div class="bg-femDark-950/80 p-4 rounded-2xl border border-slate-800 space-y-3">
@@ -483,7 +339,7 @@
                 <input type="text" id="cap-id" placeholder="ID de MLBB (Ej: 12345678)" class="bg-femDark-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-femPink-500">
                 <input type="text" id="cap-server" placeholder="Servidor (Ej: 2001)" class="bg-femDark-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-femPink-500">
               </div>
-              <input type="tel" id="cap-phone" placeholder="WhatsApp de Contacto (Para coordinar sala)" class="w-full bg-femDark-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-femPink-500">
+              <input type="tel" id="cap-phone" placeholder="WhatsApp de Contacto" class="w-full bg-femDark-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-femPink-500">
             </div>
 
             <button onclick="enviarInscripcionDirecta()" class="w-full bg-gradient-to-r from-femPink-500 to-femPurple-600 hover:from-femPink-400 text-slate-950 font-orbitron font-black text-xs py-4 rounded-2xl transition-all shadow-lg shadow-femPink-500/20 cursor-pointer uppercase tracking-wider">
@@ -518,7 +374,22 @@
         </div>
       </div>
 
-      <!-- TAB 4: CHAT EN VIVO -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO DIVIDIDO (IZQUIERDA Y DERECHA) -->
+      <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+        <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO &bull; CAMINO A LA FINAL</h3>
+            <p class="text-xs text-slate-400">Diseño optimizado en dos lados (Izquierda y Derecha) con convergencia al centro.</p>
+          </div>
+          <span class="text-[10px] bg-femPink-500/20 text-femPink-300 border border-femPink-500/30 px-3 py-1 rounded-full font-bold">Listas para captura de WhatsApp</span>
+        </div>
+
+        <div id="arbol-esquematico-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center bg-femDark-950 p-6 rounded-2xl border border-slate-800 min-h-[450px]">
+          <p class="text-xs text-slate-500 italic text-center col-span-full">Genera los enfrentamientos desde el panel de administración para ver el árbol dividido.</p>
+        </div>
+      </div>
+
+      <!-- TAB 5: CHAT EN VIVO -->
       <div id="tab-content-chat" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-5">
         <div class="flex items-center justify-between border-b border-slate-800 pb-4">
           <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase flex items-center gap-2">
@@ -540,7 +411,7 @@
         </div>
       </div>
 
-      <!-- TAB 5: SALÓN DE LA FAMA -->
+      <!-- TAB 6: SALÓN DE LA FAMA -->
       <div id="tab-content-hall" class="hidden glass-panel rounded-3xl p-6 md:p-10 shadow-2xl text-center space-y-8">
         <div>
           <h3 class="text-xl font-orbitron font-black text-white uppercase tracking-wider flex items-center justify-center gap-2">
@@ -579,7 +450,7 @@
         </div>
       </div>
 
-      <!-- TAB 6: STREAMING TIKTOK -->
+      <!-- TAB 7: STREAMING TIKTOK -->
       <div id="tab-content-stream" class="hidden glass-panel rounded-3xl p-6 md:p-10 shadow-2xl text-center space-y-6">
         <div class="border-b border-slate-800 pb-4">
           <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase flex items-center justify-center gap-2">
@@ -612,7 +483,7 @@
       <button onclick="cerrarPlayerCard()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
       
       <div id="card-printable-area" class="p-6 bg-gradient-to-b from-femDark-900 to-femDark-950 rounded-2xl border border-femPink-500/40 space-y-4 shadow-2xl">
-        <div class="w-20 h-20 mx-auto rounded-2xl bg-femPink-500/20 border border-femPink-400 flex items-center justify-center text-femPink-400 text-4xl shadow-lg">
+        <div id="card-avatar-box" class="w-20 h-20 mx-auto rounded-2xl bg-femPink-500/20 border border-femPink-400 flex items-center justify-center text-femPink-400 text-4xl shadow-lg overflow-hidden">
           <i class="fa-solid fa-user-ninja"></i>
         </div>
         <div>
@@ -740,7 +611,6 @@
 
     function seleccionarModalidad(modo) {
       document.getElementById('mode-selector-section').classList.add('hidden');
-      document.getElementById('roles-3d-showcase').classList.add('hidden');
       document.getElementById('tournament-app-container').classList.remove('hidden');
       document.getElementById('back-menu-btn').classList.remove('hidden');
       sincronizarDatosFirebase();
@@ -748,44 +618,59 @@
 
     function volverMenu() {
       document.getElementById('mode-selector-section').classList.remove('hidden');
-      document.getElementById('roles-3d-showcase').classList.remove('hidden');
       document.getElementById('tournament-app-container').classList.add('hidden');
       document.getElementById('back-menu-btn').classList.add('hidden');
     }
 
+    // Inscripción Directa con procesamiento de Avatar Base64
     function enviarInscripcionDirecta() {
       const nombreEquipo = document.getElementById('team-name').value.trim();
       const capNick = document.getElementById('cap-nick').value.trim();
       const capId = document.getElementById('cap-id').value.trim();
       const capServer = document.getElementById('cap-server').value.trim();
       const capPhone = document.getElementById('cap-phone').value.trim();
+      const avatarInput = document.getElementById('cap-avatar-file');
 
       if (!nombreEquipo || !capNick || !capId || !capServer || !capPhone) {
         return mostrarToast("Por favor completa todos los campos del formulario", "warning");
       }
 
-      const jugadoraData = {
-        nombreEquipo,
-        jugadores: [{ nick: capNick, id: capId, server: capServer, telefono: capPhone }]
+      const guardarEnFirebase = (avatarBase64 = "") => {
+        const jugadoraData = {
+          nombreEquipo,
+          avatar: avatarBase64,
+          jugadores: [{ nick: capNick, id: capId, server: capServer, telefono: capPhone }]
+        };
+
+        db.ref(`torneos/1v1_femenino/equipos`).push(jugadoraData, (error) => {
+          if (!error) {
+            mostrarToast("¡Inscripción registrada con éxito!", "success");
+            document.getElementById('team-name').value = '';
+            document.getElementById('cap-nick').value = '';
+            document.getElementById('cap-id').value = '';
+            document.getElementById('cap-server').value = '';
+            document.getElementById('cap-phone').value = '';
+            if (avatarInput) avatarInput.value = '';
+            cambiarTab('bracket');
+          } else {
+            mostrarToast("Error al guardar inscripción", "error");
+          }
+        });
       };
 
-      db.ref(`torneos/1v1_femenino/equipos`).push(jugadoraData, (error) => {
-        if (!error) {
-          mostrarToast("¡Inscripción registrada con éxito!", "success");
-          document.getElementById('team-name').value = '';
-          document.getElementById('cap-nick').value = '';
-          document.getElementById('cap-id').value = '';
-          document.getElementById('cap-server').value = '';
-          document.getElementById('cap-phone').value = '';
-          cambiarTab('bracket');
-        } else {
-          mostrarToast("Error al guardar inscripción", "error");
-        }
-      });
+      if (avatarInput && avatarInput.files && avatarInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          guardarEnFirebase(e.target.result);
+        };
+        reader.readAsDataURL(avatarInput.files[0]);
+      } else {
+        guardarEnFirebase("");
+      }
     }
 
     function cambiarTab(tab) {
-      ['registro', 'equipos', 'bracket', 'chat', 'hall', 'stream'].forEach(t => {
+      ['registro', 'equipos', 'bracket', 'arbol', 'chat', 'hall', 'stream'].forEach(t => {
         document.getElementById(`tab-content-${t}`)?.classList.add('hidden');
         document.getElementById(`tab-btn-${t}`)?.classList.remove('bg-femPink-500', 'text-slate-950');
         document.getElementById(`tab-btn-${t}`)?.classList.add('bg-femDark-900', 'text-slate-400');
@@ -793,6 +678,10 @@
       document.getElementById(`tab-content-${tab}`)?.classList.remove('hidden');
       document.getElementById(`tab-btn-${tab}`)?.classList.remove('bg-femDark-900', 'text-slate-400');
       document.getElementById(`tab-btn-${tab}`)?.classList.add('bg-femPink-500', 'text-slate-950');
+      
+      if(tab === 'arbol') {
+        renderizarArbolDividido();
+      }
     }
 
     function openAuthModal() { 
@@ -841,12 +730,19 @@
         keys.forEach(k => {
           const eq = data[k];
           const j = eq.jugadores[0];
+          let avatarHtml = eq.avatar 
+            ? `<img src="${eq.avatar}" class="w-10 h-10 rounded-xl object-cover border border-femPink-400/50">` 
+            : `<div class="w-10 h-10 rounded-xl bg-femPink-500/20 border border-femPink-400 flex items-center justify-center text-femPink-400"><i class="fa-solid fa-user"></i></div>`;
+
           let deleteBtn = isAdmin ? `<button onclick="eliminarJugadora('${k}')" class="text-rose-400 hover:text-rose-300 text-xs cursor-pointer"><i class="fa-solid fa-trash"></i></button>` : '';
           container.innerHTML += `
-            <div class="bg-femDark-950 border border-slate-800 p-4 rounded-2xl flex justify-between items-center glass-card-hover cursor-pointer" onclick="abrirPlayerCard('${escapeHTML(eq.nombreEquipo)}', '${escapeHTML(j.id)}', '${escapeHTML(j.server)}')">
-              <div>
-                <div class="font-orbitron font-bold text-femPink-400">🛡️ ${escapeHTML(eq.nombreEquipo)}</div>
-                <div class="text-[11px] text-slate-300">ID: ${escapeHTML(j.id)} (${escapeHTML(j.server)})</div>
+            <div class="bg-femDark-950 border border-slate-800 p-4 rounded-2xl flex justify-between items-center glass-card-hover cursor-pointer" onclick="abrirPlayerCard('${escapeHTML(eq.nombreEquipo)}', '${escapeHTML(j.id)}', '${escapeHTML(j.server)}', '${eq.avatar || ''}')">
+              <div class="flex items-center gap-3">
+                ${avatarHtml}
+                <div>
+                  <div class="font-orbitron font-bold text-femPink-400">🛡️ ${escapeHTML(eq.nombreEquipo)}</div>
+                  <div class="text-[11px] text-slate-300">ID: ${escapeHTML(j.id)} (${escapeHTML(j.server)})</div>
+                </div>
               </div>
               ${deleteBtn}
             </div>
@@ -857,6 +753,7 @@
       db.ref(`torneos/1v1_femenino/bracket`).on('value', (snap) => {
         datosBracketServidor = snap.val();
         renderizarBracket();
+        renderizarArbolDividido();
       });
     }
 
@@ -909,6 +806,67 @@
       mostrarToast(`Ganadora registrada: ${ganadora}`, "success");
     }
 
+    // RENDERIZAR ÁRBOL DIVIDIDO (IZQUIERDA Y DERECHA CONVERGIENDO AL CENTRO)
+    function renderizarArbolDividido() {
+      const container = document.getElementById('arbol-esquematico-container');
+      if (!container || !datosBracketServidor) return;
+
+      container.innerHTML = '';
+      const partidosRonda1 = datosBracketServidor['ronda_1'] || [];
+      if (partidosRonda1.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 italic text-center col-span-full">Aún no se han generado los enfrentamientos.</p>`;
+        return;
+      }
+
+      // Dividir participantes en Lado Izquierdo y Lado Derecho
+      const mitad = Math.ceil(partidosRonda1.length / 2);
+      const ladoIzq = partidosRonda1.slice(0, mitad);
+      const ladoDer = partidosRonda1.slice(mitad);
+
+      let htmlIzq = `<div class="space-y-3"><h4 class="text-xs font-orbitron font-bold text-femPink-400 text-center uppercase mb-3">◀ Lado Izquierdo</h4>`;
+      ladoIzq.forEach((p, i) => {
+        htmlIzq += `
+          <div class="bg-femDark-900 border border-slate-800 p-3 rounded-xl text-xs space-y-1 shadow">
+            <div class="flex justify-between text-[9px] text-slate-400 font-bold"><span>MATCH ${i+1}</span><span>${p.ganador !== 'Pendiente' ? 'GANA: '+escapeHTML(p.ganador) : 'EN ESPERA'}</span></div>
+            <div class="font-bold text-pink-300">${escapeHTML(p.equipo1)}</div>
+            <div class="text-[9px] text-slate-500">VS</div>
+            <div class="font-bold text-purple-300">${escapeHTML(p.equipo2)}</div>
+          </div>
+        `;
+      });
+      htmlIzq += `</div>`;
+
+      let htmlCentro = `
+        <div class="flex flex-col items-center justify-center space-y-4 p-4 bg-femDark-900/60 border border-femPink-500/30 rounded-2xl text-center">
+          <div class="w-14 h-14 rounded-2xl bg-amber-400/20 border border-amber-400/60 flex items-center justify-center text-amber-400 text-2xl shadow-lg">
+            <i class="fa-solid fa-crown"></i>
+          </div>
+          <div>
+            <h4 class="font-orbitron font-black text-white text-sm uppercase">GRAN FINAL</h4>
+            <p class="text-[10px] text-slate-400 mt-0.5">Definición de Campeona 1v1</p>
+          </div>
+          <div class="w-full bg-femDark-950 p-3 rounded-xl border border-slate-800 text-xs">
+            <span class="text-femPink-400 font-bold">🏆 Enfrentamiento Estelar</span>
+          </div>
+        </div>
+      `;
+
+      let htmlDer = `<div class="space-y-3"><h4 class="text-xs font-orbitron font-bold text-femPink-400 text-center uppercase mb-3">Lado Derecho ▶</h4>`;
+      ladoDer.forEach((p, i) => {
+        htmlDer += `
+          <div class="bg-femDark-900 border border-slate-800 p-3 rounded-xl text-xs space-y-1 shadow">
+            <div class="flex justify-between text-[9px] text-slate-400 font-bold"><span>MATCH ${i+1 + mitad}</span><span>${p.ganador !== 'Pendiente' ? 'GANA: '+escapeHTML(p.ganador) : 'EN ESPERA'}</span></div>
+            <div class="font-bold text-pink-300">${escapeHTML(p.equipo1)}</div>
+            <div class="text-[9px] text-slate-500">VS</div>
+            <div class="font-bold text-purple-300">${escapeHTML(p.equipo2)}</div>
+          </div>
+        `;
+      });
+      htmlDer += `</div>`;
+
+      container.innerHTML = htmlIzq + htmlCentro + htmlDer;
+    }
+
     function enviarMensajeChat() {
       const nick = document.getElementById('chat-nick-input').value.trim() || 'Espectadora';
       const msg = document.getElementById('chat-msg-input').value.trim();
@@ -930,10 +888,18 @@
       });
     }
 
-    function abrirPlayerCard(nombre, id, server) {
+    function abrirPlayerCard(nombre, id, server, avatar) {
       document.getElementById('card-player-name').innerText = nombre;
       document.getElementById('card-player-id').innerText = id || 'N/A';
       document.getElementById('card-player-server').innerText = server || 'N/A';
+      
+      const avatarBox = document.getElementById('card-avatar-box');
+      if (avatar) {
+        avatarBox.innerHTML = `<img src="${avatar}" class="w-full h-full object-cover">`;
+      } else {
+        avatarBox.innerHTML = `<i class="fa-solid fa-user-ninja"></i>`;
+      }
+
       document.getElementById('player-card-modal').classList.remove('hidden');
     }
     function cerrarPlayerCard() { document.getElementById('player-card-modal').classList.add('hidden'); }
@@ -963,7 +929,7 @@
         }
         db.ref(`torneos/1v1_femenino/bracket/ronda_1`).set(partidos, () => {
           rondaSeleccionada = 1;
-          mostrarToast("¡Bracket generado exitosamente!", "success");
+          mostrarToast("¡Bracket dividido generado exitosamente!", "success");
         });
       });
     }
