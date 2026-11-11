@@ -101,7 +101,6 @@
       filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.5));
     }
 
-    /* ESTILOS DE CORCHETES EXACTOS A LA HOJA DIBUJADA */
     .bracket-pair-left {
       border-right: 3px solid #ec4899;
       border-top: 3px solid #ec4899;
@@ -364,11 +363,11 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO PAREADO -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO PAREADO Y GRAN FINAL -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
           <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO PAREADO (DIAGRAMA EXACTO)</h3>
-          <p class="text-xs text-slate-400">Cada 2 enfrentamientos se unen por un corchete directo para formar a los 2 clasificados que disputarán el siguiente match.</p>
+          <p class="text-xs text-slate-400">Las tablas avanzan ronda por ronda. Al finalizar las tablas, los campeones disputan la Gran Final.</p>
         </div>
 
         <div id="arbol-esquematico-container" class="space-y-10">
@@ -780,7 +779,7 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO ADAPTADO A RONDA 1-4 DE LA HOJA */
+    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO + SECCIÓN DE GRAN FINAL ENTRE CAMPEONES */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container || !datosBracketServidor) return;
@@ -906,7 +905,7 @@
                     <i class="fa-solid fa-trophy"></i>
                   </div>
                   <div class="w-full">
-                    <h6 class="font-orbitron font-black text-white text-[10px] uppercase mb-2">${rActivaBloque === totalRondas ? '🏆 CAMPEONA DEL TORNEO' : 'ENFRENTAMIENTOS RESULTANTES (RONDA ' + (rActivaBloque + 1) + ')'}</h6>
+                    <h6 class="font-orbitron font-black text-white text-[10px] uppercase mb-2">CLASIFICADO DE TABLA #${numBloque}</h6>
                     
                     <div class="bg-femDark-950 border border-slate-700/80 p-3 rounded-xl text-[10px] space-y-2 shadow">
                       <div class="flex items-center justify-between font-bold text-pink-300">
@@ -962,7 +961,7 @@
                   <div class="bg-femDark-900 border border-slate-800 p-2 rounded-xl text-[10px] space-y-1 shadow">
                     <div class="flex justify-between text-[8px] text-slate-400 font-bold"><span>MATCH #${mitad + i + 2}</span><span class="text-femPink-400">${p2.ganador !== 'Pendiente' ? '🏆 '+escapeHTML(p2.ganador) : ''}</span></div>
                     <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
-                      <img src="${getAvatarForTeam(p2.equipo1)}" class="w-4 h-4 rounded-full object-cover shrink-0">
+                      <img src="${getAvatarForTeam(p1 ? p1.equipo1 : '')}" class="w-4 h-4 rounded-full object-cover shrink-0">
                       <span class="truncate">${escapeHTML(p2.equipo1)}</span>
                     </div>
                     <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
@@ -985,6 +984,45 @@
         `;
 
         container.innerHTML += htmlBloque;
+      }
+
+      // NUEVO MÓDULO: GRAN FINAL ENTRE CAMPEONES DE TABLA
+      let partidosUltimaRonda = datosBracketServidor[`ronda_${totalRondas}`] || [];
+      if (totalRondas > 1 && partidosUltimaRonda.length > 0) {
+        let pFinal = partidosUltimaRonda[0];
+        container.innerHTML += `
+          <div class="glass-panel border-2 border-amber-400/80 p-6 rounded-3xl space-y-4 shadow-[0_0_50px_rgba(251,191,36,0.3)] bg-gradient-to-b from-femDark-900 to-femDark-950 mt-10">
+            <div class="text-center border-b border-amber-400/30 pb-3">
+              <span class="px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400 text-amber-300 font-orbitron font-black text-xs uppercase">
+                👑 ENFRENTAMIENTO DEFINITIVO
+              </span>
+              <h3 class="font-orbitron font-black text-xl text-white mt-2 uppercase tracking-widest">GRAN FINAL DE CAMPEONAS</h3>
+              <p class="text-xs text-slate-300">Enfrentamiento directo entre las vendedoras de las tablas</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center p-4">
+              <div class="bg-femDark-900 border border-femPink-500/50 p-4 rounded-2xl text-center space-y-2 shadow-lg">
+                <span class="text-[10px] font-orbitron font-bold text-femPink-400 uppercase">Campeona Tabla 1 / Lado Izq</span>
+                <img src="${getAvatarForTeam(pFinal.equipo1)}" class="w-16 h-16 rounded-full object-cover mx-auto border-2 border-femPink-400 shadow-md">
+                <h4 class="font-orbitron font-black text-sm text-white truncate">${escapeHTML(pFinal.equipo1)}</h4>
+              </div>
+
+              <div class="text-center space-y-2">
+                <div class="w-16 h-16 rounded-full bg-amber-400/20 border-2 border-amber-400 flex items-center justify-center text-amber-400 text-3xl mx-auto shadow-2xl animate-bounce">
+                  <i class="fa-solid fa-trophy"></i>
+                </div>
+                <span class="font-orbitron font-black text-lg text-amber-400 block">VS</span>
+                <span class="text-[10px] text-slate-400 font-bold uppercase block">${pFinal.ganador !== 'Pendiente' ? '🏆 CAMPEONA ABSOLUTA: ' + escapeHTML(pFinal.ganador) : 'EN DISPUTA'}</span>
+              </div>
+
+              <div class="bg-femDark-900 border border-femPurple-500/50 p-4 rounded-2xl text-center space-y-2 shadow-lg">
+                <span class="text-[10px] font-orbitron font-bold text-femPurple-400 uppercase">Campeona Tabla 2 / Lado Der</span>
+                <img src="${getAvatarForTeam(pFinal.equipo2)}" class="w-16 h-16 rounded-full object-cover mx-auto border-2 border-femPurple-400 shadow-md">
+                <h4 class="font-orbitron font-black text-sm text-white truncate">${escapeHTML(pFinal.equipo2)}</h4>
+              </div>
+            </div>
+          </div>
+        `;
       }
     }
 
@@ -1204,9 +1242,22 @@
       });
     }
 
+    /* REINICIO PROFUNDO CORREGIDO EN TIEMPO REAL */
     function reiniciarTorneo() {
-      if (confirm("¿Seguro que deseas reiniciar los equipos y llaves de la demo?")) {
-        db.ref(`${RUTA_TORNEO}`).remove(() => mostrarToast("Datos de la demo reiniciados", "info"));
+      if (confirm("¿Seguro que deseas reiniciar los equipos, llaves y salas de chat del torneo?")) {
+        db.ref(`${RUTA_TORNEO}`).remove(() => {
+          datosBracketServidor = null;
+          jugadorasCacheObj = {};
+          rondasBloquesCache = {};
+          rondaSeleccionada = 1;
+
+          document.getElementById('teams-list-container').innerHTML = '<p class="text-xs text-slate-500 italic col-span-full text-center py-6">No hay registros guardados en tiempo real aún...</p>';
+          document.getElementById('count-registered-teams').innerText = '0';
+          document.getElementById('matches-container').innerHTML = '<p class="text-xs text-slate-500 italic col-span-full py-6 text-center">Aún no se han generado enfrentamientos.</p>';
+          document.getElementById('arbol-esquematico-container').innerHTML = '<p class="text-xs text-slate-500 italic text-center col-span-full py-6">Genera los enfrentamientos desde el panel de administración para ver el árbol por bloques.</p>';
+
+          mostrarToast("¡Torneo e historial limpiados con éxito!", "info");
+        });
       }
     }
 
