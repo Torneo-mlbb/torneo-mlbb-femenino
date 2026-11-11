@@ -29,14 +29,28 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <style>
     body { background-color: #090514; color: #f3f4f6; font-family: 'Montserrat', sans-serif; background-attachment: fixed; }
+    
     .fem-gradient-text {
-      background: linear-gradient(135deg, #fbcfe8 0%, #ec4899 50%, #c084fc 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #f472b6 40%, #ec4899 70%, #c084fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    
     .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #090514; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #ec4899; border-radius: 4px; }
+
+    /* EFECTOS ESPECIALES TIPO EDIT GAMER */
+    .cyber-card {
+      clip-path: polygon(0 0, 96% 0, 100% 12%, 100% 100%, 4% 100%, 0 88%);
+    }
+    .cyber-btn {
+      clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+    }
+    .scanline-overlay {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between custom-scrollbar">
@@ -68,57 +82,73 @@
   <main class="max-w-6xl mx-auto px-4 py-6 w-full flex-grow">
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- SELECTOR DE MODALIDAD CON CONTADOR REGRESIVO Y NEÓN -->
-    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_50px_rgba(236,72,153,0.3)] bg-femDark-900 min-h-[580px] flex flex-col justify-center items-center p-4 sm:p-8">
-      <div class="absolute inset-0 bg-gradient-to-br from-femDark-900 via-femPurple-900/50 to-femDark-900 z-0"></div>
-      <div class="absolute -top-36 -left-36 w-96 h-96 bg-femPink-500/25 rounded-full blur-[100px] animate-pulse"></div>
-      <div class="absolute -bottom-36 -right-36 w-96 h-96 bg-purple-600/25 rounded-full blur-[100px] animate-pulse delay-1000"></div>
+    <!-- PORTADA PRINCIPAL TIPO EDIT / CINEMÁTICA DE ESPORTS -->
+    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border-2 border-femPink-500/40 shadow-[0_0_60px_rgba(236,72,153,0.35)] bg-femDark-900 min-h-[620px] flex flex-col justify-center items-center p-6 md:p-12">
+      
+      <!-- Fondo dinámico con resplandor neón -->
+      <div class="absolute inset-0 bg-gradient-to-tr from-femDark-900 via-femPurple-900/60 to-femDark-900 z-0"></div>
+      <div class="absolute inset-0 scanline-overlay pointer-events-none z-0 opacity-40"></div>
+      
+      <!-- Luces neón flotantes -->
+      <div class="absolute top-1/4 left-10 w-96 h-96 bg-femPink-500/20 rounded-full blur-[120px] animate-pulse"></div>
+      <div class="absolute bottom-10 right-10 w-96 h-96 bg-purple-600/30 rounded-full blur-[130px] animate-pulse delay-700"></div>
 
-      <div class="relative z-10 w-full max-w-xl text-center space-y-6">
-        <div class="inline-block animate-bounce">
-          <span class="bg-gradient-to-r from-femPink-500/30 to-purple-500/30 border border-femPink-400/50 text-femPink-300 text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-md shadow-[0_0_15px_rgba(236,72,153,0.4)]">
-            ✨ Inscripciones Abiertas & Gratuitas
-          </span>
+      <!-- Contenido de Impacto -->
+      <div class="relative z-10 w-full max-w-2xl text-center space-y-7">
+        
+        <!-- Insignia "SEASON PASS / BATTLE READY" -->
+        <div class="inline-flex items-center gap-2 bg-gradient-to-r from-femPink-500/20 via-purple-500/20 to-femPink-500/20 border border-femPink-400/60 px-5 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.5)]">
+          <span class="w-2 h-2 rounded-full bg-femPink-400 animate-ping"></span>
+          <span class="text-femPink-300 text-xs font-black uppercase tracking-[0.2em]">FASE DE REGISTRO ABIERTA &bull; 100% GRATIS</span>
         </div>
 
-        <div class="space-y-1">
-          <h2 class="text-3xl sm:text-5xl font-black text-white tracking-widest uppercase fem-gradient-text drop-shadow-[0_5px_15px_rgba(236,72,153,0.4)]">
-            ¡REGÍSTRATE GRATIS!
+        <!-- TÍTULO EDIT ESTILO TRÁILER DE GAMEPLAY -->
+        <div class="space-y-2">
+          <h2 class="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none drop-shadow-[0_8px_25px_rgba(236,72,153,0.5)]">
+            DEMUESTRA TU <br>
+            <span class="fem-gradient-text tracking-normal">DOMINIO EN EL ARRECIFE</span>
           </h2>
-          <p class="text-xs sm:text-sm text-femPink-400 font-bold uppercase tracking-[0.25em] drop-shadow">
-            MOBILE LEGENDS: BANG BANG &bull; FEMENINO
+          <p class="text-xs sm:text-sm text-femPink-300 font-bold uppercase tracking-[0.3em] drop-shadow">
+            MOBILE LEGENDS: BANG BANG &bull; EDITION 1VS1
           </p>
         </div>
 
-        <!-- CONTADOR REGRESIVO ANIMADO -->
-        <div class="bg-femDark-800/80 border border-femPink-500/30 p-3 rounded-2xl max-w-md mx-auto">
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">⏱️ El torneo inicia en:</p>
+        <!-- CONTADOR REGRESIVO ESTILO RELOJ DE ARENA DE ARENA -->
+        <div class="bg-femDark-800/90 border border-femPink-500/40 p-4 rounded-2xl max-w-md mx-auto shadow-2xl backdrop-blur-lg">
+          <p class="text-[10px] font-black text-femPink-400 uppercase tracking-widest mb-2 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-stopwatch text-femPink-400"></i> CIERRE DE INSCRIPCIONES EN:
+          </p>
           <div class="grid grid-cols-4 gap-2 text-center">
-            <div class="bg-femDark-900 p-2 rounded-xl border border-slate-800"><span id="cd-days" class="block font-black text-femPink-400 text-lg">00</span><span class="text-[9px] text-slate-500">DÍAS</span></div>
-            <div class="bg-femDark-900 p-2 rounded-xl border border-slate-800"><span id="cd-hours" class="block font-black text-femPink-400 text-lg">00</span><span class="text-[9px] text-slate-500">HORAS</span></div>
-            <div class="bg-femDark-900 p-2 rounded-xl border border-slate-800"><span id="cd-mins" class="block font-black text-femPink-400 text-lg">00</span><span class="text-[9px] text-slate-500">MINS</span></div>
-            <div class="bg-femDark-900 p-2 rounded-xl border border-slate-800"><span id="cd-secs" class="block font-black text-femPink-400 text-lg">00</span><span class="text-[9px] text-slate-500">SEGS</span></div>
+            <div class="bg-femDark-900/90 p-2.5 rounded-xl border border-femPink-500/20"><span id="cd-days" class="block font-black text-femPink-300 text-xl md:text-2xl">00</span><span class="text-[9px] text-slate-400 font-bold">DÍAS</span></div>
+            <div class="bg-femDark-900/90 p-2.5 rounded-xl border border-femPink-500/20"><span id="cd-hours" class="block font-black text-femPink-300 text-xl md:text-2xl">00</span><span class="text-[9px] text-slate-400 font-bold">HORAS</span></div>
+            <div class="bg-femDark-900/90 p-2.5 rounded-xl border border-femPink-500/20"><span id="cd-mins" class="block font-black text-femPink-300 text-xl md:text-2xl">00</span><span class="text-[9px] text-slate-400 font-bold">MINS</span></div>
+            <div class="bg-femDark-900/90 p-2.5 rounded-xl border border-femPink-500/20"><span id="cd-secs" class="block font-black text-femPink-300 text-xl md:text-2xl">00</span><span class="text-[9px] text-slate-400 font-bold">SEGS</span></div>
           </div>
         </div>
 
-        <!-- BOTÓN 1V1 EDIT -->
-        <div onclick="seleccionarModalidad('1v1')" class="group relative w-full rounded-2xl bg-gradient-to-r from-femDark-800 via-femPurple-900/40 to-femDark-800 p-0.5 border border-femPink-500/50 hover:border-femPink-400 cursor-pointer transition-all duration-500 transform hover:-translate-y-1.5 hover:scale-[1.02] shadow-[0_10px_30px_rgba(236,72,153,0.25)] hover:shadow-[0_15px_45px_rgba(236,72,153,0.5)] overflow-hidden">
-          <div class="absolute top-0 -left-[100%] w-[60%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-25deg] group-hover:left-[150%] transition-all duration-1000"></div>
-          <div class="bg-femDark-900/90 backdrop-blur-sm p-4 sm:p-5 rounded-[15px] flex items-center justify-between gap-4">
-            <div class="flex items-center gap-4">
-              <div class="w-14 h-14 rounded-xl bg-femPink-500/20 border border-femPink-500/50 flex items-center justify-center text-femPink-400 text-2xl shadow-[0_0_20px_rgba(236,72,153,0.4)] group-hover:scale-110 group-hover:rotate-6 transition">
-                <i class="fa-solid fa-crown"></i>
+        <!-- BOTÓN PRINCIPAL ACCIÓN ESTILO "PRESS START / JOIN TOURNAMENT" -->
+        <div class="pt-2">
+          <div onclick="seleccionarModalidad('1v1')" class="group relative inline-block w-full max-w-md cursor-pointer">
+            <!-- Resplandor externo del botón al hacer hover -->
+            <div class="absolute -inset-1 bg-gradient-to-r from-femPink-500 via-purple-600 to-femPink-500 rounded-2xl blur-lg opacity-70 group-hover:opacity-100 group-hover:blur-xl transition duration-500 animate-pulse"></div>
+            
+            <div class="relative bg-gradient-to-r from-femPink-500 via-femPink-600 to-purple-600 p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-4 border border-white/20 shadow-2xl group-hover:scale-[1.02] transition duration-300">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-slate-950/40 border border-white/20 flex items-center justify-center text-white text-2xl group-hover:rotate-12 transition duration-300">
+                  <i class="fa-solid fa-gamepad"></i>
+                </div>
+                <div class="text-left">
+                  <span class="block text-slate-950 font-black text-lg sm:text-xl uppercase tracking-wider leading-none">ENTRAR AL TORNEO 1V1</span>
+                  <span class="text-[11px] text-slate-900 font-bold tracking-wide">Registro libre &bull; Clasificación Directa</span>
+                </div>
               </div>
-              <div class="text-left">
-                <h3 class="text-white font-black text-base sm:text-lg uppercase tracking-wide group-hover:text-femPink-300">Torneo 1 vs 1 Femenino</h3>
-                <p class="text-xs text-slate-400">Inscripción libre e individual &bull; Eliminación Directa</p>
+              <div class="w-10 h-10 rounded-full bg-slate-950 text-femPink-400 flex items-center justify-center text-sm group-hover:translate-x-1 transition">
+                <i class="fa-solid fa-arrow-right"></i>
               </div>
-            </div>
-            <div class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-femPink-500 to-purple-600 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md group-hover:scale-105 transition flex items-center gap-2">
-              Unirme <i class="fa-solid fa-bolt animate-pulse"></i>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
