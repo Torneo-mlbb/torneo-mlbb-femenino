@@ -91,7 +91,6 @@
       background-size: 100% 4px;
     }
 
-    /* EFECTO DE LEVITACIÓN / FLOTACIÓN DEL PERSONAJE 3D */
     @keyframes heroFloat {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       50% { transform: translateY(-12px) rotate(1.5deg); }
@@ -102,7 +101,7 @@
       filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.5));
     }
 
-    /* ESTILOS DE CORCHETES EXACTOS A LA PIZARRA */
+    /* ESTILOS DE CORCHETES EXACTOS A LA HOJA DIBUJADA */
     .bracket-pair-left {
       border-right: 3px solid #ec4899;
       border-top: 3px solid #ec4899;
@@ -185,20 +184,18 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow relative z-10">
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
-    <!-- NUEVO HERO SHOWCASE CON PERSONAJE MLBB 3D Y BOTÓN DEBAJO -->
+    <!-- HERO SHOWCASE SECTION -->
     <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[660px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
       <div class="absolute inset-0 bg-gradient-to-br from-femDark-950 via-femPurple-900/50 to-femDark-950 z-0"></div>
       <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-30"></div>
       
       <div class="relative z-10 w-full max-w-3xl text-center space-y-6 flex flex-col items-center">
         
-        <!-- INSIGNIA DE TORNEO -->
         <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-femPink-500/20 via-femPurple-500/20 to-femPink-500/20 border border-femPink-400/50 px-5 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.3)]">
           <span class="w-2.5 h-2.5 rounded-full bg-femPink-400 animate-ping"></span>
           <span class="text-femPink-300 text-xs font-orbitron font-bold uppercase tracking-widest">INSCRIPCIÓN LIBRE Y GRATUITA</span>
         </div>
 
-        <!-- TÍTULOS -->
         <div class="space-y-2">
           <h2 id="scramble-title" class="text-4xl sm:text-6xl lg:text-7xl font-orbitron font-black text-white tracking-tight uppercase leading-none drop-shadow-[0_10px_30px_rgba(236,72,153,0.5)]">
             TORNEO FEMENINO
@@ -221,7 +218,7 @@
                onclick="seleccionarModalidad('1v1')">
         </div>
 
-        <!-- BOTÓN ÚNICO DE REGISTRO ABAJO DEL PERSONAJE -->
+        <!-- BOTÓN ÚNICO DE REGISTRO DEBAJO -->
         <div class="w-full max-w-md pt-2">
           <button onclick="seleccionarModalidad('1v1')" class="w-full group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-femPink-500 via-femPink-600 to-femPurple-600 font-orbitron font-black text-slate-950 uppercase tracking-wider text-sm sm:text-base rounded-2xl hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(236,72,153,0.6)] cursor-pointer overflow-hidden border border-femPink-300/40">
             <span class="relative z-10 flex items-center gap-3">
@@ -236,7 +233,7 @@
     <!-- TOURNAMENT APP CONTAINER -->
     <div id="tournament-app-container" class="hidden space-y-8 transition-all duration-500">
       
-      <!-- UNIFIED SINGLE ADMIN PANEL -->
+      <!-- SUPER ADMIN PANEL -->
       <section id="super-admin-panel" class="hidden glass-panel border border-femPink-500/60 rounded-3xl p-6 shadow-2xl space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-femPink-500/30 pb-4">
           <div class="flex items-center gap-3">
@@ -302,7 +299,7 @@
         </button>
       </div>
 
-      <!-- TAB 1: FORMULARIO DIRECTO GRATUITO CON AVATAR -->
+      <!-- TAB 1: FORMULARIO DIRECTO -->
       <div id="tab-content-registro" class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl transition-all">
         <div class="max-w-2xl space-y-6">
           <div class="border-b border-slate-800 pb-4">
@@ -367,7 +364,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO POR BLOQUES PAREADOS CON CORCHETES -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO PAREADO -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
           <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO PAREADO (DIAGRAMA EXACTO)</h3>
@@ -382,7 +379,7 @@
     </div>
   </main>
 
-  <!-- MODAL: CHAT PRIVADO POR PARTIDA CON AUTENTICACIÓN POR ID -->
+  <!-- MODAL: CHAT PRIVADO POR PARTIDA -->
   <div id="whatsapp-chat-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden">
     <div class="glass-panel border border-femPink-500/40 rounded-3xl w-full max-w-xl h-[85vh] flex flex-col shadow-2xl overflow-hidden relative">
       
@@ -401,7 +398,7 @@
         </button>
       </div>
 
-      <!-- VISTA DE AUTENTICACIÓN PROTEGIDA -->
+      <!-- VISTA DE AUTENTICACIÓN -->
       <div id="chat-modal-auth-view" class="p-6 flex-1 flex flex-col items-center justify-center text-center space-y-4">
         <div class="w-16 h-16 rounded-2xl bg-femPink-500/10 border border-femPink-400/40 flex items-center justify-center text-femPink-400 text-2xl mb-1">
           <i class="fa-solid fa-lock-keyhole"></i>
@@ -783,7 +780,7 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO CON CORCHETES EXACTOS PAREADOS (DIAGRAMA PIZARRA) */
+    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO ADAPTADO A RONDA 1-4 DE LA HOJA */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container || !datosBracketServidor) return;
@@ -814,8 +811,6 @@
         let mitad = Math.ceil(partidosBloqueActual.length / 2) || 1;
         let ladoIzq = partidosBloqueActual.slice(0, mitad);
         let ladoDer = partidosBloqueActual.slice(mitad);
-
-        let partidosSiguienteRonda = datosBracketServidor[`ronda_${rActivaBloque + 1}`] || [];
 
         let bloqueId = `bloque-captura-${numBloque}`;
 
@@ -848,7 +843,6 @@
               </div>
             </div>
 
-            <!-- CONTENEDOR ESPECÍFICO QUE SE CAPTURA PARA WHATSAPP -->
             <div id="${bloqueId}" class="bg-femDark-950 p-5 rounded-2xl border border-slate-800/80 space-y-4">
               
               <div class="text-center border-b border-slate-800/60 pb-2 flex justify-between items-center px-2">
@@ -859,7 +853,6 @@
 
               <div class="grid grid-cols-1 md:grid-cols-7 gap-2 items-center relative">
                 
-                <!-- LADO IZQUIERDO: COLUMNA DE ENFRENTAMIENTOS ACTIVOS PAREADOS -->
                 <div class="md:col-span-2 space-y-6">
                   <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ ENFRENTAMIENTOS R${rActivaBloque}</h5>
         `;
@@ -908,7 +901,6 @@
         htmlBloque += `
                 </div>
 
-                <!-- CENTRO: MATCH RESULTANTE EN SIGUIENTE RONDA (PROPORCIÓN 2:1) -->
                 <div class="md:col-span-3 flex flex-col items-center justify-center p-4 bg-femDark-900 border border-femPink-500/40 rounded-2xl text-center space-y-3 shadow-inner">
                   <div class="w-10 h-10 rounded-full bg-amber-400/20 border border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow animate-pulse">
                     <i class="fa-solid fa-trophy"></i>
@@ -939,7 +931,6 @@
                   </div>
                 </div>
 
-                <!-- LADO DERECHO: COLUMNA DE ENFRENTAMIENTOS ACTIVOS PAREADOS -->
                 <div class="md:col-span-2 space-y-6">
                   <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">ENFRENTAMIENTOS R${rActivaBloque} (DER) ▶</h5>
         `;
@@ -997,7 +988,6 @@
       }
     }
 
-    /* DESCARGA INDIVIDUAL DE CADA BLOQUE PARA ENVIAR POR WHATSAPP */
     function tomarCapturaBloqueIndividual(containerId, numBloque, numRonda) {
       const area = document.getElementById(containerId);
       if(!area) return;
@@ -1016,7 +1006,6 @@
       });
     }
 
-    /* SISTEMA DE CHAT PRIVADO POR PARTIDA CON AUTENTICACIÓN */
     function abrirChatWhatsAppModal(rondaNum, idx, equipo1, equipo2) {
       activeChatMatchInfo = { rondaNum, idx, equipo1, equipo2 };
       
@@ -1150,7 +1139,6 @@
       });
     }
 
-    /* GESTIÓN DE SORTEO Y AVANCE DE RONDAS */
     function iniciarSorteoMatematico() {
       db.ref(`${RUTA_TORNEO}/equipos`).once('value', (snap) => {
         const data = snap.val();
