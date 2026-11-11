@@ -367,7 +367,7 @@
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
           <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO PAREADO (DIAGRAMA EXACTO DE HOJA)</h3>
-          <p class="text-xs text-slate-400">Cada tabla contiene 8 partidas (4 izq / 4 der). De cada lado avanzan 2 ganadores a la siguiente ronda.</p>
+          <p class="text-xs text-slate-400">Las tablas avanzan internamente hasta su Ronda 4. Los ganadores finales de cada tabla pasan al Cuadro de PlayOffs.</p>
         </div>
 
         <div id="arbol-esquematico-container" class="space-y-10">
@@ -581,7 +581,7 @@
       const nombresBots = [
         "QueenLancelot", "FannyGod", "KaguraQueen", "EsmeraldaX", "MiyaAssassin",
         "LaylaSniper", "GuineverePro", "RubyVamp", "AngelaHeal", "OdetteMagic",
-        "LunoxCosmic", "VexanaCurse", "LesleyDead", "WanwanAgile", "BeatrixGun"
+        "LunoxCosmic", "VexanaCurse", "LesleyDead", "WanwanAgile font", "BeatrixGun", "KarinaSlayer"
       ];
 
       mostrarToast("Añadiendo jugadoras de prueba...", "info");
@@ -713,9 +713,10 @@
 
       for (let r = 1; r <= totalRondas; r++) {
         let isActive = r === rondaSeleccionada;
+        let esRondaPlayOffs = r > 4;
         roundsFilter.innerHTML += `
           <button onclick="seleccionarRonda(${r})" class="px-3.5 py-1.5 rounded-xl text-xs font-orbitron ${isActive ? 'bg-femPink-500 text-slate-950 font-bold' : 'bg-femDark-950 text-slate-400'}">
-            Ronda ${r}
+            ${esRondaPlayOffs ? '👑 FASE FINAL' : 'Ronda ' + r}
           </button>
         `;
       }
@@ -783,7 +784,7 @@
       });
     }
 
-    /* LÓGICA DE ÁRBOL ESQUEMÁTICO PAREADO FIJO (8 MATCHES POR TABLA) */
+    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO (CORREGIDO PARA DETENERSE EN RONDA 4 Y MOSTRAR FASE FINAL) */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container) return;
@@ -805,10 +806,13 @@
       const PARTIDAS_POR_TABLA = 8;
       const totalBloques = Math.ceil(partidosRonda1.length / PARTIDAS_POR_TABLA) || 1;
 
+      // 1. RENDER DE TABLAS INDIVIDUALES (LÍMITE MÁXIMO RONDA 4)
       for (let b = 0; b < totalBloques; b++) {
         let numBloque = b + 1;
         let rActivaBloque = rondasBloquesCache[numBloque] || 1;
-        if (rActivaBloque > totalRondas) rActivaBloque = totalRondas;
+        
+        // Las tablas esquemáticas de hoja solo existen de Ronda 1 a Ronda 4
+        if (rActivaBloque > 4) rActivaBloque = 4;
 
         let partidosRondaSel = datosBracketServidor[`ronda_${rActivaBloque}`] || [];
         let inicioIdx = b * Math.max(1, Math.floor(PARTIDAS_POR_TABLA / Math.pow(2, rActivaBloque - 1)));
@@ -824,7 +828,9 @@
         let bloqueId = `bloque-captura-${numBloque}`;
 
         let botonesRondaHtml = '';
-        for (let r = 1; r <= totalRondas; r++) {
+        // Solo mostramos botones de Ronda 1 a 4 para las tablas
+        let maxRondaTabs = Math.min(4, totalRondas);
+        for (let r = 1; r <= maxRondaTabs; r++) {
           let btnActive = r === rActivaBloque;
           botonesRondaHtml += `
             <button onclick="cambiarRondaBloqueArbol(${numBloque}, ${r})" class="px-2 py-0.5 rounded text-[10px] font-orbitron font-bold transition ${btnActive ? 'bg-femPink-500 text-slate-950 shadow' : 'bg-femDark-900 text-slate-400 hover:text-white'}">
@@ -860,7 +866,7 @@
             <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 gap-2">
               <div>
                 <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">TABLA / BLOQUE #${numBloque}</span>
-                <p class="text-[10px] text-slate-400">Diagrama pareado exacto de 8 partidas</p>
+                <p class="text-[10px] text-slate-400">Diagrama pareado exacto de 8 partidas (Ronda ${rActivaBloque})</p>
               </div>
 
               <div class="flex items-center gap-2">
@@ -878,12 +884,11 @@
               <div class="text-center border-b border-slate-800/60 pb-2 flex justify-between items-center px-2">
                 <span class="font-orbitron font-black text-[10px] text-femPink-400">MINIONS FEMALE</span>
                 <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">TABLA #${numBloque} &bull; RONDA ${rActivaBloque}</h4>
-                <span class="font-orbitron font-black text-[10px] text-femPurple-400">FASE ACTIVA</span>
+                <span class="font-orbitron font-black text-[10px] text-femPurple-400">${rActivaBloque === 4 ? '🏁 GANADORA DE TABLA' : 'FASE EN CURSO'}</span>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start relative">
                 
-                <!-- LADO IZQUIERDO (4 MATCHES -> 2 PARES) -->
                 <div class="space-y-4">
                   <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ LADO IZQUIERDO (R${rActivaBloque})</h5>
         `;
@@ -902,7 +907,7 @@
               </div>
               <div class="w-3 h-20 bracket-pair-left shrink-0 hidden md:block"></div>
               <div class="bg-femDark-900 border border-femPink-500/40 p-2 rounded-xl text-[9px] font-bold text-pink-300 w-28 text-center shrink-0 hidden md:block shadow">
-                <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Clasifica R${rActivaBloque+1}</span>
+                <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Clasificada R${rActivaBloque+1}</span>
                 <div class="flex items-center justify-center gap-1 mt-1 truncate">
                   <img src="${getAvatarForTeam(p1 && p1.ganador !== 'Pendiente' ? p1.ganador : (p2 ? p2.ganador : ''))}" class="w-4 h-4 rounded-full object-cover">
                   <span class="truncate text-white">${escapeHTML(p1 && p1.ganador !== 'Pendiente' ? p1.ganador : (p2 && p2.ganador !== 'Pendiente' ? p2.ganador : 'Pendiente'))}</span>
@@ -915,7 +920,6 @@
         htmlBloque += `
                 </div>
 
-                <!-- LADO DERECHO (4 MATCHES -> 2 PARES) -->
                 <div class="space-y-4">
                   <h5 class="text-[9px] font-orbitron font-bold text-femPurple-400 text-center uppercase mb-1">LADO DERECHO (R${rActivaBloque}) ▶</h5>
         `;
@@ -929,7 +933,7 @@
           htmlBloque += `
             <div class="flex items-center gap-2">
               <div class="bg-femDark-900 border border-femPurple-500/40 p-2 rounded-xl text-[9px] font-bold text-purple-300 w-28 text-center shrink-0 hidden md:block shadow">
-                <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Clasifica R${rActivaBloque+1}</span>
+                <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Clasificada R${rActivaBloque+1}</span>
                 <div class="flex items-center justify-center gap-1 mt-1 truncate">
                   <img src="${getAvatarForTeam(p1 && p1.ganador !== 'Pendiente' ? p1.ganador : (p2 ? p2.ganador : ''))}" class="w-4 h-4 rounded-full object-cover">
                   <span class="truncate text-white">${escapeHTML(p1 && p1.ganador !== 'Pendiente' ? p1.ganador : (p2 && p2.ganador !== 'Pendiente' ? p2.ganador : 'Pendiente'))}</span>
@@ -953,6 +957,54 @@
         `;
 
         container.innerHTML += htmlBloque;
+      }
+
+      // 2. MÓDULO EXCLUSIVO DE FASE FINAL (PLAYOFFS DE CAMPEONES DE TABLAS)
+      let rPlayOffsNum = 5;
+      let partidosPlayOffs = datosBracketServidor[`ronda_${rPlayOffsNum}`] || [];
+
+      if (totalRondas >= 5 || partidosPlayOffs.length > 0) {
+        let partidosHtml = '';
+        partidosPlayOffs.forEach((p, idx) => {
+          let isFinished = p.ganador !== "Pendiente";
+          partidosHtml += `
+            <div class="bg-femDark-900 border border-amber-400/40 p-4 rounded-2xl flex items-center justify-between gap-4 shadow-lg">
+              <div class="flex items-center gap-2 truncate flex-1">
+                <img src="${getAvatarForTeam(p.equipo1)}" class="w-8 h-8 rounded-full border border-pink-400 object-cover">
+                <span class="font-orbitron font-bold text-xs text-white truncate">${escapeHTML(p.equipo1)}</span>
+              </div>
+              
+              <div class="text-center font-orbitron font-black text-amber-400 text-xs px-3">
+                VS
+                ${isFinished ? `<div class="text-[9px] text-emerald-400 block">🏆 ${escapeHTML(p.ganador)}</div>` : ''}
+              </div>
+
+              <div class="flex items-center gap-2 truncate flex-1 justify-end">
+                <span class="font-orbitron font-bold text-xs text-white truncate">${escapeHTML(p.equipo2)}</span>
+                <img src="${getAvatarForTeam(p.equipo2)}" class="w-8 h-8 rounded-full border border-purple-400 object-cover">
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML += `
+          <div class="glass-panel border-2 border-amber-400/80 p-6 rounded-3xl space-y-5 shadow-[0_0_50px_rgba(251,191,36,0.3)] bg-gradient-to-b from-femDark-900 to-femDark-950 mt-10">
+            <div class="text-center border-b border-amber-400/30 pb-4">
+              <div class="w-12 h-12 rounded-full bg-amber-400/20 border-2 border-amber-400 flex items-center justify-center text-amber-400 text-2xl mx-auto shadow-2xl animate-bounce mb-2">
+                <i class="fa-solid fa-trophy"></i>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400 text-amber-300 font-orbitron font-black text-xs uppercase">
+                👑 FASE FINAL DE CAMPEONES DE TABLA
+              </span>
+              <h3 class="font-orbitron font-black text-xl text-white mt-2 uppercase tracking-widest">PLAYOFFS DEL TORNEO</h3>
+              <p class="text-xs text-slate-300">Enfrentamientos sorteados entre los ganadores absolutos de cada tabla</p>
+            </div>
+
+            <div class="space-y-3">
+              ${partidosHtml || '<p class="text-xs text-slate-400 text-center py-4">Presiona "Pasar a Siguiente Ronda" en el Admin para generar las llaves entre campeones de tabla.</p>'}
+            </div>
+          </div>
+        `;
       }
     }
 
@@ -1041,7 +1093,7 @@
 
       if (subTab === 'general') {
         btnGen.className = "px-3 py-1.5 rounded-xl font-bold bg-femPink-500 text-slate-950 transition cursor-pointer flex items-center gap-1.5 font-orbitron";
-        btnLid.className = "px-3 py-1.5 rounded-xl font-bold bg-femDark-800 text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5 font-orbitron font-orbitron";
+        btnLid.className = "px-3 py-1.5 rounded-xl font-bold bg-femDark-800 text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5 font-orbitron";
       } else {
         btnLid.className = "px-3 py-1.5 rounded-xl font-bold bg-femPink-500 text-slate-950 transition cursor-pointer flex items-center gap-1.5 font-orbitron";
         btnGen.className = "px-3 py-1.5 rounded-xl font-bold bg-femDark-800 text-slate-400 hover:text-white transition cursor-pointer flex items-center gap-1.5 font-orbitron";
@@ -1129,6 +1181,7 @@
       });
     }
 
+    /* AVANZAR DE RONDA MEJORADO (TRANSIÓN AUTOMÁTICA A PLAYOFFS AL TERMINAR RONDA 4) */
     function avanzarSiguienteRonda() {
       db.ref(`${RUTA_TORNEO}/bracket`).once('value', (snap) => {
         const bracketEstructura = snap.val() || {};
@@ -1141,11 +1194,18 @@
         let hayPendientes = partidosUltimaRonda.some(p => p.ganador === "Pendiente");
 
         if (hayPendientes) return mostrarToast(`Aún hay partidos pendientes en Ronda ${ultimaRondaNum}`, "warning");
-        if (partidosUltimaRonda.length === 1) return mostrarToast(`¡El torneo finalizó! Campeona: ${partidosUltimaRonda[0].ganador}`, "success");
+        if (partidosUltimaRonda.length === 1 && ultimaRondaNum > 4) {
+          return mostrarToast(`¡El torneo finalizó por completo! Campeona: ${partidosUltimaRonda[0].ganador}`, "success");
+        }
 
         let ganadores = partidosUltimaRonda.map(p => p.ganador);
         let siguientesPartidos = [];
         let nuevaRondaNum = ultimaRondaNum + 1;
+
+        // Si terminamos la Ronda 4 de las tablas, juntamos a todos los ganadores de tabla
+        if (ultimaRondaNum === 4) {
+          mostrarToast("🏆 ¡Generando Fase Final de Campeones de Tabla!", "success");
+        }
 
         for (let i = 0; i < ganadores.length; i += 2) {
           if (ganadores[i + 1]) {
@@ -1167,7 +1227,7 @@
         rondaSeleccionada = nuevaRondaNum;
 
         db.ref(`${RUTA_TORNEO}/bracket`).set(bracketEstructura, (err) => {
-          if (!err) mostrarToast(`¡Ronda ${nuevaRondaNum} generada con éxito!`, "success");
+          if (!err) mostrarToast(`¡Fase Siguiente (${nuevaRondaNum > 4 ? 'PlayOffs' : 'Ronda ' + nuevaRondaNum}) generada!`, "success");
         });
       });
     }
