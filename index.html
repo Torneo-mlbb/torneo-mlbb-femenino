@@ -267,7 +267,7 @@
         </div>
 
         <div class="flex flex-wrap gap-3 pt-2">
-          <!-- AHORA AÑADE BOTS INFINITOS SIN LÍMITE DE 16 -->
+          <!-- BOTS ACUMULABLES SIN LÍMITE -->
           <button onclick="agregar30Bots()" class="bg-indigo-600/80 hover:bg-indigo-600 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-robot"></i> +16 Jugadoras Demo (Acumulable)
           </button>
@@ -350,22 +350,22 @@
         </div>
       </div>
 
-      <!-- TAB 3: PARTIDAS & BRACKET (CON SISTEMA DE OCULTAR / MOSTRAR COMPLETADOS) -->
+      <!-- TAB 3: PARTIDAS & BRACKET (CON FILTRO DE MOSTRAR / OCULTAR COMPLETADAS) -->
       <div id="tab-content-bracket" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
           <div>
             <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">ENFRENTAMIENTOS DE CAMPEONATO</h3>
-            <p class="text-xs text-slate-400">Selecciona la ronda para administrar los enfrentamientos.</p>
+            <p class="text-xs text-slate-400">Selecciona la ronda para ver la distribución de partidas y chats de arena.</p>
           </div>
-          
+
           <div class="flex items-center gap-3">
-            <!-- BOTÓN PARA ALTERNAR MOSTRAR/OCULTAR PARTIDOS JUGADOS -->
-            <button onclick="toggleMostrarCompletados()" id="btn-toggle-completados" class="bg-femDark-900 hover:bg-slate-800 text-femPink-300 border border-femPink-500/40 px-3.5 py-1.5 rounded-xl text-xs font-orbitron font-bold transition flex items-center gap-1.5">
-              <i class="fa-solid fa-eye"></i> <span id="text-toggle-completados">Mostrar Completadas</span>
+            <button onclick="toggleMostrarCompletados()" id="btn-toggle-completados" class="bg-femDark-900 hover:bg-slate-800 text-femPink-300 border border-femPink-500/40 px-3.5 py-1.5 rounded-xl text-xs font-orbitron font-bold transition flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-eye" id="icon-toggle-completados"></i> <span id="text-toggle-completados">Mostrar Partidas Ocultas</span>
             </button>
             <div id="rounds-filter-container" class="flex gap-2 text-xs font-orbitron font-bold"></div>
           </div>
         </div>
+
         <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <p class="text-xs text-slate-500 italic col-span-full py-8 text-center">Aún no se han generado enfrentamientos.</p>
         </div>
@@ -502,7 +502,7 @@
     let usuarioIdAutenticado = null;
     let activeChatMatchInfo = null;
     let activeChatSubTab = 'general';
-    let mostrarCompletados = false; // ESTADO PARA OCULTAR O MOSTRAR MATCHES JUGADOS
+    let mostrarCompletados = false; // VARIABLE PARA OCULTAR/MOSTRAR PARTIDAS JUGADAS
 
     let rondasBloquesCache = {};
 
@@ -526,7 +526,7 @@
           if (index < iteration) return targetText[index];
           return chars[Math.floor(Math.random() * chars.length)];
         }).join("");
-        if (iteration >= targetText.length) clearInterval(interval);
+        if (iteration >= targetText.length) clearInterval(iteration);
         iteration += 1 / 3;
       }, 30);
     }
@@ -588,7 +588,7 @@
       }
     }
 
-    // BOTÓN DE BOTS MEJORADO: GENERA JUGADORAS EN MASA SIN LÍMITE DE 16
+    // AÑADIR BOTS ACUMULABLES (SUMA +16 CADA VEZ QUE LO PRESIONAS)
     function agregar30Bots() {
       if (!isAdmin) return mostrarToast("Acceso reservado para Admin", "error");
 
@@ -598,19 +598,24 @@
         "LunoxCosmic", "VexanaCurse", "LesleyDead", "WanwanAgile", "BeatrixGun", "KarinaSlayer"
       ];
 
-      const cantidadActual = Object.keys(jugadorasCacheObj).length;
-      mostrarToast("Añadiendo +16 jugadoras de prueba...", "info");
+      const totalExistentes = Object.keys(jugadorasCacheObj).length;
+      mostrarToast(`Añadiendo +16 jugadoras demo...`, "info");
 
       nombresBase.forEach((nombre, index) => {
-        let aliasUnico = `${nombre}_${cantidadActual + index + 1}`;
+        let aliasGenerado = `${nombre}_${totalExistentes + index + 1}`;
         db.ref(`${RUTA_TORNEO}/equipos`).push({
-          nombreEquipo: aliasUnico,
-          avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${aliasUnico}`,
-          jugadores: [{ nick: nombre, id: String(10000000 + cantidadActual + index), server: String(2000 + (index % 5)), telefono: "999999999" }]
+          nombreEquipo: aliasGenerado,
+          avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${aliasGenerado}`,
+          jugadores: [{ 
+            nick: nombre, 
+            id: String(10000000 + totalExistentes + index), 
+            server: String(2000 + (index % 5)), 
+            telefono: "999999999" 
+          }]
         });
       });
 
-      setTimeout(() => mostrarToast("¡16 jugadoras añadidas con éxito!", "success"), 1000);
+      setTimeout(() => mostrarToast("¡16 jugadoras agregadas correctamente!", "success"), 1000);
     }
 
     function cambiarTab(tab) {
@@ -717,13 +722,15 @@
     function toggleMostrarCompletados() {
       mostrarCompletados = !mostrarCompletados;
       const textBtn = document.getElementById('text-toggle-completados');
+      const iconBtn = document.getElementById('icon-toggle-completados');
       if (textBtn) {
-        textBtn.innerText = mostrarCompletados ? "Ocultar Completadas" : "Mostrar Completadas";
+        textBtn.innerText = mostrarCompletados ? "Ocultar Completadas" : "Mostrar Partidas Ocultas";
+        iconBtn.className = mostrarCompletados ? "fa-solid fa-eye-slash" : "fa-solid fa-eye";
       }
       renderizarBracket();
     }
 
-    /* RENDERIZADO DE BRACKET CON OCULTACIÓN DE PARTIDOS JUGADOS */
+    /* RENDERIZADO DEL BRACKET CON DESAPARICIÓN AL MARCAR GANADOR */
     function renderizarBracket() {
       const matchesContainer = document.getElementById('matches-container');
       const roundsFilter = document.getElementById('rounds-filter-container');
@@ -754,7 +761,7 @@
         let isFinished = p.ganador !== "Pendiente";
         let isPass = p.equipo2 === "PASE DIRECTO 🏆";
 
-        // SI YA TIENE GANADORA Y NO HEMOS ACTIVADO EL BOTÓN DE "MOSTRAR COMPLETADAS", SE OCULTA
+        // SI YA TIENE GANADORA Y EL FILTRO "MOSTRAR COMPLETADOS" ESTÁ APAGADO, SE OCULTA EL CUADRO
         if (isFinished && !mostrarCompletados) {
           return;
         }
@@ -806,9 +813,9 @@
 
       if (visiblesCount === 0 && partidosRonda.length > 0) {
         matchesContainer.innerHTML = `
-          <div class="col-span-full py-8 text-center space-y-2">
-            <p class="text-xs text-emerald-400 font-orbitron font-bold">¡Todas las partidas de la Ronda ${rondaSeleccionada} han sido completadas!</p>
-            <p class="text-[11px] text-slate-400">Haz clic en "Mostrar Completadas" arriba si deseas volver a verlas o cambiarlas.</p>
+          <div class="col-span-full py-8 text-center space-y-2 bg-femDark-950/40 rounded-2xl border border-slate-800/80">
+            <p class="text-xs text-emerald-400 font-orbitron font-bold">🎉 ¡Todas las partidas de la Ronda ${rondaSeleccionada} han sido definidas!</p>
+            <p class="text-[11px] text-slate-400">Presiona "Mostrar Partidas Ocultas" arriba si deseas volver a verlas o modificar algún resultado.</p>
           </div>
         `;
       }
@@ -824,7 +831,7 @@
     function declararGanadora(ronda, idx, ganadora) {
       db.ref(`${RUTA_TORNEO}/bracket/ronda_${ronda}/${idx}`).update({ ganador: ganadora }, () => {
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-        mostrarToast(`Ganadora registrada: ${ganadora}`, "success");
+        mostrarToast(`Ganadora registrada: ${ganadora}. Match finalizado.`, "success");
       });
     }
 
