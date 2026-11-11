@@ -363,11 +363,11 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO PAREADO REAL -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO REAL AJUSTADO -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
-          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO PAREADO (DIAGRAMA DE AVANCE CORREGIDO)</h3>
-          <p class="text-xs text-slate-400">Las ganadoras de los matches contiguos avanzan a enfrentarse entre sí en la siguiente ronda.</p>
+          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO PAREADO (LÓGICA ADAPTADA)</h3>
+          <p class="text-xs text-slate-400">Ronda 1 a 3 muestran el avance interno. En la Ronda 4 se realiza la Gran Final de Tabla.</p>
         </div>
 
         <div id="arbol-esquematico-container" class="space-y-10">
@@ -535,7 +535,6 @@
       document.getElementById('back-menu-btn').classList.add('hidden');
     }
 
-    // VALIDACIÓN DE ALIAS ÚNICO AL INSCRIBIR
     function enviarInscripcionDirecta() {
       const nombreEquipo = document.getElementById('team-name').value.trim();
       const capNick = document.getElementById('cap-nick').value.trim();
@@ -548,7 +547,6 @@
         return mostrarToast("Completa todos los campos requeridos", "warning");
       }
 
-      // Evitar Alias Duplicados
       if (jugadorasCacheObj[nombreEquipo]) {
         return mostrarToast(`El Alias "${nombreEquipo}" ya está registrado. Elige otro.`, "error");
       }
@@ -581,7 +579,6 @@
       }
     }
 
-    // BOTS CON NOMBRES Y ALIAS ÚNICOS (16 PARTICIPANTES EXACTAS)
     function agregar30Bots() {
       if (!isAdmin) return mostrarToast("Acceso reservado para Admin", "error");
 
@@ -591,7 +588,7 @@
         "LunoxCosmic", "VexanaCurse", "LesleyDead", "WanwanAgile", "BeatrixGun", "KarinaSlayer"
       ];
 
-      mostrarToast("Añadiendo 16 jugadoras únicas de prueba...", "info");
+      mostrarToast("Añadiendo 16 jugadoras únicas...", "info");
 
       nombresBots.forEach((nombre, index) => {
         if (!jugadorasCacheObj[nombre]) {
@@ -722,10 +719,10 @@
 
       for (let r = 1; r <= totalRondas; r++) {
         let isActive = r === rondaSeleccionada;
-        let esRondaPlayOffs = r > 4;
+        let nombreRonda = r === 1 ? 'Ronda 1 (Octavos)' : (r === 2 ? 'Ronda 2 (Cuartos)' : (r === 3 ? 'Ronda 3 (Semifinal)' : 'Ronda 4 (Final)'));
         roundsFilter.innerHTML += `
           <button onclick="seleccionarRonda(${r})" class="px-3.5 py-1.5 rounded-xl text-xs font-orbitron ${isActive ? 'bg-femPink-500 text-slate-950 font-bold' : 'bg-femDark-950 text-slate-400'}">
-            ${esRondaPlayOffs ? '👑 FASE FINAL' : 'Ronda ' + r}
+            ${nombreRonda}
           </button>
         `;
       }
@@ -793,7 +790,7 @@
       });
     }
 
-    /* RENDERIZADO CORREGIDO Y ESTRICTO DEL ÁRBOL ESQUEMÁTICO PAREADO */
+    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO CON LÓGICA DE SEMIFINAL Y FINAL ADAPTADA */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container) return;
@@ -837,9 +834,10 @@
         let maxRondaTabs = Math.min(4, totalRondas);
         for (let r = 1; r <= maxRondaTabs; r++) {
           let btnActive = r === rActivaBloque;
+          let rName = r === 1 ? 'R1 (Octavos)' : (r === 2 ? 'R2 (Cuartos)' : (r === 3 ? 'R3 (Semifinal)' : 'R4 (Final)'));
           botonesRondaHtml += `
             <button onclick="cambiarRondaBloqueArbol(${numBloque}, ${r})" class="px-2 py-0.5 rounded text-[10px] font-orbitron font-bold transition ${btnActive ? 'bg-femPink-500 text-slate-950 shadow' : 'bg-femDark-900 text-slate-400 hover:text-white'}">
-              Ronda ${r}
+              ${rName}
             </button>
           `;
         }
@@ -865,13 +863,169 @@
           `;
         };
 
+        // LÓGICA DE DIBUJO ADAPTADA SEGÚN LA RONDA
+        let cuerpoGraficoHtml = '';
+
+        if (rActivaBloque === 4) {
+          // RONDA 4: GRAN FINAL DE TABLA (1 VS 1 DIRECTO)
+          let pFinal = partidosBloqueActual[0] || { equipo1: 'Pendiente', equipo2: 'Pendiente', ganador: 'Pendiente' };
+          cuerpoGraficoHtml = `
+            <div class="flex flex-col items-center justify-center p-6 bg-femDark-900 border border-amber-400/60 rounded-2xl text-center space-y-4 shadow-inner">
+              <span class="text-xs font-orbitron font-black text-amber-400 uppercase">🏆 GRAN FINAL DE TABLA #${numBloque}</span>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center w-full">
+                <div class="bg-femDark-950 p-3 rounded-xl border border-femPink-500/50 font-bold text-pink-300 flex items-center justify-center gap-2">
+                  <img src="${getAvatarForTeam(pFinal.equipo1)}" class="w-6 h-6 rounded-full object-cover">
+                  <span class="truncate">${escapeHTML(pFinal.equipo1)}</span>
+                </div>
+                <div class="text-amber-400 font-orbitron font-black text-sm">VS</div>
+                <div class="bg-femDark-950 p-3 rounded-xl border border-femPurple-500/50 font-bold text-purple-300 flex items-center justify-center gap-2">
+                  <img src="${getAvatarForTeam(pFinal.equipo2)}" class="w-6 h-6 rounded-full object-cover">
+                  <span class="truncate">${escapeHTML(pFinal.equipo2)}</span>
+                </div>
+              </div>
+              <div class="pt-2 border-t border-slate-800 w-full">
+                <span class="text-[9px] text-slate-400 uppercase font-orbitron block">CAMPEONA DE TABLA</span>
+                <span class="text-sm font-orbitron font-black text-amber-400">${pFinal.ganador !== 'Pendiente' ? '👑 ' + escapeHTML(pFinal.ganador) : 'EN DISPUTA'}</span>
+              </div>
+            </div>
+          `;
+        } else if (rActivaBloque === 3) {
+          // RONDA 3: SEMIFINAL (1 MATCH EN IZQ Y 1 MATCH EN DER -> SALEN 2 FINALISTAS ÚNICOS)
+          let pIzq = ladoIzq[0];
+          let pDer = ladoDer[0];
+          let ganIzq = pIzq && pIzq.ganador !== 'Pendiente' ? pIzq.ganador : 'Pendiente';
+          let ganDer = pDer && pDer.ganador !== 'Pendiente' ? pDer.ganador : 'Pendiente';
+
+          cuerpoGraficoHtml = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              
+              <!-- SEMIFINAL LADO IZQUIERDO -->
+              <div class="space-y-3">
+                <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase">◀ SEMIFINAL IZQUIERDA</h5>
+                <div class="flex items-center gap-2">
+                  <div class="flex-1">${renderMatchCard(pIzq, 1)}</div>
+                  <div class="w-3 h-12 bracket-pair-left shrink-0 hidden md:block"></div>
+                  <div class="bg-femDark-900 border border-femPink-500/40 p-2.5 rounded-xl text-[9px] font-bold text-pink-300 w-32 text-center shrink-0 hidden md:block shadow">
+                    <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Finalista Izq</span>
+                    <div class="flex items-center justify-center gap-1 mt-1 text-white truncate">
+                      <img src="${getAvatarForTeam(ganIzq)}" class="w-4 h-4 rounded-full object-cover">
+                      <span class="truncate font-bold">${escapeHTML(ganIzq)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SEMIFINAL LADO DERECHO -->
+              <div class="space-y-3">
+                <h5 class="text-[9px] font-orbitron font-bold text-femPurple-400 text-center uppercase">SEMIFINAL DERECHA ▶</h5>
+                <div class="flex items-center gap-2">
+                  <div class="bg-femDark-900 border border-femPurple-500/40 p-2.5 rounded-xl text-[9px] font-bold text-purple-300 w-32 text-center shrink-0 hidden md:block shadow">
+                    <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Finalista Der</span>
+                    <div class="flex items-center justify-center gap-1 mt-1 text-white truncate">
+                      <img src="${getAvatarForTeam(ganDer)}" class="w-4 h-4 rounded-full object-cover">
+                      <span class="truncate font-bold">${escapeHTML(ganDer)}</span>
+                    </div>
+                  </div>
+                  <div class="w-3 h-12 bracket-pair-right shrink-0 hidden md:block"></div>
+                  <div class="flex-1">${renderMatchCard(pDer, 2)}</div>
+                </div>
+              </div>
+
+            </div>
+          `;
+        } else {
+          // RONDA 1 Y RONDA 2: DIBUJO ESTÁNDAR PAREADO (2 CLASIFICADAS POR LADO)
+          cuerpoGraficoHtml = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start relative">
+              <div class="space-y-4">
+                <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ LADO IZQUIERDO (R${rActivaBloque})</h5>
+          `;
+
+          for (let i = 0; i < ladoIzq.length; i += 2) {
+            let p1 = ladoIzq[i];
+            let p2 = ladoIzq[i + 1];
+            let matchNum1 = (b * PARTIDAS_POR_TABLA) + i + 1;
+            let matchNum2 = (b * PARTIDAS_POR_TABLA) + i + 2;
+
+            let gan1 = p1 && p1.ganador !== 'Pendiente' ? p1.ganador : 'Pendiente';
+            let gan2 = p2 && p2.ganador !== 'Pendiente' ? p2.ganador : 'Pendiente';
+
+            cuerpoGraficoHtml += `
+              <div class="flex items-center gap-2">
+                <div class="flex-1 space-y-2">
+                  ${renderMatchCard(p1, matchNum1)}
+                  ${renderMatchCard(p2, matchNum2)}
+                </div>
+                <div class="w-3 h-20 bracket-pair-left shrink-0 hidden md:block"></div>
+                <div class="bg-femDark-900 border border-femPink-500/40 p-2 rounded-xl text-[9px] font-bold text-pink-300 w-32 text-center shrink-0 hidden md:block shadow">
+                  <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Avanzan a R${rActivaBloque+1}</span>
+                  <div class="mt-1 space-y-1 text-left">
+                    <div class="flex items-center gap-1 truncate text-white">
+                      <img src="${getAvatarForTeam(gan1)}" class="w-3.5 h-3.5 rounded-full object-cover">
+                      <span class="truncate">${escapeHTML(gan1)}</span>
+                    </div>
+                    <div class="flex items-center gap-1 truncate text-white">
+                      <img src="${getAvatarForTeam(gan2)}" class="w-3.5 h-3.5 rounded-full object-cover">
+                      <span class="truncate">${escapeHTML(gan2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+
+          cuerpoGraficoHtml += `
+              </div>
+              <div class="space-y-4">
+                <h5 class="text-[9px] font-orbitron font-bold text-femPurple-400 text-center uppercase mb-1">LADO DERECHO (R${rActivaBloque}) ▶</h5>
+          `;
+
+          for (let i = 0; i < ladoDer.length; i += 2) {
+            let p1 = ladoDer[i];
+            let p2 = ladoDer[i + 1];
+            let matchNum1 = (b * PARTIDAS_POR_TABLA) + mitad + i + 1;
+            let matchNum2 = (b * PARTIDAS_POR_TABLA) + mitad + i + 2;
+
+            let gan1 = p1 && p1.ganador !== 'Pendiente' ? p1.ganador : 'Pendiente';
+            let gan2 = p2 && p2.ganador !== 'Pendiente' ? p2.ganador : 'Pendiente';
+
+            cuerpoGraficoHtml += `
+              <div class="flex items-center gap-2">
+                <div class="bg-femDark-900 border border-femPurple-500/40 p-2 rounded-xl text-[9px] font-bold text-purple-300 w-32 text-center shrink-0 hidden md:block shadow">
+                  <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Avanzan a R${rActivaBloque+1}</span>
+                  <div class="mt-1 space-y-1 text-left">
+                    <div class="flex items-center gap-1 truncate text-white">
+                      <img src="${getAvatarForTeam(gan1)}" class="w-3.5 h-3.5 rounded-full object-cover">
+                      <span class="truncate">${escapeHTML(gan1)}</span>
+                    </div>
+                    <div class="flex items-center gap-1 truncate text-white">
+                      <img src="${getAvatarForTeam(gan2)}" class="w-3.5 h-3.5 rounded-full object-cover">
+                      <span class="truncate">${escapeHTML(gan2)}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-3 h-20 bracket-pair-right shrink-0 hidden md:block"></div>
+                <div class="flex-1 space-y-2">
+                  ${renderMatchCard(p1, matchNum1)}
+                  ${renderMatchCard(p2, matchNum2)}
+                </div>
+              </div>
+            `;
+          }
+
+          cuerpoGraficoHtml += `
+              </div>
+            </div>
+          `;
+        }
+
         let htmlBloque = `
           <div class="glass-panel border border-femPink-500/40 p-4 sm:p-5 rounded-3xl space-y-4 shadow-2xl relative">
             
             <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 gap-2">
               <div>
                 <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">TABLA / BLOQUE #${numBloque}</span>
-                <p class="text-[10px] text-slate-400">Diagrama de enfrentamientos (Ronda ${rActivaBloque})</p>
+                <p class="text-[10px] text-slate-400">Esquema de avaces en tiempo real (Ronda ${rActivaBloque})</p>
               </div>
 
               <div class="flex items-center gap-2">
@@ -889,94 +1043,11 @@
               <div class="text-center border-b border-slate-800/60 pb-2 flex justify-between items-center px-2">
                 <span class="font-orbitron font-black text-[10px] text-femPink-400">MINIONS FEMALE</span>
                 <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">TABLA #${numBloque} &bull; RONDA ${rActivaBloque}</h4>
-                <span class="font-orbitron font-black text-[10px] text-femPurple-400">${rActivaBloque === 4 ? '🏁 GANADORA DE TABLA' : 'FASE EN CURSO'}</span>
+                <span class="font-orbitron font-black text-[10px] text-femPurple-400">${rActivaBloque === 4 ? '🏁 GRAN FINAL' : 'FASE EN CURSO'}</span>
               </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start relative">
-                
-                <!-- LADO IZQUIERDO -->
-                <div class="space-y-4">
-                  <h5 class="text-[9px] font-orbitron font-bold text-femPink-400 text-center uppercase mb-1">◀ LADO IZQUIERDO (R${rActivaBloque})</h5>
-        `;
+              ${cuerpoGraficoHtml}
 
-        for (let i = 0; i < ladoIzq.length; i += 2) {
-          let p1 = ladoIzq[i];
-          let p2 = ladoIzq[i + 1];
-          let matchNum1 = (b * PARTIDAS_POR_TABLA) + i + 1;
-          let matchNum2 = (b * PARTIDAS_POR_TABLA) + i + 2;
-
-          let gan1 = p1 && p1.ganador !== 'Pendiente' ? p1.ganador : 'Pendiente';
-          let gan2 = p2 && p2.ganador !== 'Pendiente' ? p2.ganador : 'Pendiente';
-
-          htmlBloque += `
-            <div class="flex items-center gap-2">
-              <div class="flex-1 space-y-2">
-                ${renderMatchCard(p1, matchNum1)}
-                ${renderMatchCard(p2, matchNum2)}
-              </div>
-              <div class="w-3 h-20 bracket-pair-left shrink-0 hidden md:block"></div>
-              <div class="bg-femDark-900 border border-femPink-500/40 p-2 rounded-xl text-[9px] font-bold text-pink-300 w-32 text-center shrink-0 hidden md:block shadow">
-                <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Avanzan a R${rActivaBloque+1}</span>
-                <div class="mt-1 space-y-1 text-left">
-                  <div class="flex items-center gap-1 truncate text-white">
-                    <img src="${getAvatarForTeam(gan1)}" class="w-3.5 h-3.5 rounded-full object-cover">
-                    <span class="truncate">${escapeHTML(gan1)}</span>
-                  </div>
-                  <div class="flex items-center gap-1 truncate text-white">
-                    <img src="${getAvatarForTeam(gan2)}" class="w-3.5 h-3.5 rounded-full object-cover">
-                    <span class="truncate">${escapeHTML(gan2)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-        }
-
-        htmlBloque += `
-                </div>
-
-                <!-- LADO DERECHO -->
-                <div class="space-y-4">
-                  <h5 class="text-[9px] font-orbitron font-bold text-femPurple-400 text-center uppercase mb-1">LADO DERECHO (R${rActivaBloque}) ▶</h5>
-        `;
-
-        for (let i = 0; i < ladoDer.length; i += 2) {
-          let p1 = ladoDer[i];
-          let p2 = ladoDer[i + 1];
-          let matchNum1 = (b * PARTIDAS_POR_TABLA) + mitad + i + 1;
-          let matchNum2 = (b * PARTIDAS_POR_TABLA) + mitad + i + 2;
-
-          let gan1 = p1 && p1.ganador !== 'Pendiente' ? p1.ganador : 'Pendiente';
-          let gan2 = p2 && p2.ganador !== 'Pendiente' ? p2.ganador : 'Pendiente';
-
-          htmlBloque += `
-            <div class="flex items-center gap-2">
-              <div class="bg-femDark-900 border border-femPurple-500/40 p-2 rounded-xl text-[9px] font-bold text-purple-300 w-32 text-center shrink-0 hidden md:block shadow">
-                <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Avanzan a R${rActivaBloque+1}</span>
-                <div class="mt-1 space-y-1 text-left">
-                  <div class="flex items-center gap-1 truncate text-white">
-                    <img src="${getAvatarForTeam(gan1)}" class="w-3.5 h-3.5 rounded-full object-cover">
-                    <span class="truncate">${escapeHTML(gan1)}</span>
-                  </div>
-                  <div class="flex items-center gap-1 truncate text-white">
-                    <img src="${getAvatarForTeam(gan2)}" class="w-3.5 h-3.5 rounded-full object-cover">
-                    <span class="truncate">${escapeHTML(gan2)}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="w-3 h-20 bracket-pair-right shrink-0 hidden md:block"></div>
-              <div class="flex-1 space-y-2">
-                ${renderMatchCard(p1, matchNum1)}
-                ${renderMatchCard(p2, matchNum2)}
-              </div>
-            </div>
-          `;
-        }
-
-        htmlBloque += `
-                </div>
-
-              </div>
             </div>
           </div>
         `;
@@ -1136,7 +1207,6 @@
       });
     }
 
-    // SORTEO DE RONDA 1 GARANTIZANDO PARES ÚNICOS
     function iniciarSorteoMatematico() {
       db.ref(`${RUTA_TORNEO}/equipos`).once('value', (snap) => {
         const data = snap.val();
@@ -1158,12 +1228,11 @@
 
         db.ref(`${RUTA_TORNEO}/bracket/ronda_1`).set(partidos, () => {
           rondaSeleccionada = 1;
-          mostrarToast("¡Sorteo de Ronda 1 generado sin duplicados!", "success");
+          mostrarToast("¡Sorteo de Ronda 1 generado correctamente!", "success");
         });
       });
     }
 
-    // AVANZAR DE RONDA TOMANDO EXACTAMENTE A LAS GANADORAS
     function avanzarSiguienteRonda() {
       db.ref(`${RUTA_TORNEO}/bracket`).once('value', (snap) => {
         const bracketEstructura = snap.val() || {};
@@ -1178,12 +1247,10 @@
         if (hayPendientes) return mostrarToast(`Hay partidos pendientes en Ronda ${ultimaRondaNum}`, "warning");
         if (partidosUltimaRonda.length === 1) return mostrarToast(`¡El torneo finalizó! Campeona: ${partidosUltimaRonda[0].ganador}`, "success");
 
-        // EXTRAER GANADORAS REGISTRADAS
         let ganadores = partidosUltimaRonda.map(p => p.ganador);
         let siguientesPartidos = [];
         let nuevaRondaNum = ultimaRondaNum + 1;
 
-        // ENFRENTAR GANADORA 1 VS GANADORA 2 (PAR EN PAR STRICTO)
         for (let i = 0; i < ganadores.length; i += 2) {
           if (ganadores[i + 1]) {
             siguientesPartidos.push({
@@ -1204,7 +1271,7 @@
         rondaSeleccionada = nuevaRondaNum;
 
         db.ref(`${RUTA_TORNEO}/bracket`).set(bracketEstructura, (err) => {
-          if (!err) mostrarToast(`¡Ronda ${nuevaRondaNum} generada con las clasificadas reales!`, "success");
+          if (!err) mostrarToast(`¡Ronda ${nuevaRondaNum} generada con éxito!`, "success");
         });
       });
     }
