@@ -6,7 +6,6 @@
   <title>MLBB 1v1 Female Championship &bull; Official eSports Edition</title>
   
   <!-- Tailwind CSS & Fonts -->
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- O Tailwind CDN estándar -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
   
@@ -258,7 +257,7 @@
     <!-- 2. MAIN TOURNAMENT APP CONTAINER -->
     <div id="tournament-app-container" class="hidden space-y-8 transition-all duration-500">
       
-      <!-- SUPER ADMIN CONTROL PANEL -->
+      <!-- SUPER ADMIN CONTROL PANEL (CON BOTÓN DE AÑADIR 30 BOTS) -->
       <section id="super-admin-panel" class="hidden glass-panel border border-femPink-500/60 rounded-3xl p-6 shadow-2xl space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-femPink-500/30 pb-4">
           <div class="flex items-center gap-3">
@@ -267,13 +266,16 @@
             </div>
             <div>
               <h2 class="font-orbitron font-black text-sm text-femPink-300 uppercase tracking-wider">PANEL CENTRAL DE ADMINISTRACIÓN</h2>
-              <p class="text-[11px] text-slate-400">Gestión de llaves, reseteo de servidor y avance de ganadoras.</p>
+              <p class="text-[11px] text-slate-400">Gestión de llaves, reseteo de servidor y simulación automática.</p>
             </div>
           </div>
           <span class="text-xs font-orbitron font-bold text-femPink-300 bg-femPink-500/20 border border-femPink-500/40 px-3 py-1 rounded-full">SESIÓN ACTIVA &bull; ADMIN</span>
         </div>
 
         <div class="flex flex-wrap gap-3">
+          <button onclick="agregar30Bots()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-robot"></i> Añadir 30 Bots de Prueba
+          </button>
           <button onclick="iniciarSorteoMatematico()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-calculator"></i> Sortear y Generar Brackets Divididos
           </button>
@@ -308,7 +310,7 @@
         </button>
       </div>
 
-      <!-- TAB 1: FORMULARIO DE INSCRIPCIÓN DIRECTA (CON AVATAR) -->
+      <!-- TAB 1: FORMULARIO DE INSCRIPCIÓN DIRECTA -->
       <div id="tab-content-registro" class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl transition-all">
         <div class="max-w-2xl space-y-6">
           <div class="border-b border-slate-800 pb-4">
@@ -324,7 +326,6 @@
               <input type="text" id="team-name" placeholder="Ej: QueenLancelot" class="w-full bg-femDark-950 border border-slate-700/80 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-femPink-500 transition shadow-inner">
             </div>
 
-            <!-- Campo Avatar / Imagen -->
             <div>
               <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Avatar / Imagen de la Jugadora:</label>
               <input type="file" id="cap-avatar-file" accept="image/*" class="w-full bg-femDark-950 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-slate-300 file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-femPink-500 file:text-slate-950 hover:file:bg-femPink-400 cursor-pointer">
@@ -374,7 +375,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO DIVIDIDO (IZQUIERDA Y DERECHA) -->
+      <!-- TAB 4: ÁRBOL ESQUEMÁTICO DIVIDIDO -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
           <div>
@@ -622,7 +623,40 @@
       document.getElementById('back-menu-btn').classList.add('hidden');
     }
 
-    // Inscripción Directa con procesamiento de Avatar Base64
+    // FUNCIÓN PARA AÑADIR 30 BOTS DE PRUEBA AUTOMÁTICAMENTE
+    function agregar30Bots() {
+      if (!isSuperAdmin) return mostrarToast("Acceso denegado", "error");
+      
+      const nombresBots = [
+        "QueenLancelot", "FannyGod", "KaguraQueen", "EsmeraldaX", "MiyaAssassin",
+        "LaylaSniper", "GuineverePro", "RubyVamp", "AngelaHeal", "OdetteMagic",
+        "LunoxCosmic", "VexanaCurse", "HanabiShadow", "LesleyBullet", "KaditaWave",
+        "PharsaBird", "LyliaChaos", "CarmillaBat", "ValentinaCopy", "XavierLaser",
+        "MelissaDoll", "NovariaStar", "JoyFlash", "FlorynBloom", "BeatrixGun",
+        "YveGalaxy", "AliceBlood", "RafaelaAngel", "FreyaValkyrie", "BelerickTree"
+      ];
+
+      mostrarToast("Generando 30 bots de prueba...", "info");
+
+      nombresBots.forEach((nombre, index) => {
+        const botData = {
+          nombreEquipo: `${nombre}_Bot`,
+          avatar: "",
+          jugadores: [{
+            nick: nombre,
+            id: String(10000000 + index),
+            server: String(2000 + (index % 5)),
+            telefono: "999999999"
+          }]
+        };
+        db.ref(`torneos/1v1_femenino/equipos`).push(botData);
+      });
+
+      setTimeout(() => {
+        mostrarToast("¡30 bots añadidos con éxito!", "success");
+      }, 1500);
+    }
+
     function enviarInscripcionDirecta() {
       const nombreEquipo = document.getElementById('team-name').value.trim();
       const capNick = document.getElementById('cap-nick').value.trim();
@@ -806,7 +840,6 @@
       mostrarToast(`Ganadora registrada: ${ganadora}`, "success");
     }
 
-    // RENDERIZAR ÁRBOL DIVIDIDO (IZQUIERDA Y DERECHA CONVERGIENDO AL CENTRO)
     function renderizarArbolDividido() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container || !datosBracketServidor) return;
@@ -818,7 +851,6 @@
         return;
       }
 
-      // Dividir participantes en Lado Izquierdo y Lado Derecho
       const mitad = Math.ceil(partidosRonda1.length / 2);
       const ladoIzq = partidosRonda1.slice(0, mitad);
       const ladoDer = partidosRonda1.slice(mitad);
