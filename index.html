@@ -272,7 +272,7 @@
             <i class="fa-solid fa-robot"></i> +16 Jugadoras Demo
           </button>
           
-          <!-- BOTONES MATCH 1 (SE OCULTAN CUANDO FINALIZA FASE 1) -->
+          <!-- BOTONES MATCH 1 -->
           <button id="btn-sortear-match1" onclick="iniciarSorteoMatematico()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-calculator"></i> Sortear Ronda 1 (Match 1)
           </button>
@@ -308,7 +308,7 @@
           <i class="fa-solid fa-sitemap"></i> Partidas (Match 1)
         </button>
 
-        <!-- PESTAÑA MATCH 2 (OCULTA INICIALMENTE, APARECE EN POSICIÓN 4 AL FINALIZAR FASE 1) -->
+        <!-- PESTAÑA MATCH 2 (OCULTA INICIALMENTE) -->
         <button id="tab-btn-match2" onclick="cambiarTab('match2')" class="hidden px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-amber-400 hover:text-amber-300 transition cursor-pointer whitespace-nowrap border border-amber-500/40 items-center gap-2">
           <i class="fa-solid fa-trophy"></i> Cuadro Finalistas (Match 2)
         </button>
@@ -753,9 +753,22 @@
       });
     }
 
-    // GESTIÓN DE VISIBILIDAD DE BOTONES Y PESTAÑA ENTRE MATCH 1 Y MATCH 2
+    // CORRECCIÓN CLAVE: EVALUACIÓN STRICTA DEL FIN DE MATCH 1
     function evaluarEstadoMatch1YMatch2() {
-      if (!datosBracketServidor) return;
+      const btnSortear1 = document.getElementById('btn-sortear-match1');
+      const btnAvanzar1 = document.getElementById('btn-avanzar-match1');
+      const btnCrearMatch2 = document.getElementById('btn-crear-match2-admin');
+      const btnAvanzarMatch2 = document.getElementById('btn-avanzar-match2');
+      const tabMatch2 = document.getElementById('tab-btn-match2');
+
+      if (!datosBracketServidor) {
+        btnSortear1?.classList.remove('hidden');
+        btnAvanzar1?.classList.remove('hidden');
+        btnCrearMatch2?.classList.add('hidden');
+        btnAvanzarMatch2?.classList.add('hidden');
+        tabMatch2?.classList.add('hidden');
+        return;
+      }
 
       const rondas = Object.keys(datosBracketServidor);
       if (rondas.length === 0) return;
@@ -763,21 +776,13 @@
       const ultimaRondaNum = rondas.length;
       const partidosUltimaRonda = datosBracketServidor[`ronda_${ultimaRondaNum}`] || [];
 
-      // Si en la última ronda del Match 1 solo queda 1 enfrentamiento y ya tiene ganador, o si hay ganadores definidos
-      const match1Completado = partidosUltimaRonda.length > 0 && partidosUltimaRonda.every(p => p.ganador !== "Pendiente");
-
-      const btnSortear1 = document.getElementById('btn-sortear-match1');
-      const btnAvanzar1 = document.getElementById('btn-avanzar-match1');
-      const btnCrearMatch2 = document.getElementById('btn-crear-match2-admin');
-      const btnAvanzarMatch2 = document.getElementById('btn-avanzar-match2');
-      const tabMatch2 = document.getElementById('tab-btn-match2');
+      // Solo se considera completada la Fase 1 si se llegó a la final (1 solo partido) y ya hay ganador definido.
+      const match1Completado = partidosUltimaRonda.length === 1 && partidosUltimaRonda[0].ganador !== "Pendiente";
 
       if (match1Completado) {
-        // Bloquear y ocultar generación del Match 1
         btnSortear1?.classList.add('hidden');
         btnAvanzar1?.classList.add('hidden');
 
-        // Mostrar botones y pestaña del Match 2
         btnCrearMatch2?.classList.remove('hidden');
         btnCrearMatch2?.classList.add('flex');
         tabMatch2?.classList.remove('hidden');
@@ -788,7 +793,6 @@
           btnAvanzarMatch2?.classList.add('flex');
         }
       } else {
-        // En progreso del Match 1
         btnSortear1?.classList.remove('hidden');
         btnAvanzar1?.classList.remove('hidden');
         btnCrearMatch2?.classList.add('hidden');
@@ -915,6 +919,7 @@
       db.ref(`${RUTA_TORNEO}/bracket/ronda_${ronda}/${idx}`).update({ ganador: ganadora }, () => {
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
         mostrarToast(`Ganadora registrada: ${ganadora}. Match finalizado.`, "success");
+        evaluarEstadoMatch1YMatch2();
       });
     }
 
@@ -1366,7 +1371,6 @@
 
         if (hayPendientes) return mostrarToast(`Hay partidos pendientes en Ronda ${ultimaRondaNum}`, "warning");
 
-        // LÍMITE: Si ya llegamos a 1 solo partido y tiene ganador, Match 1 terminó
         if (partidosUltimaRonda.length === 1 && partidosUltimaRonda[0].ganador !== "Pendiente") {
           return mostrarToast("¡Match 1 finalizado! Utiliza el botón de Crear Match 2", "info");
         }
@@ -1400,7 +1404,6 @@
       });
     }
 
-    // CREACIÓN DE MATCH 2 CON LISTA DE FINALISTAS DEL MATCH 1
     function generarMatch2Finalistas() {
       if (!isAdmin) return;
 
@@ -1441,7 +1444,6 @@
       });
     }
 
-    // AVANCE INDEPENDIENTE DE RONDAS DENTRO DEL MATCH 2
     function avanzarRondaMatch2() {
       if (!datosMatch2Servidor || !datosMatch2Servidor.partidas) return mostrarToast("No se ha creado el Match 2", "warning");
 
