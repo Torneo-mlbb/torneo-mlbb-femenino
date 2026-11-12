@@ -221,13 +221,14 @@
             id="guini-viewer"
             src="guini.glb"
             alt="Guinevere Athena Asamiya 3D"
+            autoplay
             camera-controls
             disable-pan
-            camera-target="0m 1.1m 0m"
-            camera-orbit="0deg 85deg 230%"
-            min-camera-orbit="auto auto 150%"
-            max-camera-orbit="auto auto 300%"
-            field-of-view="45deg"
+            camera-target="auto auto auto"
+            camera-orbit="0deg 85deg 185%"
+            min-camera-orbit="auto auto 120%"
+            max-camera-orbit="auto auto 260%"
+            field-of-view="42deg"
             shadow-intensity="1"
             exposure="1.15"
             interaction-prompt="none"
@@ -577,16 +578,22 @@
           }, { once: true });
         } else {
           guiniViewer.animationName = animaciones[0];
-          guiniViewer.currentTime = 0;
-          guiniViewer.play();
+          let tiempoAnterior = 0;
 
-          const vigilarFinal = setInterval(() => {
-            if (guiniViewer.duration && guiniViewer.currentTime >= guiniViewer.duration - 0.08) {
+          function vigilarBucle() {
+            const actual = guiniViewer.currentTime;
+            const duracion = guiniViewer.duration;
+
+            if (duracion > 0 && (actual >= duracion - 0.05 || (tiempoAnterior > duracion * 0.5 && actual < tiempoAnterior))) {
               guiniViewer.pause();
-              guiniViewer.currentTime = guiniViewer.duration - 0.05;
-              clearInterval(vigilarFinal);
+              guiniViewer.currentTime = duracion - 0.05;
+              return;
             }
-          }, 30);
+            tiempoAnterior = actual;
+            requestAnimationFrame(vigilarBucle);
+          }
+
+          requestAnimationFrame(vigilarBucle);
         }
       });
     }
