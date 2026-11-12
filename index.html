@@ -225,9 +225,9 @@
             camera-controls
             disable-pan
             camera-target="auto auto auto"
-            camera-orbit="0deg 85deg 185%"
-            min-camera-orbit="auto auto 120%"
-            max-camera-orbit="auto auto 260%"
+            camera-orbit="0deg 85deg 145%"
+            min-camera-orbit="auto auto 100%"
+            max-camera-orbit="auto auto 220%"
             field-of-view="42deg"
             shadow-intensity="1"
             exposure="1.15"
@@ -566,35 +566,26 @@
         const animaciones = guiniViewer.availableAnimations;
         if (!animaciones || animaciones.length === 0) return;
 
-        const idleAnim = animaciones.find(a => /idle|stand|wait|loop/i.test(a));
+        guiniViewer.animationName = animaciones[0];
 
-        if (animaciones.length > 1 && idleAnim) {
-          const introAnim = animaciones.find(a => a !== idleAnim) || animaciones[0];
-          guiniViewer.animationName = introAnim;
-          guiniViewer.play({ repetitions: 1 });
-          guiniViewer.addEventListener('finished', () => {
-            guiniViewer.animationName = idleAnim;
-            guiniViewer.play();
-          }, { once: true });
-        } else {
-          guiniViewer.animationName = animaciones[0];
-          let tiempoAnterior = 0;
-
-          function vigilarBucle() {
-            const actual = guiniViewer.currentTime;
-            const duracion = guiniViewer.duration;
-
-            if (duracion > 0 && (actual >= duracion - 0.05 || (tiempoAnterior > duracion * 0.5 && actual < tiempoAnterior))) {
-              guiniViewer.pause();
-              guiniViewer.currentTime = duracion - 0.05;
-              return;
-            }
-            tiempoAnterior = actual;
-            requestAnimationFrame(vigilarBucle);
-          }
-
-          requestAnimationFrame(vigilarBucle);
+        function puntoPoseFinalSeguro(duracion, objetivo) {
+          return Math.min(objetivo, duracion - 0.1);
         }
+
+        function vigilarPoseFinal() {
+          const actual = guiniViewer.currentTime;
+          const duracion = guiniViewer.duration;
+          const puntoPoseQuieta = duracion * 0.76;
+
+          if (duracion > 0 && actual >= puntoPoseFinalSeguro(duracion, puntoPoseQuieta)) {
+            guiniViewer.pause();
+            guiniViewer.currentTime = puntoPoseQuieta;
+            return;
+          }
+          requestAnimationFrame(vigilarPoseFinal);
+        }
+
+        requestAnimationFrame(vigilarPoseFinal);
       });
     }
 
