@@ -414,11 +414,11 @@
             <p class="text-xs text-slate-400">Selecciona la ronda para ver la distribución de partidas y chats de arena.</p>
           </div>
 
-          <div class="flex items-center gap-3">
+          <div class="flex flex-wrap items-center gap-3">
             <button onclick="toggleMostrarCompletados()" id="btn-toggle-completados" class="bg-femDark-900 hover:bg-slate-800 text-femPink-300 border border-femPink-500/40 px-3.5 py-1.5 rounded-xl text-xs font-orbitron font-bold transition flex items-center gap-1.5 cursor-pointer">
               <i class="fa-solid fa-eye" id="icon-toggle-completados"></i> <span id="text-toggle-completados">Mostrar Partidas Ocultas</span>
             </button>
-            <div id="rounds-filter-container" class="flex gap-2 text-xs font-orbitron font-bold"></div>
+            <div id="rounds-filter-container" class="flex flex-wrap gap-2 text-xs font-orbitron font-bold"></div>
           </div>
         </div>
 
@@ -451,8 +451,8 @@
           </div>
         </div>
 
-        <!-- CONTENEDOR PARTIDAS MATCH 2 -->
-        <div id="match2-cuadro-container" class="bg-femDark-950 p-6 rounded-2xl border border-amber-500/30 min-h-[300px]">
+        <!-- CONTENEDOR PARTIDAS MATCH 2 (CON HISTORIAL DE RONDAS Y BOTÓN OCULTAR/MOSTRAR) -->
+        <div id="match2-cuadro-container" class="bg-femDark-950 p-6 rounded-2xl border border-amber-500/30 min-h-[300px] space-y-5">
           <p class="text-xs text-slate-500 italic text-center py-8">Aún no se ha generado el cuadro final.</p>
         </div>
 
@@ -597,12 +597,15 @@
     let activeChatMatchInfo = null;
     let activeChatSubTab = 'general';
     let mostrarCompletados = false;
+    let mostrarCompletadosMatch2 = true; // Visible por defecto para ver historial y corregir errores
     let rondasBloquesCache = {};
 
     document.addEventListener('DOMContentLoaded', () => {
       auth.onAuthStateChanged((user) => {
         isAdmin = !!user;
         actualizarPermisosAdmin();
+        renderizarBracket();
+        renderizarMatch2();
       });
 
       scrambleTextEffect();
@@ -739,6 +742,7 @@
         btnArbol.className = "px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold text-slate-400 hover:text-white cursor-pointer transition";
         contPartidas.classList.remove('hidden');
         contArbol.classList.add('hidden');
+        renderizarMatch2();
       } else {
         btnArbol.className = "px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold bg-amber-500 text-slate-950 cursor-pointer transition";
         btnPartidas.className = "px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold text-slate-400 hover:text-white cursor-pointer transition";
@@ -836,13 +840,11 @@
       });
     }
 
-    // CONTROL ESTRUCTURAL POR TABLA / BLOQUE DE 8 PARTIDAS
     function calcularFinMatch1PorTablas() {
       if (!datosBracketServidor) return false;
       const partidosRonda1 = datosBracketServidor['ronda_1'] || [];
       if (partidosRonda1.length === 0) return false;
 
-      const PARTIDAS_POR_TABLA = 8;
       const totalRondasExistentes = Object.keys(datosBracketServidor).length;
       const rondasRequeridasPorTabla = Math.min(4, Math.ceil(Math.log2(partidosRonda1.length)) + 1);
 
@@ -905,6 +907,11 @@
       renderizarBracket();
     }
 
+    function toggleMostrarCompletadosMatch2() {
+      mostrarCompletadosMatch2 = !mostrarCompletadosMatch2;
+      renderizarMatch2();
+    }
+
     function renderizarBracket() {
       const matchesContainer = document.getElementById('matches-container');
       const roundsFilter = document.getElementById('rounds-filter-container');
@@ -922,7 +929,7 @@
         let isActive = r === rondaSeleccionada;
         let nombreRonda = r === 1 ? 'Ronda 1 (Octavos)' : (r === 2 ? 'Ronda 2 (Cuartos)' : (r === 3 ? 'Ronda 3 (Semifinal)' : `Ronda ${r} (Final de Tabla)`));
         roundsFilter.innerHTML += `
-          <button onclick="seleccionarRonda(${r})" class="px-3.5 py-1.5 rounded-xl text-xs font-orbitron ${isActive ? 'bg-femPink-500 text-slate-950 font-bold' : 'bg-femDark-950 text-slate-400'}">
+          <button onclick="seleccionarRonda(${r})" class="px-3.5 py-1.5 rounded-xl text-xs font-orbitron cursor-pointer transition ${isActive ? 'bg-femPink-500 text-slate-950 font-bold' : 'bg-femDark-950 text-slate-400 hover:text-white'}">
             ${nombreRonda}
           </button>
         `;
@@ -950,13 +957,13 @@
         ` : '';
 
         matchesContainer.innerHTML += `
-          <div class="bg-femDark-950 border border-slate-800/80 rounded-2xl p-5 shadow-lg space-y-3">
-            <div class="flex justify-between text-[11px] font-orbitron font-bold text-femPink-400 border-b border-slate-800 pb-2">
+          <div class="bg-femDark-950 border ${isFinished ? 'border-emerald-500/40' : 'border-slate-800/80'} rounded-2xl p-5 shadow-lg space-y-3">
+            <div class="flex justify-between text-[11px] font-orbitron font-bold ${isFinished ? 'text-emerald-400' : 'text-femPink-400'} border-b border-slate-800 pb-2">
               <span>MATCH #${idx + 1}</span>
               <span>${isFinished ? 'GANADORA: ' + escapeHTML(p.ganador) : 'EN ESPERA'}</span>
             </div>
             
-            <div class="p-2 rounded-xl bg-femDark-900 border border-slate-800 font-bold text-xs text-pink-300 flex items-center justify-between gap-2">
+            <div class="p-2 rounded-xl bg-femDark-900 border ${p.ganador === p.equipo1 ? 'border-emerald-500/50' : 'border-slate-800'} font-bold text-xs text-pink-300 flex items-center justify-between gap-2">
               <div class="flex items-center gap-2 truncate">
                 <img src="${img1}" class="w-7 h-7 rounded-full object-cover border border-femPink-400">
                 <span class="truncate">${p.ganador === p.equipo1 ? '🏆 ' : ''}${escapeHTML(p.equipo1)}</span>
@@ -965,7 +972,7 @@
 
             <div class="text-[10px] text-slate-500 text-center font-bold">VS</div>
 
-            <div class="p-2 rounded-xl bg-femDark-900 border border-slate-800 font-bold text-xs text-purple-300 flex items-center justify-between gap-2">
+            <div class="p-2 rounded-xl bg-femDark-900 border ${p.ganador === p.equipo2 ? 'border-emerald-500/50' : 'border-slate-800'} font-bold text-xs text-purple-300 flex items-center justify-between gap-2">
               <div class="flex items-center gap-2 truncate">
                 <img src="${img2}" class="w-7 h-7 rounded-full object-cover border border-femPurple-500">
                 <span class="truncate">${p.ganador === p.equipo2 ? '🏆 ' : ''}${escapeHTML(p.equipo2)}</span>
@@ -974,8 +981,12 @@
             ${chatBtnHtml}
             ${isAdmin && !isPass ? `
               <div class="flex gap-2 pt-2 border-t border-slate-800">
-                <button onclick="declararGanadora(${rondaSeleccionada}, ${idx}, '${escapeHTML(p.equipo1)}')" class="bg-femPink-500/20 hover:bg-femPink-500 hover:text-slate-950 text-femPink-300 text-[10px] py-1.5 rounded-lg w-1/2 font-bold cursor-pointer transition font-orbitron">Gana ${escapeHTML(p.equipo1)}</button>
-                <button onclick="declararGanadora(${rondaSeleccionada}, ${idx}, '${escapeHTML(p.equipo2)}')" class="bg-femPink-500/20 hover:bg-femPink-500 hover:text-slate-950 text-femPink-300 text-[10px] py-1.5 rounded-lg w-1/2 font-bold cursor-pointer transition font-orbitron">Gana ${escapeHTML(p.equipo2)}</button>
+                <button onclick="declararGanadora(${rondaSeleccionada}, ${idx}, '${escapeHTML(p.equipo1)}')" class="${p.ganador === p.equipo1 ? 'bg-emerald-600 text-white' : 'bg-femPink-500/20 hover:bg-femPink-500 hover:text-slate-950 text-femPink-300'} text-[10px] py-1.5 rounded-lg w-1/2 font-bold cursor-pointer transition font-orbitron">
+                  ${p.ganador === p.equipo1 ? '✓ ' : ''}Gana ${escapeHTML(p.equipo1)}
+                </button>
+                <button onclick="declararGanadora(${rondaSeleccionada}, ${idx}, '${escapeHTML(p.equipo2)}')" class="${p.ganador === p.equipo2 ? 'bg-emerald-600 text-white' : 'bg-femPink-500/20 hover:bg-femPink-500 hover:text-slate-950 text-femPink-300'} text-[10px] py-1.5 rounded-lg w-1/2 font-bold cursor-pointer transition font-orbitron">
+                  ${p.ganador === p.equipo2 ? '✓ ' : ''}Gana ${escapeHTML(p.equipo2)}
+                </button>
               </div>
             ` : ''}
           </div>
@@ -1002,7 +1013,7 @@
     function declararGanadora(ronda, idx, ganadora) {
       db.ref(`${RUTA_TORNEO}/bracket/ronda_${ronda}/${idx}`).update({ ganador: ganadora }, () => {
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-        mostrarToast(`Ganadora registrada: ${ganadora}. Match finalizado.`, "success");
+        mostrarToast(`Ganadora actualizada: ${ganadora}.`, "success");
         evaluarEstadoMatch1YMatch2();
       });
     }
@@ -1570,6 +1581,7 @@
       });
     }
 
+    /* PARTIDAS MATCH 2 CON SELECTOR DE RONDAS ANTERIORES Y CORRECCIÓN DE ERRORES */
     function renderizarMatch2() {
       const container = document.getElementById('match2-cuadro-container');
       if (!container) return;
@@ -1582,48 +1594,99 @@
 
       let rondasObj = datosMatch2Servidor.rondas;
       let totalRondasM2 = Object.keys(rondasObj).length;
-      let partidos = rondasObj[`ronda_${totalRondasM2}`] || [];
+      if (rondaMatch2Seleccionada > totalRondasM2) rondaMatch2Seleccionada = totalRondasM2;
+
+      let partidos = rondasObj[`ronda_${rondaMatch2Seleccionada}`] || [];
       let matchesHtml = '';
+      let visiblesCount = 0;
+
+      // Botones de navegación entre rondas del Match 2
+      let filtroRondasHtml = '';
+      for (let r = 1; r <= totalRondasM2; r++) {
+        let isActive = r === rondaMatch2Seleccionada;
+        let rLabel = (rondasObj[`ronda_${r}`] || []).length === 1 ? `Ronda ${r} (Gran Final)` : `Ronda ${r}`;
+        filtroRondasHtml += `
+          <button onclick="seleccionarRondaMatch2(${r})" class="px-3.5 py-1.5 rounded-xl text-xs font-orbitron cursor-pointer transition ${isActive ? 'bg-amber-500 text-slate-950 font-bold shadow' : 'bg-femDark-900 text-slate-400 hover:text-white border border-slate-800'}">
+            ${rLabel}
+          </button>
+        `;
+      }
 
       partidos.forEach((p, idx) => {
         let finalizado = p.ganador !== 'Pendiente';
         let isPass = p.equipo2 === 'PASE DIRECTO 🏆';
 
+        if (finalizado && !mostrarCompletadosMatch2) return;
+        visiblesCount++;
+
         matchesHtml += `
-          <div class="bg-femDark-900 border border-amber-500/40 p-4 rounded-xl space-y-2">
-            <div class="flex justify-between text-[10px] text-amber-400 font-bold font-orbitron">
-              <span>FINAL MATCH #${idx + 1} (R${totalRondasM2})</span>
+          <div class="bg-femDark-900 border ${finalizado ? 'border-emerald-500/40' : 'border-amber-500/40'} p-4 rounded-xl space-y-2.5 shadow-lg">
+            <div class="flex justify-between text-[10px] ${finalizado ? 'text-emerald-400' : 'text-amber-400'} font-bold font-orbitron border-b border-slate-800 pb-2">
+              <span>FINAL MATCH #${idx + 1} (R${rondaMatch2Seleccionada})</span>
               <span>${finalizado ? 'GANADORA: ' + escapeHTML(p.ganador) : 'EN JUEGO'}</span>
             </div>
-            <div class="text-xs font-bold text-pink-300 flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
+            
+            <div class="p-2 rounded-lg bg-femDark-950 border ${p.ganador === p.equipo1 ? 'border-emerald-500/50' : 'border-slate-800'} text-xs font-bold text-pink-300 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 truncate">
                 <img src="${getAvatarForTeam(p.equipo1)}" class="w-6 h-6 rounded-full object-cover border border-femPink-400">
-                <span>${p.ganador === p.equipo1 ? '👑 ' : ''}${escapeHTML(p.equipo1)}</span>
+                <span class="truncate">${p.ganador === p.equipo1 ? '👑 ' : ''}${escapeHTML(p.equipo1)}</span>
               </div>
             </div>
+
             <div class="text-[9px] text-slate-500 text-center font-bold">VS</div>
-            <div class="text-xs font-bold text-purple-300 flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
+
+            <div class="p-2 rounded-lg bg-femDark-950 border ${p.ganador === p.equipo2 ? 'border-emerald-500/50' : 'border-slate-800'} text-xs font-bold text-purple-300 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 truncate">
                 <img src="${getAvatarForTeam(p.equipo2)}" class="w-6 h-6 rounded-full object-cover border border-femPurple-500">
-                <span>${p.ganador === p.equipo2 ? '👑 ' : ''}${escapeHTML(p.equipo2)}</span>
+                <span class="truncate">${p.ganador === p.equipo2 ? '👑 ' : ''}${escapeHTML(p.equipo2)}</span>
               </div>
             </div>
-            ${isAdmin && !finalizado && !isPass ? `
-              <div class="flex gap-2 pt-2 border-t border-slate-800">
-                <button onclick="declararGanadoraMatch2(${totalRondasM2}, ${idx}, '${escapeHTML(p.equipo1)}')" class="bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 text-amber-300 text-[10px] py-1 rounded w-1/2 font-bold cursor-pointer font-orbitron">Gana ${escapeHTML(p.equipo1)}</button>
-                <button onclick="declararGanadoraMatch2(${totalRondasM2}, ${idx}, '${escapeHTML(p.equipo2)}')" class="bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 text-amber-300 text-[10px] py-1 rounded w-1/2 font-bold cursor-pointer font-orbitron">Gana ${escapeHTML(p.equipo2)}</button>
+
+            ${isAdmin && !isPass ? `
+              <div class="pt-2 border-t border-slate-800 space-y-1.5">
+                <div class="flex gap-2">
+                  <button onclick="declararGanadoraMatch2(${rondaMatch2Seleccionada}, ${idx}, '${escapeHTML(p.equipo1)}')" class="${p.ganador === p.equipo1 ? 'bg-emerald-600 text-white' : 'bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 text-amber-300'} text-[10px] py-1.5 rounded-lg w-1/2 font-bold cursor-pointer transition font-orbitron">
+                    ${p.ganador === p.equipo1 ? '✓ ' : ''}Gana ${escapeHTML(p.equipo1)}
+                  </button>
+                  <button onclick="declararGanadoraMatch2(${rondaMatch2Seleccionada}, ${idx}, '${escapeHTML(p.equipo2)}')" class="${p.ganador === p.equipo2 ? 'bg-emerald-600 text-white' : 'bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 text-amber-300'} text-[10px] py-1.5 rounded-lg w-1/2 font-bold cursor-pointer transition font-orbitron">
+                    ${p.ganador === p.equipo2 ? '✓ ' : ''}Gana ${escapeHTML(p.equipo2)}
+                  </button>
+                </div>
+                ${finalizado ? `<p class="text-[9px] text-slate-400 text-center italic">Puedes pulsar el otro botón si hubo un error al elegir ganadora.</p>` : ''}
               </div>
             ` : ''}
           </div>
         `;
       });
 
+      if (visiblesCount === 0 && partidos.length > 0) {
+        matchesHtml = `
+          <div class="col-span-full py-8 text-center space-y-2 bg-femDark-900/60 rounded-2xl border border-amber-500/20">
+            <p class="text-xs text-emerald-400 font-orbitron font-bold">✅ Todas las partidas de la Ronda ${rondaMatch2Seleccionada} están completadas.</p>
+            <p class="text-[11px] text-slate-400">Pulsa "Mostrar Completadas" arriba para verlas o corregir algún resultado.</p>
+          </div>
+        `;
+      }
+
       container.innerHTML = `
         <div class="space-y-6">
-          <div class="text-center border-b border-amber-500/30 pb-3">
-            <h4 class="font-orbitron font-black text-sm text-amber-400 uppercase">ENFRENTAMIENTOS DE CAMPEONAS (RONDA ${totalRondasM2})</h4>
-            <p class="text-[11px] text-slate-400 font-orbitron">GRAN CAMPEONA DEL TORNEO: <span class="text-amber-300 font-bold">${escapeHTML(datosMatch2Servidor.granCampeona || 'En Disputa')}</span></p>
+          <div class="flex flex-wrap justify-between items-center border-b border-amber-500/30 pb-3 gap-3">
+            <div>
+              <h4 class="font-orbitron font-black text-sm text-amber-400 uppercase">ENFRENTAMIENTOS DE CAMPEONAS (RONDA ${rondaMatch2Seleccionada})</h4>
+              <p class="text-[11px] text-slate-400 font-orbitron">GRAN CAMPEONA DEL TORNEO: <span class="text-amber-300 font-bold">${escapeHTML(datosMatch2Servidor.granCampeona || 'En Disputa')}</span></p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="toggleMostrarCompletadosMatch2()" class="bg-femDark-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-xl text-xs font-orbitron font-bold transition flex items-center gap-1.5 cursor-pointer">
+                <i class="fa-solid ${mostrarCompletadosMatch2 ? 'fa-eye-slash' : 'fa-eye'}"></i>
+                <span>${mostrarCompletadosMatch2 ? 'Ocultar Completadas' : 'Mostrar Completadas'}</span>
+              </button>
+              <div class="flex flex-wrap gap-1.5">
+                ${filtroRondasHtml}
+              </div>
+            </div>
           </div>
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             ${matchesHtml}
           </div>
@@ -1633,10 +1696,11 @@
 
     function seleccionarRondaMatch2(r) {
       rondaMatch2Seleccionada = r;
+      renderizarMatch2();
       renderizarArbolMatch2();
     }
 
-    /* ÁRBOL ESQUEMÁTICO DEL MATCH 2 (IDÉNTICO AL MATCH 1) */
+    /* ÁRBOL ESQUEMÁTICO DEL MATCH 2 CON LLAVES SIEMPRE CONECTADAS */
     function renderizarArbolMatch2() {
       const container = document.getElementById('match2-arbol-container');
       if (!container) return;
@@ -1659,9 +1723,9 @@
       let botonesRondaHtml = '';
       for (let r = 1; r <= totalRondasM2; r++) {
         let btnActive = r === rondaMatch2Seleccionada;
-        let rName = r === totalRondasM2 && partidosRondaSel.length === 1 ? `R${r} (Gran Final)` : `Ronda ${r}`;
+        let rName = (rondasObj[`ronda_${r}`] || []).length === 1 ? `R${r} (Gran Final)` : `Ronda ${r}`;
         botonesRondaHtml += `
-          <button onclick="seleccionarRondaMatch2(${r})" class="px-2.5 py-1 rounded-lg text-[10px] font-orbitron font-bold transition ${btnActive ? 'bg-amber-500 text-slate-950 shadow' : 'bg-femDark-900 text-slate-400 hover:text-white'}">
+          <button onclick="seleccionarRondaMatch2(${r})" class="px-2.5 py-1 rounded-lg text-[10px] font-orbitron font-bold cursor-pointer transition ${btnActive ? 'bg-amber-500 text-slate-950 shadow' : 'bg-femDark-900 text-slate-400 hover:text-white'}">
             ${rName}
           </button>
         `;
@@ -1712,6 +1776,45 @@
             </div>
           </div>
         `;
+      } else if (partidosRondaSel.length === 2) {
+        let pIzq = ladoIzq[0];
+        let pDer = ladoDer[0];
+        let ganIzq = pIzq && pIzq.ganador !== 'Pendiente' ? pIzq.ganador : 'Pendiente';
+        let ganDer = pDer && pDer.ganador !== 'Pendiente' ? pDer.ganador : 'Pendiente';
+
+        cuerpoGraficoHtml = `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div class="space-y-3">
+              <h5 class="text-[9px] font-orbitron font-bold text-amber-400 text-center uppercase">◀ SEMIFINAL IZQUIERDA</h5>
+              <div class="flex items-center gap-2">
+                <div class="flex-1">${renderMatchCardM2(pIzq, 1)}</div>
+                <div class="w-3 h-12 bracket-pair-amber-left shrink-0 hidden md:block"></div>
+                <div class="bg-femDark-900 border border-amber-500/40 p-2.5 rounded-xl text-[9px] font-bold text-amber-300 w-32 text-center shrink-0 hidden md:block shadow">
+                  <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Finalista Izq</span>
+                  <div class="flex items-center justify-center gap-1 mt-1 text-white truncate">
+                    <img src="${getAvatarForTeam(ganIzq)}" class="w-4 h-4 rounded-full object-cover">
+                    <span class="truncate font-bold">${escapeHTML(ganIzq)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h5 class="text-[9px] font-orbitron font-bold text-amber-400 text-center uppercase">SEMIFINAL DERECHA ▶</h5>
+              <div class="flex items-center gap-2">
+                <div class="bg-femDark-900 border border-amber-500/40 p-2.5 rounded-xl text-[9px] font-bold text-amber-300 w-32 text-center shrink-0 hidden md:block shadow">
+                  <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Finalista Der</span>
+                  <div class="flex items-center justify-center gap-1 mt-1 text-white truncate">
+                    <img src="${getAvatarForTeam(ganDer)}" class="w-4 h-4 rounded-full object-cover">
+                    <span class="truncate font-bold">${escapeHTML(ganDer)}</span>
+                  </div>
+                </div>
+                <div class="w-3 h-12 bracket-pair-amber-right shrink-0 hidden md:block"></div>
+                <div class="flex-1">${renderMatchCardM2(pDer, 2)}</div>
+              </div>
+            </div>
+          </div>
+        `;
       } else {
         cuerpoGraficoHtml = `
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start relative">
@@ -1729,9 +1832,9 @@
             <div class="flex items-center gap-2">
               <div class="flex-1 space-y-2">
                 ${renderMatchCardM2(p1, i + 1)}
-                ${renderMatchCardM2(p2, i + 2)}
+                ${p2 ? renderMatchCardM2(p2, i + 2) : ''}
               </div>
-              ${p2 ? `<div class="w-3 h-20 bracket-pair-amber-left shrink-0 hidden md:block"></div>` : ''}
+              <div class="w-3 ${p2 ? 'h-20' : 'h-12'} bracket-pair-amber-left shrink-0 hidden md:block"></div>
               <div class="bg-femDark-900 border border-amber-500/40 p-2 rounded-xl text-[9px] font-bold text-amber-300 w-32 text-center shrink-0 hidden md:block shadow">
                 <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Avanzan a R${rondaMatch2Seleccionada + 1}</span>
                 <div class="mt-1 space-y-1 text-left">
@@ -1778,10 +1881,10 @@
                   </div>` : ''}
                 </div>
               </div>
-              ${p2 ? `<div class="w-3 h-20 bracket-pair-amber-right shrink-0 hidden md:block"></div>` : ''}
+              <div class="w-3 ${p2 ? 'h-20' : 'h-12'} bracket-pair-amber-right shrink-0 hidden md:block"></div>
               <div class="flex-1 space-y-2">
                 ${renderMatchCardM2(p1, mitad + i + 1)}
-                ${renderMatchCardM2(p2, mitad + i + 2)}
+                ${p2 ? renderMatchCardM2(p2, mitad + i + 2) : ''}
               </div>
             </div>
           `;
@@ -1824,7 +1927,7 @@
           db.ref(`${RUTA_TORNEO}/match2`).update({ granCampeona: ganadora });
           mostrarToast(`¡${ganadora} es la Gran Campeona del Torneo!`, "success");
         } else {
-          mostrarToast(`Ganadora registrada en Match 2: ${ganadora}`, "success");
+          mostrarToast(`Ganadora actualizada en Match 2: ${ganadora}`, "success");
         }
       });
     }
