@@ -192,7 +192,7 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow relative z-10">
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
-    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[680px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
+    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[720px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
       <div class="absolute inset-0 bg-gradient-to-br from-femDark-950 via-femPurple-900/50 to-femDark-950 z-0"></div>
       <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-30"></div>
       
@@ -215,23 +215,23 @@
           Demuestra tu nivel competitivo. Registra tus datos de MLBB, accede a tu sala de chat privada y compite en el árbol esquemático oficial.
         </p>
 
-        <div class="relative my-1 w-full max-w-sm sm:max-w-md flex flex-col items-center justify-center">
+        <div class="relative my-1 w-full max-w-md sm:max-w-lg flex flex-col items-center justify-center">
           <div class="absolute inset-0 bg-femPink-500/20 rounded-full blur-3xl -z-10 transform scale-110"></div>
           <model-viewer
             id="guini-viewer"
             src="guini.glb"
             alt="Guinevere Athena Asamiya 3D"
-            autoplay
             camera-controls
             disable-pan
-            camera-orbit="0deg 82deg 145%"
-            min-camera-orbit="auto auto 110%"
-            max-camera-orbit="auto auto 220%"
-            field-of-view="38deg"
+            camera-target="0m 1.1m 0m"
+            camera-orbit="0deg 85deg 230%"
+            min-camera-orbit="auto auto 150%"
+            max-camera-orbit="auto auto 300%"
+            field-of-view="45deg"
             shadow-intensity="1"
             exposure="1.15"
             interaction-prompt="none"
-            class="w-full h-80 sm:h-96 cursor-grab active:cursor-grabbing">
+            class="w-full h-96 sm:h-[460px] cursor-grab active:cursor-grabbing">
           </model-viewer>
           <span class="text-[10px] text-femPink-300/80 font-orbitron tracking-widest uppercase -mt-2 flex items-center gap-1.5">
             <i class="fa-solid fa-rotate"></i> Arrastra para girar en 360°
@@ -563,19 +563,30 @@
 
       guiniViewer.addEventListener('load', () => {
         const animaciones = guiniViewer.availableAnimations;
-        if (animaciones && animaciones.length > 1) {
-          const idleAnim = animaciones.find(a => /idle|stand|wait|loop/i.test(a)) || animaciones[animaciones.length - 1];
-          const introAnim = animaciones.find(a => a !== idleAnim) || animaciones[0];
+        if (!animaciones || animaciones.length === 0) return;
 
+        const idleAnim = animaciones.find(a => /idle|stand|wait|loop/i.test(a));
+
+        if (animaciones.length > 1 && idleAnim) {
+          const introAnim = animaciones.find(a => a !== idleAnim) || animaciones[0];
           guiniViewer.animationName = introAnim;
           guiniViewer.play({ repetitions: 1 });
-
           guiniViewer.addEventListener('finished', () => {
             guiniViewer.animationName = idleAnim;
             guiniViewer.play();
           }, { once: true });
-        } else if (animaciones && animaciones.length === 1) {
-          guiniViewer.play({ repetitions: 1 });
+        } else {
+          guiniViewer.animationName = animaciones[0];
+          guiniViewer.currentTime = 0;
+          guiniViewer.play();
+
+          const vigilarFinal = setInterval(() => {
+            if (guiniViewer.duration && guiniViewer.currentTime >= guiniViewer.duration - 0.08) {
+              guiniViewer.pause();
+              guiniViewer.currentTime = guiniViewer.duration - 0.05;
+              clearInterval(vigilarFinal);
+            }
+          }, 30);
         }
       });
     }
