@@ -218,10 +218,16 @@
         <div class="relative my-1 w-full max-w-sm sm:max-w-md flex flex-col items-center justify-center">
           <div class="absolute inset-0 bg-femPink-500/20 rounded-full blur-3xl -z-10 transform scale-110"></div>
           <model-viewer
+            id="guini-viewer"
             src="guini.glb"
             alt="Guinevere Athena Asamiya 3D"
             autoplay
             camera-controls
+            disable-pan
+            camera-orbit="0deg 82deg 145%"
+            min-camera-orbit="auto auto 110%"
+            max-camera-orbit="auto auto 220%"
+            field-of-view="38deg"
             shadow-intensity="1"
             exposure="1.15"
             interaction-prompt="none"
@@ -548,7 +554,31 @@
       });
 
       scrambleTextEffect();
+      configurarModelo3D();
     });
+
+    function configurarModelo3D() {
+      const guiniViewer = document.getElementById('guini-viewer');
+      if (!guiniViewer) return;
+
+      guiniViewer.addEventListener('load', () => {
+        const animaciones = guiniViewer.availableAnimations;
+        if (animaciones && animaciones.length > 1) {
+          const idleAnim = animaciones.find(a => /idle|stand|wait|loop/i.test(a)) || animaciones[animaciones.length - 1];
+          const introAnim = animaciones.find(a => a !== idleAnim) || animaciones[0];
+
+          guiniViewer.animationName = introAnim;
+          guiniViewer.play({ repetitions: 1 });
+
+          guiniViewer.addEventListener('finished', () => {
+            guiniViewer.animationName = idleAnim;
+            guiniViewer.play();
+          }, { once: true });
+        } else if (animaciones && animaciones.length === 1) {
+          guiniViewer.play({ repetitions: 1 });
+        }
+      });
+    }
 
     function scrambleTextEffect() {
       const title = document.getElementById('scramble-title');
