@@ -281,7 +281,7 @@
             <i class="fa-solid fa-angles-right"></i> Pasar a Siguiente Ronda (Match 1)
           </button>
 
-          <!-- BOTONES MATCH 2 (INICIALMENTE OCULTOS) -->
+          <!-- BOTONES MATCH 2 -->
           <button id="btn-crear-match2-admin" onclick="generarMatch2Finalistas()" class="hidden bg-amber-600 hover:bg-amber-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg items-center gap-2 cursor-pointer animate-pulse">
             <i class="fa-solid fa-trophy"></i> Crear Cuadro Finalistas (Match 2)
           </button>
@@ -308,12 +308,12 @@
           <i class="fa-solid fa-sitemap"></i> Partidas (Match 1)
         </button>
 
-        <!-- PESTAÑA MATCH 2 (OCULTA INICIALMENTE) -->
+        <!-- PESTAÑA MATCH 2 -->
         <button id="tab-btn-match2" onclick="cambiarTab('match2')" class="hidden px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-amber-400 hover:text-amber-300 transition cursor-pointer whitespace-nowrap border border-amber-500/40 items-center gap-2">
           <i class="fa-solid fa-trophy"></i> Cuadro Finalistas (Match 2)
         </button>
 
-        <!-- PESTAÑA ÁRBOL (POSICIÓN 5) -->
+        <!-- PESTAÑA ÁRBOL -->
         <button id="tab-btn-arbol" onclick="cambiarTab('arbol')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
           <i class="fa-solid fa-network-wired"></i> Árbol Esquemático
         </button>
@@ -753,7 +753,29 @@
       });
     }
 
-    // CORRECCIÓN CLAVE: EVALUACIÓN STRICTA DEL FIN DE MATCH 1
+    // CONTROL ESTRUCTURAL POR TABLA / BLOQUE DE 8 PARTIDAS
+    function calcularFinMatch1PorTablas() {
+      if (!datosBracketServidor) return false;
+      const partidosRonda1 = datosBracketServidor['ronda_1'] || [];
+      if (partidosRonda1.length === 0) return false;
+
+      const PARTIDAS_POR_TABLA = 8;
+      const totalBloques = Math.ceil(partidosRonda1.length / PARTIDAS_POR_TABLA) || 1;
+      const totalRondasExistentes = Object.keys(datosBracketServidor).length;
+
+      // Un bloque necesita log2(PARTIDAS_POR_TABLA) + 1 rondas para definir 1 ganadora (ej. 8 partidas -> 4 rondas)
+      const rondasRequeridasPorTabla = Math.log2(PARTIDAS_POR_TABLA) + 1;
+
+      if (totalRondasExistentes < rondasRequeridasPorTabla) return false;
+
+      // Verificar que en la ronda final de las tablas (ej. Ronda 4) se hayan definido los ganadores
+      const partidosRondaFinal = datosBracketServidor[`ronda_${rondasRequeridasPorTabla}`] || [];
+      if (partidosRondaFinal.length === 0) return false;
+
+      const campeonasListas = partidosRondaFinal.every(p => p.ganador && p.ganador !== "Pendiente");
+      return campeonasListas;
+    }
+
     function evaluarEstadoMatch1YMatch2() {
       const btnSortear1 = document.getElementById('btn-sortear-match1');
       const btnAvanzar1 = document.getElementById('btn-avanzar-match1');
@@ -761,23 +783,7 @@
       const btnAvanzarMatch2 = document.getElementById('btn-avanzar-match2');
       const tabMatch2 = document.getElementById('tab-btn-match2');
 
-      if (!datosBracketServidor) {
-        btnSortear1?.classList.remove('hidden');
-        btnAvanzar1?.classList.remove('hidden');
-        btnCrearMatch2?.classList.add('hidden');
-        btnAvanzarMatch2?.classList.add('hidden');
-        tabMatch2?.classList.add('hidden');
-        return;
-      }
-
-      const rondas = Object.keys(datosBracketServidor);
-      if (rondas.length === 0) return;
-
-      const ultimaRondaNum = rondas.length;
-      const partidosUltimaRonda = datosBracketServidor[`ronda_${ultimaRondaNum}`] || [];
-
-      // Solo se considera completada la Fase 1 si se llegó a la final (1 solo partido) y ya hay ganador definido.
-      const match1Completado = partidosUltimaRonda.length === 1 && partidosUltimaRonda[0].ganador !== "Pendiente";
+      const match1Completado = calcularFinMatch1PorTablas();
 
       if (match1Completado) {
         btnSortear1?.classList.add('hidden');
@@ -836,7 +842,7 @@
 
       for (let r = 1; r <= totalRondas; r++) {
         let isActive = r === rondaSeleccionada;
-        let nombreRonda = r === 1 ? 'Ronda 1 (Octavos)' : (r === 2 ? 'Ronda 2 (Cuartos)' : (r === 3 ? 'Ronda 3 (Semifinal)' : `Ronda ${r} (Final)`));
+        let nombreRonda = r === 1 ? 'Ronda 1 (Octavos)' : (r === 2 ? 'Ronda 2 (Cuartos)' : (r === 3 ? 'Ronda 3 (Semifinal)' : `Ronda ${r} (Final de Tabla)`));
         roundsFilter.innerHTML += `
           <button onclick="seleccionarRonda(${r})" class="px-3.5 py-1.5 rounded-xl text-xs font-orbitron ${isActive ? 'bg-femPink-500 text-slate-950 font-bold' : 'bg-femDark-950 text-slate-400'}">
             ${nombreRonda}
@@ -1351,7 +1357,7 @@
           });
         }
 
-        db.ref(`${RUTA_TORNEO}/bracket/ronda_1`).set(partidos, () => {
+        db.ref(`${RUTA_TORNEO}/bracket`).set({ ronda_1: partidos }, () => {
           rondaSeleccionada = 1;
           mostrarToast("¡Sorteo de Ronda 1 generado correctamente!", "success");
         });
@@ -1359,6 +1365,10 @@
     }
 
     function avanzarSiguienteRonda() {
+      if (calcularFinMatch1PorTablas()) {
+        return mostrarToast("¡Campeonas de Tablas definidas! Presiona 'Crear Cuadro Finalistas (Match 2)'", "info");
+      }
+
       db.ref(`${RUTA_TORNEO}/bracket`).once('value', (snap) => {
         const bracketEstructura = snap.val() || {};
         let totalRondas = Object.keys(bracketEstructura).length;
@@ -1370,10 +1380,6 @@
         let hayPendientes = partidosUltimaRonda.some(p => p.ganador === "Pendiente");
 
         if (hayPendientes) return mostrarToast(`Hay partidos pendientes en Ronda ${ultimaRondaNum}`, "warning");
-
-        if (partidosUltimaRonda.length === 1 && partidosUltimaRonda[0].ganador !== "Pendiente") {
-          return mostrarToast("¡Match 1 finalizado! Utiliza el botón de Crear Match 2", "info");
-        }
 
         let ganadores = partidosUltimaRonda.map(p => p.ganador);
         let siguientesPartidos = [];
@@ -1451,7 +1457,9 @@
       let hayPendientes = partidos.some(p => p.ganador === "Pendiente");
 
       if (hayPendientes) return mostrarToast("Define a las ganadoras actuales del Match 2 antes de avanzar", "warning");
-      if (partidos.length === 1) return mostrarToast(`¡Gran Campeona del Torneo: ${datosMatch2Servidor.granCampeona}!`, "success");
+      if (partidos.length === 1 && partidos[0].ganador !== "Pendiente") {
+        return mostrarToast(`¡Gran Campeona del Torneo: ${datosMatch2Servidor.granCampeona}!`, "success");
+      }
 
       let ganadores = partidos.map(p => p.ganador);
       let siguientes = [];
