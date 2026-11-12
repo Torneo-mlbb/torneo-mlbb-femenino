@@ -4,21 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MLBB 1v1 Female Championship &bull; Official eSports Edition</title>
-  
-  <!-- Tailwind CSS & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-  
-  <!-- FontAwesome Icons & Canvas Utilities -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-  <!-- Firebase Web SDKs -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -45,7 +39,6 @@
       }
     }
   </script>
-
   <style>
     body {
       background-color: #05030a;
@@ -57,26 +50,22 @@
         radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.12) 0%, transparent 50%);
       background-attachment: fixed;
     }
-
     .cyber-gradient-text {
       background: linear-gradient(135deg, #ffffff 0%, #f472b6 35%, #ec4899 65%, #c084fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 35px rgba(236,72,153,0.4);
     }
-
     .glitch-subtext {
       letter-spacing: 0.35em;
       text-shadow: 0 0 10px rgba(236,72,153,0.6), 0 0 20px rgba(192,132,252,0.4);
     }
-
     .glass-panel {
       background: rgba(22, 13, 39, 0.65);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(236, 72, 153, 0.25);
     }
-
     .glass-card-hover {
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -85,22 +74,15 @@
       box-shadow: 0 10px 40px -10px rgba(236, 72, 153, 0.45), 0 0 20px rgba(192, 132, 252, 0.3);
       transform: translateY(-4px) scale(1.01);
     }
-
     .scanline-bg {
       background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
       background-size: 100% 4px;
     }
-
-    @keyframes heroFloat {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-12px) rotate(1.5deg); }
+    model-viewer {
+      --poster-color: transparent;
+      filter: drop-shadow(0 0 28px rgba(236, 72, 153, 0.55));
+      outline: none;
     }
-
-    .hero-character-anim {
-      animation: heroFloat 4s ease-in-out infinite;
-      filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.5));
-    }
-
     .bracket-pair-left {
       border-right: 3px solid #ec4899;
       border-top: 3px solid #ec4899;
@@ -118,7 +100,6 @@
       height: 3px;
       background-color: #ec4899;
     }
-
     .bracket-pair-right {
       border-left: 3px solid #ec4899;
       border-top: 3px solid #ec4899;
@@ -136,7 +117,6 @@
       height: 3px;
       background-color: #ec4899;
     }
-
     .bracket-pair-amber-left {
       border-right: 3px solid #f59e0b;
       border-top: 3px solid #f59e0b;
@@ -154,7 +134,6 @@
       height: 3px;
       background-color: #f59e0b;
     }
-
     .bracket-pair-amber-right {
       border-left: 3px solid #f59e0b;
       border-top: 3px solid #f59e0b;
@@ -172,7 +151,6 @@
       height: 3px;
       background-color: #f59e0b;
     }
-
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #05030a; }
     ::-webkit-scrollbar-thumb { background: #db2777; border-radius: 4px; }
@@ -181,20 +159,18 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-femPink-500 selection:text-white">
 
-  <!-- TOP HUD HEADER -->
   <header class="bg-femDark-900/90 backdrop-blur-xl border-b border-femPink-500/30 sticky top-0 z-50 transition-all">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap justify-between items-center gap-4">
-      
       <div class="flex items-center gap-3.5 cursor-pointer" onclick="volverMenu()">
         <div class="relative group">
           <div class="absolute -inset-1 bg-gradient-to-r from-femPink-500 to-femPurple-500 rounded-xl blur opacity-60 group-hover:opacity-100 transition duration-300"></div>
-          <div class="relative w-11 h-11 rounded-xl bg-femDark-950 border border-femPink-400/50 flex items-center justify-center text-femPink-400 font-bold text-xl shadow-lg">
-            <i class="fa-solid fa-crown group-hover:scale-110 transition duration-300"></i>
+          <div class="relative w-11 h-11 rounded-xl bg-femDark-950 border border-femPink-400/50 overflow-hidden shadow-lg">
+            <img src="logo-minions.jpg" alt="Logo Minions" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
           </div>
         </div>
         <div>
           <h1 class="font-orbitron font-black text-lg md:text-xl tracking-wider flex items-center gap-2">
-            <span class="cyber-gradient-text">FEMALE CHAMPIONSHIP</span>
+            <span class="cyber-gradient-text">MINIONS FEMALE</span>
           </h1>
           <p class="text-[10px] text-slate-400 font-semibold tracking-widest uppercase flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> MOBILE LEGENDS 1v1 &bull; ESPORTS
@@ -206,26 +182,21 @@
         <button id="back-menu-btn" onclick="volverMenu()" class="hidden px-3.5 py-1.5 rounded-xl text-xs font-bold bg-femDark-800 text-slate-300 border border-slate-700 hover:bg-slate-700/80 hover:text-white transition flex items-center gap-2 cursor-pointer shadow-md">
           <i class="fa-solid fa-house text-femPink-400"></i> Inicio
         </button>
-
         <div id="role-badge" class="px-3.5 py-1.5 rounded-xl text-xs font-orbitron font-bold uppercase tracking-wider bg-femDark-800/80 text-femPink-300 border border-femPink-500/40 flex items-center gap-2 shadow-inner">
           <i class="fa-solid fa-user-shield text-xs"></i> <span id="role-badge-text">Espectadora</span>
         </div>
       </div>
-
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow relative z-10">
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
-    <!-- HERO SHOWCASE SECTION -->
-    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[660px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
+    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[680px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
       <div class="absolute inset-0 bg-gradient-to-br from-femDark-950 via-femPurple-900/50 to-femDark-950 z-0"></div>
       <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-30"></div>
       
-      <div class="relative z-10 w-full max-w-3xl text-center space-y-6 flex flex-col items-center">
-        
+      <div class="relative z-10 w-full max-w-3xl text-center space-y-5 flex flex-col items-center">
         <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-femPink-500/20 via-femPurple-500/20 to-femPink-500/20 border border-femPink-400/50 px-5 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.3)]">
           <span class="w-2.5 h-2.5 rounded-full bg-femPink-400 animate-ping"></span>
           <span class="text-femPink-300 text-xs font-orbitron font-bold uppercase tracking-widest">INSCRIPCIÓN LIBRE Y GRATUITA</span>
@@ -244,16 +215,23 @@
           Demuestra tu nivel competitivo. Registra tus datos de MLBB, accede a tu sala de chat privada y compite en el árbol esquemático oficial.
         </p>
 
-        <!-- PERSONAJE MODELO 3D DE MLBB -->
-        <div class="relative my-2 w-full max-w-xs sm:max-w-sm flex items-center justify-center">
+        <div class="relative my-1 w-full max-w-sm sm:max-w-md flex flex-col items-center justify-center">
           <div class="absolute inset-0 bg-femPink-500/20 rounded-full blur-3xl -z-10 transform scale-110"></div>
-          <img src="https://akmweb.gamedev.moonton.com/hero/hero_png/layla.png" 
-               alt="MLBB Hero Render 3D" 
-               class="hero-character-anim max-h-72 sm:max-h-80 object-contain cursor-pointer transition-transform duration-300 hover:scale-105"
-               onclick="seleccionarModalidad('1v1')">
+          <model-viewer
+            src="guini.glb"
+            alt="Guinevere Athena Asamiya 3D"
+            autoplay
+            camera-controls
+            shadow-intensity="1"
+            exposure="1.15"
+            interaction-prompt="none"
+            class="w-full h-80 sm:h-96 cursor-grab active:cursor-grabbing">
+          </model-viewer>
+          <span class="text-[10px] text-femPink-300/80 font-orbitron tracking-widest uppercase -mt-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-rotate"></i> Arrastra para girar en 360°
+          </span>
         </div>
 
-        <!-- BOTÓN ÚNICO DE REGISTRO DEBAJO -->
         <div class="w-full max-w-md pt-2">
           <button onclick="seleccionarModalidad('1v1')" class="w-full group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-femPink-500 via-femPink-600 to-femPurple-600 font-orbitron font-black text-slate-950 uppercase tracking-wider text-sm sm:text-base rounded-2xl hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(236,72,153,0.6)] cursor-pointer overflow-hidden border border-femPink-300/40">
             <span class="relative z-10 flex items-center gap-3">
@@ -261,14 +239,10 @@
             </span>
           </button>
         </div>
-
       </div>
     </section>
 
-    <!-- TOURNAMENT APP CONTAINER -->
     <div id="tournament-app-container" class="hidden space-y-8 transition-all duration-500">
-      
-      <!-- SUPER ADMIN PANEL -->
       <section id="super-admin-panel" class="hidden glass-panel border border-femPink-500/60 rounded-3xl p-6 shadow-2xl space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-femPink-500/30 pb-4">
           <div class="flex items-center gap-3">
@@ -303,36 +277,27 @@
         </div>
 
         <div class="flex flex-wrap gap-3 pt-2">
-          <!-- BOTS ACUMULABLES -->
           <button id="btn-add-bots" onclick="agregar30Bots()" class="bg-indigo-600/80 hover:bg-indigo-600 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-robot"></i> +16 Jugadoras Demo
           </button>
-          
-          <!-- BOTONES MATCH 1 -->
           <button id="btn-sortear-match1" onclick="iniciarSorteoMatematico()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-calculator"></i> Sortear Ronda 1 (Match 1)
           </button>
-
           <button id="btn-avanzar-match1" onclick="avanzarSiguienteRonda()" class="bg-femPink-600 hover:bg-femPink-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-angles-right"></i> Pasar a Siguiente Ronda (Match 1)
           </button>
-
-          <!-- BOTONES MATCH 2 -->
           <button id="btn-crear-match2-admin" onclick="generarMatch2Finalistas()" class="hidden bg-amber-600 hover:bg-amber-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg items-center gap-2 cursor-pointer animate-pulse">
             <i class="fa-solid fa-trophy"></i> Crear Cuadro Finalistas (Match 2)
           </button>
-
           <button id="btn-avanzar-match2" onclick="avanzarRondaMatch2()" class="hidden bg-amber-700 hover:bg-amber-600 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-forward"></i> Avance de Ronda Match 2
           </button>
-
           <button onclick="reiniciarTorneo()" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 text-xs font-orbitron font-bold py-3 px-5 rounded-xl transition flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-rotate-right"></i> Reiniciar Torneo Total
           </button>
         </div>
       </section>
 
-      <!-- NAVIGATION TABS -->
       <div class="flex gap-2.5 border-b border-slate-800/80 pb-3 overflow-x-auto custom-scrollbar">
         <button id="tab-btn-registro" onclick="cambiarTab('registro')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femPink-500 text-slate-950 transition cursor-pointer whitespace-nowrap shadow-md flex items-center gap-2">
           <i class="fa-solid fa-pen-to-square"></i> Inscripción
@@ -343,19 +308,14 @@
         <button id="tab-btn-bracket" onclick="cambiarTab('bracket')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
           <i class="fa-solid fa-sitemap"></i> Partidas (Match 1)
         </button>
-
-        <!-- PESTAÑA MATCH 2 (APARECE SOLO AL FINALIZAR EL MATCH 1) -->
         <button id="tab-btn-match2" onclick="cambiarTab('match2')" class="hidden px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-amber-400 hover:text-amber-300 transition cursor-pointer whitespace-nowrap border border-amber-500/40 items-center gap-2">
           <i class="fa-solid fa-trophy"></i> Cuadro Finalistas (Match 2)
         </button>
-
-        <!-- PESTAÑA ÁRBOL MATCH 1 -->
         <button id="tab-btn-arbol" onclick="cambiarTab('arbol')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
           <i class="fa-solid fa-network-wired"></i> Árbol (Match 1)
         </button>
       </div>
 
-      <!-- TAB 1: FORMULARIO DIRECTO -->
       <div id="tab-content-registro" class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl transition-all">
         <div class="max-w-2xl space-y-6">
           <div class="border-b border-slate-800 pb-4">
@@ -395,7 +355,6 @@
         </div>
       </div>
 
-      <!-- TAB 2: JUGADORAS REGISTRADAS -->
       <div id="tab-content-equipos" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-5">
         <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
           <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">JUGADORAS CONFIRMADAS</h3>
@@ -406,14 +365,12 @@
         </div>
       </div>
 
-      <!-- TAB 3: PARTIDAS (MATCH 1) -->
       <div id="tab-content-bracket" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
           <div>
             <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">MATCH 1 &bull; TABLAS CLASIFICATORIAS</h3>
             <p class="text-xs text-slate-400">Selecciona la ronda para ver la distribución de partidas y chats de arena.</p>
           </div>
-
           <div class="flex flex-wrap items-center gap-3">
             <button onclick="toggleMostrarCompletados()" id="btn-toggle-completados" class="bg-femDark-900 hover:bg-slate-800 text-femPink-300 border border-femPink-500/40 px-3.5 py-1.5 rounded-xl text-xs font-orbitron font-bold transition flex items-center gap-1.5 cursor-pointer">
               <i class="fa-solid fa-eye" id="icon-toggle-completados"></i> <span id="text-toggle-completados">Mostrar Partidas Ocultas</span>
@@ -421,13 +378,11 @@
             <div id="rounds-filter-container" class="flex flex-wrap gap-2 text-xs font-orbitron font-bold"></div>
           </div>
         </div>
-
         <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <p class="text-xs text-slate-500 italic col-span-full py-8 text-center">Aún no se han generado enfrentamientos.</p>
         </div>
       </div>
 
-      <!-- TAB 4: MATCH 2 (CUADRO Y ÁRBOL ESQUEMÁTICO DE CAMPEONAS) -->
       <div id="tab-content-match2" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 border border-amber-500/40">
         <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-4 gap-4">
           <div>
@@ -435,7 +390,6 @@
             <p class="text-xs text-slate-400">Enfrentamiento directo y árbol esquemático de las ganadoras de cada tabla del Match 1.</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <!-- CONMUTADOR ENTRE PARTIDAS Y ÁRBOL ESQUEMÁTICO DEL MATCH 2 -->
             <div class="flex bg-femDark-950 p-1 rounded-xl border border-amber-500/30">
               <button id="m2-subview-partidas" onclick="cambiarSubVistaMatch2('partidas')" class="px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold bg-amber-500 text-slate-950 cursor-pointer transition">
                 <i class="fa-solid fa-gamepad"></i> Partidas
@@ -444,43 +398,35 @@
                 <i class="fa-solid fa-network-wired"></i> Árbol Esquemático
               </button>
             </div>
-
             <button onclick="tomarCapturaMatch2()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-xl text-xs font-orbitron font-black cursor-pointer uppercase shadow-lg">
               <i class="fa-solid fa-camera"></i> Capturar Cuadro Final
             </button>
           </div>
         </div>
 
-        <!-- CONTENEDOR PARTIDAS MATCH 2 (CON HISTORIAL DE RONDAS Y BOTÓN OCULTAR/MOSTRAR) -->
         <div id="match2-cuadro-container" class="bg-femDark-950 p-6 rounded-2xl border border-amber-500/30 min-h-[300px] space-y-5">
           <p class="text-xs text-slate-500 italic text-center py-8">Aún no se ha generado el cuadro final.</p>
         </div>
 
-        <!-- CONTENEDOR ÁRBOL ESQUEMÁTICO MATCH 2 -->
         <div id="match2-arbol-container" class="hidden bg-femDark-950 p-6 rounded-2xl border border-amber-500/30 space-y-6">
           <p class="text-xs text-slate-500 italic text-center py-8">Genera el cuadro final para visualizar el árbol esquemático de campeonas.</p>
         </div>
       </div>
 
-      <!-- TAB 5: ÁRBOL ESQUEMÁTICO MATCH 1 -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
           <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO (MATCH 1)</h3>
           <p class="text-xs text-slate-400">Esquema gráfico visual con avatares de perfil por cada tabla clasificatoria.</p>
         </div>
-
         <div id="arbol-esquematico-container" class="space-y-10">
           <p class="text-xs text-slate-500 italic text-center col-span-full py-6">Genera los enfrentamientos desde el panel de administración para ver el árbol por bloques.</p>
         </div>
       </div>
-
     </div>
   </main>
 
-  <!-- MODAL: CHAT PRIVADO POR PARTIDA -->
   <div id="whatsapp-chat-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden">
     <div class="glass-panel border border-femPink-500/40 rounded-3xl w-full max-w-xl h-[85vh] flex flex-col shadow-2xl overflow-hidden relative">
-      
       <div class="bg-femDark-900 border-b border-slate-800 px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-full bg-femPink-500/20 border border-femPink-400 flex items-center justify-center text-femPink-400 font-bold">
@@ -496,7 +442,6 @@
         </button>
       </div>
 
-      <!-- VISTA DE AUTENTICACIÓN -->
       <div id="chat-modal-auth-view" class="p-6 flex-1 flex flex-col items-center justify-center text-center space-y-4">
         <div class="w-16 h-16 rounded-2xl bg-femPink-500/10 border border-femPink-400/40 flex items-center justify-center text-femPink-400 text-2xl mb-1">
           <i class="fa-solid fa-lock-keyhole"></i>
@@ -513,7 +458,6 @@
         </div>
       </div>
 
-      <!-- VISTA PRINCIPAL DEL CHAT -->
       <div id="chat-modal-main-view" class="flex-1 flex flex-col hidden overflow-hidden">
         <div class="bg-femDark-900/80 px-4 py-2 border-b border-slate-800 flex gap-2 text-xs">
           <button id="modal-subtab-gen" onclick="switchModalChatSubTab('general')" class="px-3 py-1.5 rounded-xl font-bold bg-femPink-500 text-slate-950 transition cursor-pointer flex items-center gap-1.5 font-orbitron">
@@ -523,11 +467,9 @@
             <i class="fa-solid fa-crown"></i> Chat Admin
           </button>
         </div>
-
         <div id="chat-modal-messages-container" class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-2.5 bg-femDark-950/60">
           <p class="text-xs text-slate-500 italic text-center py-4">No hay mensajes en esta sala aún...</p>
         </div>
-
         <div class="p-3 bg-femDark-900 border-t border-slate-800 flex items-center gap-2">
           <input type="text" id="chat-modal-text-input" onkeypress="if(event.key==='Enter') enviarMensajeChatWhatsApp()" placeholder="Escribe un mensaje..." class="flex-1 bg-femDark-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-femPink-500">
           <button onclick="enviarMensajeChatWhatsApp()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs w-10 h-10 rounded-xl transition flex items-center justify-center cursor-pointer shadow-lg">
@@ -535,11 +477,9 @@
           </button>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- MODAL: LOGIN ADMIN -->
   <div id="auth-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="glass-panel border border-femPink-500/40 rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
       <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
@@ -556,14 +496,13 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="bg-femDark-950 border-t border-slate-800/80 py-8 px-4 text-center text-xs text-slate-500 mt-12">
     <div class="max-w-6xl mx-auto space-y-3">
       <div class="flex flex-col items-center justify-center gap-2">
-        <div onclick="openAuthModal()" class="w-12 h-12 rounded-xl bg-femPink-500/20 border border-femPink-400 flex items-center justify-center text-femPink-400 text-2xl cursor-pointer hover:scale-105 transition shadow-lg">
-          <i class="fa-solid fa-crown"></i>
+        <div onclick="openAuthModal()" class="w-14 h-14 rounded-2xl bg-femPink-500/20 border-2 border-femPink-400/70 overflow-hidden cursor-pointer hover:scale-110 transition shadow-[0_0_25px_rgba(236,72,153,0.4)]">
+          <img src="logo-minions.jpg" alt="Logo Minions Admin" class="w-full h-full object-cover">
         </div>
-        <p class="font-orbitron font-bold text-femPink-400">TORNEO FEMENINO 1V1 &bull; DEMO</p>
+        <p class="font-orbitron font-bold text-femPink-400">MINIONS FEMALE 1V1 &bull; OFFICIAL</p>
       </div>
       <p>© 2026 Mobile Legends: Bang Bang &bull; Plataforma Oficial de Competencia Femenina</p>
     </div>
@@ -589,7 +528,7 @@
     let isAdmin = false;
     let rondaSeleccionada = 1;
     let rondaMatch2Seleccionada = 1;
-    let subVistaMatch2 = 'partidas'; // 'partidas' | 'arbol'
+    let subVistaMatch2 = 'partidas';
     let datosBracketServidor = null;
     let datosMatch2Servidor = null;
     let jugadorasCacheObj = {};
@@ -597,7 +536,7 @@
     let activeChatMatchInfo = null;
     let activeChatSubTab = 'general';
     let mostrarCompletados = false;
-    let mostrarCompletadosMatch2 = true; // Visible por defecto para ver historial y corregir errores
+    let mostrarCompletadosMatch2 = true;
     let rondasBloquesCache = {};
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -622,7 +561,7 @@
           if (index < iteration) return targetText[index];
           return chars[Math.floor(Math.random() * chars.length)];
         }).join("");
-        if (iteration >= targetText.length) clearInterval(iteration);
+        if (iteration >= targetText.length) clearInterval(interval);
         iteration += 1 / 3;
       }, 30);
     }
@@ -1018,7 +957,6 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO MATCH 1 */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container) return;
@@ -1241,13 +1179,11 @@
 
         let htmlBloque = `
           <div class="glass-panel border border-femPink-500/40 p-4 sm:p-5 rounded-3xl space-y-4 shadow-2xl relative">
-            
             <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 gap-2">
               <div>
                 <span class="font-orbitron font-black text-xs text-femPink-400 uppercase tracking-wider">TABLA / BLOQUE #${numBloque}</span>
                 <p class="text-[10px] text-slate-400">Esquema de avances en tiempo real (Ronda ${rActivaBloque})</p>
               </div>
-
               <div class="flex items-center gap-2">
                 <div class="flex gap-1 bg-femDark-950 p-1 rounded-xl border border-slate-800">
                   ${botonesRondaHtml}
@@ -1259,15 +1195,12 @@
             </div>
 
             <div id="${bloqueId}" class="bg-femDark-950 p-4 rounded-2xl border border-slate-800/80 space-y-4">
-              
               <div class="text-center border-b border-slate-800/60 pb-2 flex justify-between items-center px-2">
                 <span class="font-orbitron font-black text-[10px] text-femPink-400">MINIONS FEMALE</span>
                 <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">TABLA #${numBloque} &bull; RONDA ${rActivaBloque}</h4>
                 <span class="font-orbitron font-black text-[10px] text-femPurple-400">${rActivaBloque === 4 ? '🏁 GRAN FINAL' : 'FASE EN CURSO'}</span>
               </div>
-
               ${cuerpoGraficoHtml}
-
             </div>
           </div>
         `;
@@ -1499,7 +1432,6 @@
       });
     }
 
-    /* MATCH 2: CREACIÓN Y AVANCE CON HISTORIAL POR RONDAS */
     function generarMatch2Finalistas() {
       if (!isAdmin) return;
 
@@ -1581,7 +1513,6 @@
       });
     }
 
-    /* PARTIDAS MATCH 2 CON SELECTOR DE RONDAS ANTERIORES Y CORRECCIÓN DE ERRORES */
     function renderizarMatch2() {
       const container = document.getElementById('match2-cuadro-container');
       if (!container) return;
@@ -1600,7 +1531,6 @@
       let matchesHtml = '';
       let visiblesCount = 0;
 
-      // Botones de navegación entre rondas del Match 2
       let filtroRondasHtml = '';
       for (let r = 1; r <= totalRondasM2; r++) {
         let isActive = r === rondaMatch2Seleccionada;
@@ -1675,7 +1605,6 @@
               <h4 class="font-orbitron font-black text-sm text-amber-400 uppercase">ENFRENTAMIENTOS DE CAMPEONAS (RONDA ${rondaMatch2Seleccionada})</h4>
               <p class="text-[11px] text-slate-400 font-orbitron">GRAN CAMPEONA DEL TORNEO: <span class="text-amber-300 font-bold">${escapeHTML(datosMatch2Servidor.granCampeona || 'En Disputa')}</span></p>
             </div>
-
             <div class="flex flex-wrap items-center gap-2">
               <button onclick="toggleMostrarCompletadosMatch2()" class="bg-femDark-900 hover:bg-slate-800 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-xl text-xs font-orbitron font-bold transition flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid ${mostrarCompletadosMatch2 ? 'fa-eye-slash' : 'fa-eye'}"></i>
@@ -1700,7 +1629,6 @@
       renderizarArbolMatch2();
     }
 
-    /* ÁRBOL ESQUEMÁTICO DEL MATCH 2 CON LLAVES SIEMPRE CONECTADAS */
     function renderizarArbolMatch2() {
       const container = document.getElementById('match2-arbol-container');
       if (!container) return;
@@ -1909,7 +1837,7 @@
 
         <div id="arbol-match2-captura-area" class="bg-femDark-950 p-4 rounded-2xl border border-amber-500/20 space-y-4">
           <div class="text-center border-b border-amber-500/20 pb-2 flex justify-between items-center px-2">
-            <span class="font-orbitron font-black text-[10px] text-amber-400">FEMALE CHAMPIONSHIP</span>
+            <span class="font-orbitron font-black text-[10px] text-amber-400">MINIONS FEMALE</span>
             <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">FASE FINAL &bull; RONDA ${rondaMatch2Seleccionada}</h4>
             <span class="font-orbitron font-black text-[10px] text-femPink-400">MATCH 2</span>
           </div>
