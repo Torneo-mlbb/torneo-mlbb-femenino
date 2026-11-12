@@ -267,23 +267,27 @@
         </div>
 
         <div class="flex flex-wrap gap-3 pt-2">
-          <!-- BOTS ACUMULABLES SIN LÍMITE -->
-          <button onclick="agregar30Bots()" class="bg-indigo-600/80 hover:bg-indigo-600 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-robot"></i> +16 Jugadoras Demo (Acumulable)
+          <!-- BOTS ACUMULABLES -->
+          <button id="btn-add-bots" onclick="agregar30Bots()" class="bg-indigo-600/80 hover:bg-indigo-600 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-robot"></i> +16 Jugadoras Demo
           </button>
           
-          <button onclick="iniciarSorteoMatematico()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
+          <!-- BOTONES MATCH 1 (SE OCULTAN CUANDO FINALIZA FASE 1) -->
+          <button id="btn-sortear-match1" onclick="iniciarSorteoMatematico()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-calculator"></i> Sortear Ronda 1 (Match 1)
           </button>
 
-          <!-- BOTÓN RESTAURADO PARA AVANZAR RONDAS EN MATCH 1 -->
-          <button onclick="avanzarSiguienteRonda()" class="bg-femPink-600 hover:bg-femPink-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-angles-right"></i> Pasar a Siguiente Ronda
+          <button id="btn-avanzar-match1" onclick="avanzarSiguienteRonda()" class="bg-femPink-600 hover:bg-femPink-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-angles-right"></i> Pasar a Siguiente Ronda (Match 1)
           </button>
 
-          <!-- BOTÓN DE CUADRO FINALISTAS MATCH 2 -->
-          <button id="btn-crear-match2-admin" onclick="generarMatch2Finalistas()" class="bg-amber-600 hover:bg-amber-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg flex items-center gap-2 cursor-pointer">
+          <!-- BOTONES MATCH 2 (INICIALMENTE OCULTOS) -->
+          <button id="btn-crear-match2-admin" onclick="generarMatch2Finalistas()" class="hidden bg-amber-600 hover:bg-amber-500 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg items-center gap-2 cursor-pointer animate-pulse">
             <i class="fa-solid fa-trophy"></i> Crear Cuadro Finalistas (Match 2)
+          </button>
+
+          <button id="btn-avanzar-match2" onclick="avanzarRondaMatch2()" class="hidden bg-amber-700 hover:bg-amber-600 text-white font-orbitron font-bold text-xs py-3 px-5 rounded-xl transition shadow-lg items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-forward"></i> Avance de Ronda Match 2
           </button>
 
           <button onclick="reiniciarTorneo()" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 text-xs font-orbitron font-bold py-3 px-5 rounded-xl transition flex items-center gap-2 cursor-pointer">
@@ -303,11 +307,15 @@
         <button id="tab-btn-bracket" onclick="cambiarTab('bracket')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
           <i class="fa-solid fa-sitemap"></i> Partidas (Match 1)
         </button>
-        <button id="tab-btn-arbol" onclick="cambiarTab('arbol')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
-          <i class="fa-solid fa-network-wired"></i> Árbol (Captura WhatsApp)
-        </button>
-        <button id="tab-btn-match2" onclick="cambiarTab('match2')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-amber-400 hover:text-amber-300 transition cursor-pointer whitespace-nowrap border border-amber-500/40 flex items-center gap-2">
+
+        <!-- PESTAÑA MATCH 2 (OCULTA INICIALMENTE, APARECE EN POSICIÓN 4 AL FINALIZAR FASE 1) -->
+        <button id="tab-btn-match2" onclick="cambiarTab('match2')" class="hidden px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-amber-400 hover:text-amber-300 transition cursor-pointer whitespace-nowrap border border-amber-500/40 items-center gap-2">
           <i class="fa-solid fa-trophy"></i> Cuadro Finalistas (Match 2)
+        </button>
+
+        <!-- PESTAÑA ÁRBOL (POSICIÓN 5) -->
+        <button id="tab-btn-arbol" onclick="cambiarTab('arbol')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
+          <i class="fa-solid fa-network-wired"></i> Árbol Esquemático
         </button>
       </div>
 
@@ -362,7 +370,7 @@
         </div>
       </div>
 
-      <!-- TAB 3: PARTIDAS & BRACKET MATCH 1 -->
+      <!-- TAB 3: PARTIDAS (MATCH 1) -->
       <div id="tab-content-bracket" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
           <div>
@@ -383,19 +391,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: ÁRBOL ESQUEMÁTICO REAL -->
-      <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
-        <div class="border-b border-slate-800 pb-4">
-          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO PAREADO (MATCH 1)</h3>
-          <p class="text-xs text-slate-400">Esquema gráfico visual con avatares de perfil para descarga de captura.</p>
-        </div>
-
-        <div id="arbol-esquematico-container" class="space-y-10">
-          <p class="text-xs text-slate-500 italic text-center col-span-full py-6">Genera los enfrentamientos desde el panel de administración para ver el árbol por bloques.</p>
-        </div>
-      </div>
-
-      <!-- TAB 5: MATCH 2 (CUADRO DE FINALISTAS) -->
+      <!-- TAB 4: MATCH 2 (CUADRO DE FINALISTAS) -->
       <div id="tab-content-match2" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 border border-amber-500/40">
         <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-4 gap-4">
           <div>
@@ -408,7 +404,19 @@
         </div>
 
         <div id="match2-cuadro-container" class="bg-femDark-950 p-6 rounded-2xl border border-amber-500/30 min-h-[300px]">
-          <p class="text-xs text-slate-500 italic text-center py-8">Aún no se ha generado el cuadro final. Avanza las rondas del Match 1 hasta definir a las campeonas y presiona "Crear Cuadro Finalistas (Match 2)".</p>
+          <p class="text-xs text-slate-500 italic text-center py-8">Aún no se ha generado el cuadro final.</p>
+        </div>
+      </div>
+
+      <!-- TAB 5: ÁRBOL ESQUEMÁTICO -->
+      <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+        <div class="border-b border-slate-800 pb-4">
+          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO</h3>
+          <p class="text-xs text-slate-400">Esquema gráfico visual con avatares de perfil para descarga de captura.</p>
+        </div>
+
+        <div id="arbol-esquematico-container" class="space-y-10">
+          <p class="text-xs text-slate-500 italic text-center col-span-full py-6">Genera los enfrentamientos desde el panel de administración para ver el árbol por bloques.</p>
         </div>
       </div>
 
@@ -647,7 +655,7 @@
     }
 
     function cambiarTab(tab) {
-      ['registro', 'equipos', 'bracket', 'arbol', 'match2'].forEach(t => {
+      ['registro', 'equipos', 'bracket', 'match2', 'arbol'].forEach(t => {
         document.getElementById(`tab-content-${t}`)?.classList.add('hidden');
         document.getElementById(`tab-btn-${t}`)?.classList.remove('bg-femPink-500', 'text-slate-950');
         document.getElementById(`tab-btn-${t}`)?.classList.add('bg-femDark-900', 'text-slate-400');
@@ -735,12 +743,58 @@
         datosBracketServidor = snap.val();
         renderizarBracket();
         renderizarArbolPorBloques();
+        evaluarEstadoMatch1YMatch2();
       });
 
       db.ref(`${RUTA_TORNEO}/match2`).on('value', (snap) => {
         datosMatch2Servidor = snap.val();
         renderizarMatch2();
+        evaluarEstadoMatch1YMatch2();
       });
+    }
+
+    // GESTIÓN DE VISIBILIDAD DE BOTONES Y PESTAÑA ENTRE MATCH 1 Y MATCH 2
+    function evaluarEstadoMatch1YMatch2() {
+      if (!datosBracketServidor) return;
+
+      const rondas = Object.keys(datosBracketServidor);
+      if (rondas.length === 0) return;
+
+      const ultimaRondaNum = rondas.length;
+      const partidosUltimaRonda = datosBracketServidor[`ronda_${ultimaRondaNum}`] || [];
+
+      // Si en la última ronda del Match 1 solo queda 1 enfrentamiento y ya tiene ganador, o si hay ganadores definidos
+      const match1Completado = partidosUltimaRonda.length > 0 && partidosUltimaRonda.every(p => p.ganador !== "Pendiente");
+
+      const btnSortear1 = document.getElementById('btn-sortear-match1');
+      const btnAvanzar1 = document.getElementById('btn-avanzar-match1');
+      const btnCrearMatch2 = document.getElementById('btn-crear-match2-admin');
+      const btnAvanzarMatch2 = document.getElementById('btn-avanzar-match2');
+      const tabMatch2 = document.getElementById('tab-btn-match2');
+
+      if (match1Completado) {
+        // Bloquear y ocultar generación del Match 1
+        btnSortear1?.classList.add('hidden');
+        btnAvanzar1?.classList.add('hidden');
+
+        // Mostrar botones y pestaña del Match 2
+        btnCrearMatch2?.classList.remove('hidden');
+        btnCrearMatch2?.classList.add('flex');
+        tabMatch2?.classList.remove('hidden');
+        tabMatch2?.classList.add('flex');
+
+        if (datosMatch2Servidor && datosMatch2Servidor.partidas) {
+          btnAvanzarMatch2?.classList.remove('hidden');
+          btnAvanzarMatch2?.classList.add('flex');
+        }
+      } else {
+        // En progreso del Match 1
+        btnSortear1?.classList.remove('hidden');
+        btnAvanzar1?.classList.remove('hidden');
+        btnCrearMatch2?.classList.add('hidden');
+        btnAvanzarMatch2?.classList.add('hidden');
+        tabMatch2?.classList.add('hidden');
+      }
     }
 
     function getAvatarForTeam(nombreEquipo) {
@@ -778,7 +832,7 @@
 
       for (let r = 1; r <= totalRondas; r++) {
         let isActive = r === rondaSeleccionada;
-        let nombreRonda = r === 1 ? 'Ronda 1 (Octavos)' : (r === 2 ? 'Ronda 2 (Cuartos)' : (r === 3 ? 'Ronda 3 (Semifinal)' : 'Ronda 4 (Final)'));
+        let nombreRonda = r === 1 ? 'Ronda 1 (Octavos)' : (r === 2 ? 'Ronda 2 (Cuartos)' : (r === 3 ? 'Ronda 3 (Semifinal)' : `Ronda ${r} (Final)`));
         roundsFilter.innerHTML += `
           <button onclick="seleccionarRonda(${r})" class="px-3.5 py-1.5 rounded-xl text-xs font-orbitron ${isActive ? 'bg-femPink-500 text-slate-950 font-bold' : 'bg-femDark-950 text-slate-400'}">
             ${nombreRonda}
@@ -889,7 +943,7 @@
       for (let b = 0; b < totalBloques; b++) {
         let numBloque = b + 1;
         let rActivaBloque = rondasBloquesCache[numBloque] || 1;
-        if (rActivaBloque > 4) rActivaBloque = 4;
+        if (rActivaBloque > totalRondas) rActivaBloque = totalRondas;
 
         let partidosRondaSel = datosBracketServidor[`ronda_${rActivaBloque}`] || [];
         let inicioIdx = b * Math.max(1, Math.floor(PARTIDAS_POR_TABLA / Math.pow(2, rActivaBloque - 1)));
@@ -908,7 +962,7 @@
         let maxRondaTabs = Math.min(4, totalRondas);
         for (let r = 1; r <= maxRondaTabs; r++) {
           let btnActive = r === rActivaBloque;
-          let rName = r === 1 ? 'R1 (Octavos)' : (r === 2 ? 'R2 (Cuartos)' : (r === 3 ? 'R3 (Semifinal)' : 'R4 (Final)'));
+          let rName = r === 1 ? 'R1 (Octavos)' : (r === 2 ? 'R2 (Cuartos)' : (r === 3 ? 'R3 (Semifinal)' : `R${r} (Final)`));
           botonesRondaHtml += `
             <button onclick="cambiarRondaBloqueArbol(${numBloque}, ${r})" class="px-2 py-0.5 rounded text-[10px] font-orbitron font-bold transition ${btnActive ? 'bg-femPink-500 text-slate-950 shadow' : 'bg-femDark-900 text-slate-400 hover:text-white'}">
               ${rName}
@@ -1311,7 +1365,11 @@
         let hayPendientes = partidosUltimaRonda.some(p => p.ganador === "Pendiente");
 
         if (hayPendientes) return mostrarToast(`Hay partidos pendientes en Ronda ${ultimaRondaNum}`, "warning");
-        if (partidosUltimaRonda.length === 1) return mostrarToast(`¡Match 1 finalizado! Campeona de Fase 1: ${partidosUltimaRonda[0].ganador}`, "success");
+
+        // LÍMITE: Si ya llegamos a 1 solo partido y tiene ganador, Match 1 terminó
+        if (partidosUltimaRonda.length === 1 && partidosUltimaRonda[0].ganador !== "Pendiente") {
+          return mostrarToast("¡Match 1 finalizado! Utiliza el botón de Crear Match 2", "info");
+        }
 
         let ganadores = partidosUltimaRonda.map(p => p.ganador);
         let siguientesPartidos = [];
@@ -1342,7 +1400,7 @@
       });
     }
 
-    // GENERAR MATCH 2 FINALISTAS CORREGIDO
+    // CREACIÓN DE MATCH 2 CON LISTA DE FINALISTAS DEL MATCH 1
     function generarMatch2Finalistas() {
       if (!isAdmin) return;
 
@@ -1361,7 +1419,7 @@
         });
 
         if (finalistas.length < 2) {
-          return mostrarToast("Debes finalizar al menos los enfrentamientos de la última ronda para sacar 2 o más finalistas", "warning");
+          return mostrarToast("Se necesitan al menos 2 finalistas definidas en Match 1", "warning");
         }
 
         let partidosFinales = [];
@@ -1383,13 +1441,47 @@
       });
     }
 
+    // AVANCE INDEPENDIENTE DE RONDAS DENTRO DEL MATCH 2
+    function avanzarRondaMatch2() {
+      if (!datosMatch2Servidor || !datosMatch2Servidor.partidas) return mostrarToast("No se ha creado el Match 2", "warning");
+
+      let partidos = datosMatch2Servidor.partidas;
+      let hayPendientes = partidos.some(p => p.ganador === "Pendiente");
+
+      if (hayPendientes) return mostrarToast("Define a las ganadoras actuales del Match 2 antes de avanzar", "warning");
+      if (partidos.length === 1) return mostrarToast(`¡Gran Campeona del Torneo: ${datosMatch2Servidor.granCampeona}!`, "success");
+
+      let ganadores = partidos.map(p => p.ganador);
+      let siguientes = [];
+
+      for (let i = 0; i < ganadores.length; i += 2) {
+        if (ganadores[i + 1]) {
+          siguientes.push({
+            equipo1: ganadores[i],
+            equipo2: ganadores[i + 1],
+            ganador: "Pendiente"
+          });
+        } else {
+          siguientes.push({
+            equipo1: ganadores[i],
+            equipo2: "PASE DIRECTO 🏆",
+            ganador: ganadores[i]
+          });
+        }
+      }
+
+      db.ref(`${RUTA_TORNEO}/match2/partidas`).set(siguientes, () => {
+        mostrarToast("¡Siguiente ronda del Match 2 generada!", "success");
+      });
+    }
+
     function renderizarMatch2() {
       const container = document.getElementById('match2-cuadro-container');
       if (!container) return;
       container.innerHTML = '';
 
       if (!datosMatch2Servidor || !datosMatch2Servidor.partidas) {
-        container.innerHTML = `<p class="text-xs text-slate-500 italic text-center py-8">Aún no se ha generado el cuadro final. Completa la última ronda del Match 1 y presiona "Crear Cuadro Finalistas (Match 2)".</p>`;
+        container.innerHTML = `<p class="text-xs text-slate-500 italic text-center py-8">Aún no se ha generado el cuadro final. Completa el Match 1 y presiona "Crear Cuadro Finalistas (Match 2)".</p>`;
         return;
       }
 
@@ -1484,6 +1576,7 @@
           document.getElementById('matches-container').innerHTML = '<p class="text-xs text-slate-500 italic col-span-full py-6 text-center">Aún no se han generado enfrentamientos.</p>';
           document.getElementById('arbol-esquematico-container').innerHTML = '<p class="text-xs text-slate-500 italic text-center col-span-full py-6">Genera los enfrentamientos desde el panel de administración para ver el árbol por bloques.</p>';
 
+          evaluarEstadoMatch1YMatch2();
           mostrarToast("¡Base de datos limpiada por completo!", "success");
         }).catch(err => {
           mostrarToast("Error al borrar. Revisa las reglas de tu Firebase.", "error");
