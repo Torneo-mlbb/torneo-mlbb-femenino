@@ -137,6 +137,42 @@
       background-color: #ec4899;
     }
 
+    .bracket-pair-amber-left {
+      border-right: 3px solid #f59e0b;
+      border-top: 3px solid #f59e0b;
+      border-bottom: 3px solid #f59e0b;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+      position: relative;
+    }
+    .bracket-pair-amber-left::after {
+      content: '';
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      width: 10px;
+      height: 3px;
+      background-color: #f59e0b;
+    }
+
+    .bracket-pair-amber-right {
+      border-left: 3px solid #f59e0b;
+      border-top: 3px solid #f59e0b;
+      border-bottom: 3px solid #f59e0b;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+      position: relative;
+    }
+    .bracket-pair-amber-right::after {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      width: 10px;
+      height: 3px;
+      background-color: #f59e0b;
+    }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #05030a; }
     ::-webkit-scrollbar-thumb { background: #db2777; border-radius: 4px; }
@@ -308,14 +344,14 @@
           <i class="fa-solid fa-sitemap"></i> Partidas (Match 1)
         </button>
 
-        <!-- PESTAÑA MATCH 2 -->
+        <!-- PESTAÑA MATCH 2 (APARECE SOLO AL FINALIZAR EL MATCH 1) -->
         <button id="tab-btn-match2" onclick="cambiarTab('match2')" class="hidden px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-amber-400 hover:text-amber-300 transition cursor-pointer whitespace-nowrap border border-amber-500/40 items-center gap-2">
           <i class="fa-solid fa-trophy"></i> Cuadro Finalistas (Match 2)
         </button>
 
-        <!-- PESTAÑA ÁRBOL -->
+        <!-- PESTAÑA ÁRBOL MATCH 1 -->
         <button id="tab-btn-arbol" onclick="cambiarTab('arbol')" class="px-5 py-3 text-xs font-orbitron font-bold rounded-xl bg-femDark-900 text-slate-400 hover:text-white transition cursor-pointer whitespace-nowrap flex items-center gap-2">
-          <i class="fa-solid fa-network-wired"></i> Árbol Esquemático
+          <i class="fa-solid fa-network-wired"></i> Árbol (Match 1)
         </button>
       </div>
 
@@ -391,28 +427,46 @@
         </div>
       </div>
 
-      <!-- TAB 4: MATCH 2 (CUADRO DE FINALISTAS) -->
+      <!-- TAB 4: MATCH 2 (CUADRO Y ÁRBOL ESQUEMÁTICO DE CAMPEONAS) -->
       <div id="tab-content-match2" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 border border-amber-500/40">
         <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-4 gap-4">
           <div>
             <h3 class="text-base font-orbitron font-black text-amber-400 uppercase">🏆 MATCH 2 &bull; FASE FINAL DE CAMPEONAS</h3>
-            <p class="text-xs text-slate-400">Enfrentamiento directo entre las ganadoras de cada tabla del Match 1.</p>
+            <p class="text-xs text-slate-400">Enfrentamiento directo y árbol esquemático de las ganadoras de cada tabla del Match 1.</p>
           </div>
-          <button onclick="tomarCapturaMatch2()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-xl text-xs font-orbitron font-black cursor-pointer uppercase shadow-lg">
-            <i class="fa-solid fa-camera"></i> Capturar Cuadro Final
-          </button>
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- CONMUTADOR ENTRE PARTIDAS Y ÁRBOL ESQUEMÁTICO DEL MATCH 2 -->
+            <div class="flex bg-femDark-950 p-1 rounded-xl border border-amber-500/30">
+              <button id="m2-subview-partidas" onclick="cambiarSubVistaMatch2('partidas')" class="px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold bg-amber-500 text-slate-950 cursor-pointer transition">
+                <i class="fa-solid fa-gamepad"></i> Partidas
+              </button>
+              <button id="m2-subview-arbol" onclick="cambiarSubVistaMatch2('arbol')" class="px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold text-slate-400 hover:text-white cursor-pointer transition">
+                <i class="fa-solid fa-network-wired"></i> Árbol Esquemático
+              </button>
+            </div>
+
+            <button onclick="tomarCapturaMatch2()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-xl text-xs font-orbitron font-black cursor-pointer uppercase shadow-lg">
+              <i class="fa-solid fa-camera"></i> Capturar Cuadro Final
+            </button>
+          </div>
         </div>
 
+        <!-- CONTENEDOR PARTIDAS MATCH 2 -->
         <div id="match2-cuadro-container" class="bg-femDark-950 p-6 rounded-2xl border border-amber-500/30 min-h-[300px]">
           <p class="text-xs text-slate-500 italic text-center py-8">Aún no se ha generado el cuadro final.</p>
         </div>
+
+        <!-- CONTENEDOR ÁRBOL ESQUEMÁTICO MATCH 2 -->
+        <div id="match2-arbol-container" class="hidden bg-femDark-950 p-6 rounded-2xl border border-amber-500/30 space-y-6">
+          <p class="text-xs text-slate-500 italic text-center py-8">Genera el cuadro final para visualizar el árbol esquemático de campeonas.</p>
+        </div>
       </div>
 
-      <!-- TAB 5: ÁRBOL ESQUEMÁTICO -->
+      <!-- TAB 5: ÁRBOL ESQUEMÁTICO MATCH 1 -->
       <div id="tab-content-arbol" class="hidden glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="border-b border-slate-800 pb-4">
-          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO</h3>
-          <p class="text-xs text-slate-400">Esquema gráfico visual con avatares de perfil para descarga de captura.</p>
+          <h3 class="text-base font-orbitron font-black text-femPink-400 uppercase">🌳 ÁRBOL ESQUEMÁTICO (MATCH 1)</h3>
+          <p class="text-xs text-slate-400">Esquema gráfico visual con avatares de perfil por cada tabla clasificatoria.</p>
         </div>
 
         <div id="arbol-esquematico-container" class="space-y-10">
@@ -534,6 +588,8 @@
 
     let isAdmin = false;
     let rondaSeleccionada = 1;
+    let rondaMatch2Seleccionada = 1;
+    let subVistaMatch2 = 'partidas'; // 'partidas' | 'arbol'
     let datosBracketServidor = null;
     let datosMatch2Servidor = null;
     let jugadorasCacheObj = {};
@@ -664,7 +720,32 @@
       document.getElementById(`tab-btn-${tab}`)?.classList.remove('bg-femDark-900', 'text-slate-400');
       document.getElementById(`tab-btn-${tab}`)?.classList.add('bg-femPink-500', 'text-slate-950');
       
-      if(tab === 'arbol') renderizarArbolPorBloques();
+      if (tab === 'arbol') renderizarArbolPorBloques();
+      if (tab === 'match2') {
+        renderizarMatch2();
+        renderizarArbolMatch2();
+      }
+    }
+
+    function cambiarSubVistaMatch2(vista) {
+      subVistaMatch2 = vista;
+      const btnPartidas = document.getElementById('m2-subview-partidas');
+      const btnArbol = document.getElementById('m2-subview-arbol');
+      const contPartidas = document.getElementById('match2-cuadro-container');
+      const contArbol = document.getElementById('match2-arbol-container');
+
+      if (vista === 'partidas') {
+        btnPartidas.className = "px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold bg-amber-500 text-slate-950 cursor-pointer transition";
+        btnArbol.className = "px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold text-slate-400 hover:text-white cursor-pointer transition";
+        contPartidas.classList.remove('hidden');
+        contArbol.classList.add('hidden');
+      } else {
+        btnArbol.className = "px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold bg-amber-500 text-slate-950 cursor-pointer transition";
+        btnPartidas.className = "px-3 py-1.5 rounded-lg text-[11px] font-orbitron font-bold text-slate-400 hover:text-white cursor-pointer transition";
+        contPartidas.classList.add('hidden');
+        contArbol.classList.remove('hidden');
+        renderizarArbolMatch2();
+      }
     }
 
     function openAuthModal() { 
@@ -737,6 +818,7 @@
         });
 
         renderizarArbolPorBloques();
+        renderizarArbolMatch2();
       });
 
       db.ref(`${RUTA_TORNEO}/bracket`).on('value', (snap) => {
@@ -749,6 +831,7 @@
       db.ref(`${RUTA_TORNEO}/match2`).on('value', (snap) => {
         datosMatch2Servidor = snap.val();
         renderizarMatch2();
+        renderizarArbolMatch2();
         evaluarEstadoMatch1YMatch2();
       });
     }
@@ -760,20 +843,15 @@
       if (partidosRonda1.length === 0) return false;
 
       const PARTIDAS_POR_TABLA = 8;
-      const totalBloques = Math.ceil(partidosRonda1.length / PARTIDAS_POR_TABLA) || 1;
       const totalRondasExistentes = Object.keys(datosBracketServidor).length;
-
-      // Un bloque necesita log2(PARTIDAS_POR_TABLA) + 1 rondas para definir 1 ganadora (ej. 8 partidas -> 4 rondas)
-      const rondasRequeridasPorTabla = Math.log2(PARTIDAS_POR_TABLA) + 1;
+      const rondasRequeridasPorTabla = Math.min(4, Math.ceil(Math.log2(partidosRonda1.length)) + 1);
 
       if (totalRondasExistentes < rondasRequeridasPorTabla) return false;
 
-      // Verificar que en la ronda final de las tablas (ej. Ronda 4) se hayan definido los ganadores
       const partidosRondaFinal = datosBracketServidor[`ronda_${rondasRequeridasPorTabla}`] || [];
       if (partidosRondaFinal.length === 0) return false;
 
-      const campeonasListas = partidosRondaFinal.every(p => p.ganador && p.ganador !== "Pendiente");
-      return campeonasListas;
+      return partidosRondaFinal.every(p => p.ganador && p.ganador !== "Pendiente");
     }
 
     function evaluarEstadoMatch1YMatch2() {
@@ -794,7 +872,7 @@
         tabMatch2?.classList.remove('hidden');
         tabMatch2?.classList.add('flex');
 
-        if (datosMatch2Servidor && datosMatch2Servidor.partidas) {
+        if (datosMatch2Servidor && datosMatch2Servidor.rondas) {
           btnAvanzarMatch2?.classList.remove('hidden');
           btnAvanzarMatch2?.classList.add('flex');
         }
@@ -929,7 +1007,7 @@
       });
     }
 
-    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO */
+    /* RENDERIZADO DEL ÁRBOL ESQUEMÁTICO MATCH 1 */
     function renderizarArbolPorBloques() {
       const container = document.getElementById('arbol-esquematico-container');
       if (!container) return;
@@ -1004,7 +1082,7 @@
 
         let cuerpoGraficoHtml = '';
 
-        if (rActivaBloque === 4) {
+        if (rActivaBloque === 4 || partidosBloqueActual.length === 1) {
           let pFinal = partidosBloqueActual[0] || { equipo1: 'Pendiente', equipo2: 'Pendiente', ganador: 'Pendiente' };
           cuerpoGraficoHtml = `
             <div class="flex flex-col items-center justify-center p-6 bg-femDark-900 border border-amber-400/60 rounded-2xl text-center space-y-4 shadow-inner">
@@ -1026,7 +1104,7 @@
               </div>
             </div>
           `;
-        } else if (rActivaBloque === 3) {
+        } else if (rActivaBloque === 3 || partidosBloqueActual.length === 2) {
           let pIzq = ladoIzq[0];
           let pDer = ladoDer[0];
           let ganIzq = pIzq && pIzq.ganador !== 'Pendiente' ? pIzq.ganador : 'Pendiente';
@@ -1410,6 +1488,7 @@
       });
     }
 
+    /* MATCH 2: CREACIÓN Y AVANCE CON HISTORIAL POR RONDAS */
     function generarMatch2Finalistas() {
       if (!isAdmin) return;
 
@@ -1440,8 +1519,9 @@
           });
         }
 
+        rondaMatch2Seleccionada = 1;
         db.ref(`${RUTA_TORNEO}/match2`).set({
-          partidas: partidosFinales,
+          rondas: { ronda_1: partidosFinales },
           granCampeona: "Pendiente"
         }, () => {
           mostrarToast("¡Cuadro de Finalistas (Match 2) activado!", "success");
@@ -1451,18 +1531,22 @@
     }
 
     function avanzarRondaMatch2() {
-      if (!datosMatch2Servidor || !datosMatch2Servidor.partidas) return mostrarToast("No se ha creado el Match 2", "warning");
+      if (!datosMatch2Servidor || !datosMatch2Servidor.rondas) return mostrarToast("No se ha creado el Match 2", "warning");
 
-      let partidos = datosMatch2Servidor.partidas;
-      let hayPendientes = partidos.some(p => p.ganador === "Pendiente");
+      let rondasObj = datosMatch2Servidor.rondas;
+      let totalRondasM2 = Object.keys(rondasObj).length;
+      let partidosActuales = rondasObj[`ronda_${totalRondasM2}`] || [];
 
+      let hayPendientes = partidosActuales.some(p => p.ganador === "Pendiente");
       if (hayPendientes) return mostrarToast("Define a las ganadoras actuales del Match 2 antes de avanzar", "warning");
-      if (partidos.length === 1 && partidos[0].ganador !== "Pendiente") {
+
+      if (partidosActuales.length === 1 && partidosActuales[0].ganador !== "Pendiente") {
         return mostrarToast(`¡Gran Campeona del Torneo: ${datosMatch2Servidor.granCampeona}!`, "success");
       }
 
-      let ganadores = partidos.map(p => p.ganador);
+      let ganadores = partidosActuales.map(p => p.ganador);
       let siguientes = [];
+      let nuevaRondaM2 = totalRondasM2 + 1;
 
       for (let i = 0; i < ganadores.length; i += 2) {
         if (ganadores[i + 1]) {
@@ -1480,8 +1564,9 @@
         }
       }
 
-      db.ref(`${RUTA_TORNEO}/match2/partidas`).set(siguientes, () => {
-        mostrarToast("¡Siguiente ronda del Match 2 generada!", "success");
+      rondaMatch2Seleccionada = nuevaRondaM2;
+      db.ref(`${RUTA_TORNEO}/match2/rondas/ronda_${nuevaRondaM2}`).set(siguientes, () => {
+        mostrarToast(`¡Ronda ${nuevaRondaM2} del Match 2 generada!`, "success");
       });
     }
 
@@ -1490,20 +1575,24 @@
       if (!container) return;
       container.innerHTML = '';
 
-      if (!datosMatch2Servidor || !datosMatch2Servidor.partidas) {
+      if (!datosMatch2Servidor || !datosMatch2Servidor.rondas) {
         container.innerHTML = `<p class="text-xs text-slate-500 italic text-center py-8">Aún no se ha generado el cuadro final. Completa el Match 1 y presiona "Crear Cuadro Finalistas (Match 2)".</p>`;
         return;
       }
 
-      let partidos = datosMatch2Servidor.partidas || [];
+      let rondasObj = datosMatch2Servidor.rondas;
+      let totalRondasM2 = Object.keys(rondasObj).length;
+      let partidos = rondasObj[`ronda_${totalRondasM2}`] || [];
       let matchesHtml = '';
 
       partidos.forEach((p, idx) => {
         let finalizado = p.ganador !== 'Pendiente';
+        let isPass = p.equipo2 === 'PASE DIRECTO 🏆';
+
         matchesHtml += `
           <div class="bg-femDark-900 border border-amber-500/40 p-4 rounded-xl space-y-2">
             <div class="flex justify-between text-[10px] text-amber-400 font-bold font-orbitron">
-              <span>FINAL MATCH #${idx + 1}</span>
+              <span>FINAL MATCH #${idx + 1} (R${totalRondasM2})</span>
               <span>${finalizado ? 'GANADORA: ' + escapeHTML(p.ganador) : 'EN JUEGO'}</span>
             </div>
             <div class="text-xs font-bold text-pink-300 flex items-center justify-between gap-2">
@@ -1519,10 +1608,10 @@
                 <span>${p.ganador === p.equipo2 ? '👑 ' : ''}${escapeHTML(p.equipo2)}</span>
               </div>
             </div>
-            ${isAdmin && !finalizado ? `
+            ${isAdmin && !finalizado && !isPass ? `
               <div class="flex gap-2 pt-2 border-t border-slate-800">
-                <button onclick="declararGanadoraMatch2(${idx}, '${escapeHTML(p.equipo1)}')" class="bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 text-amber-300 text-[10px] py-1 rounded w-1/2 font-bold cursor-pointer font-orbitron">Gana ${escapeHTML(p.equipo1)}</button>
-                <button onclick="declararGanadoraMatch2(${idx}, '${escapeHTML(p.equipo2)}')" class="bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 text-amber-300 text-[10px] py-1 rounded w-1/2 font-bold cursor-pointer font-orbitron">Gana ${escapeHTML(p.equipo2)}</button>
+                <button onclick="declararGanadoraMatch2(${totalRondasM2}, ${idx}, '${escapeHTML(p.equipo1)}')" class="bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 text-amber-300 text-[10px] py-1 rounded w-1/2 font-bold cursor-pointer font-orbitron">Gana ${escapeHTML(p.equipo1)}</button>
+                <button onclick="declararGanadoraMatch2(${totalRondasM2}, ${idx}, '${escapeHTML(p.equipo2)}')" class="bg-amber-500/20 hover:bg-amber-500 hover:text-slate-950 text-amber-300 text-[10px] py-1 rounded w-1/2 font-bold cursor-pointer font-orbitron">Gana ${escapeHTML(p.equipo2)}</button>
               </div>
             ` : ''}
           </div>
@@ -1532,7 +1621,7 @@
       container.innerHTML = `
         <div class="space-y-6">
           <div class="text-center border-b border-amber-500/30 pb-3">
-            <h4 class="font-orbitron font-black text-sm text-amber-400 uppercase">ENFRENTAMIENTOS DE CAMPEONAS</h4>
+            <h4 class="font-orbitron font-black text-sm text-amber-400 uppercase">ENFRENTAMIENTOS DE CAMPEONAS (RONDA ${totalRondasM2})</h4>
             <p class="text-[11px] text-slate-400 font-orbitron">GRAN CAMPEONA DEL TORNEO: <span class="text-amber-300 font-bold">${escapeHTML(datosMatch2Servidor.granCampeona || 'En Disputa')}</span></p>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1542,22 +1631,213 @@
       `;
     }
 
-    function declararGanadoraMatch2(idx, ganadora) {
-      db.ref(`${RUTA_TORNEO}/match2/partidas/${idx}`).update({ ganador: ganadora }, () => {
+    function seleccionarRondaMatch2(r) {
+      rondaMatch2Seleccionada = r;
+      renderizarArbolMatch2();
+    }
+
+    /* ÁRBOL ESQUEMÁTICO DEL MATCH 2 (IDÉNTICO AL MATCH 1) */
+    function renderizarArbolMatch2() {
+      const container = document.getElementById('match2-arbol-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!datosMatch2Servidor || !datosMatch2Servidor.rondas) {
+        container.innerHTML = `<p class="text-xs text-slate-500 italic text-center py-8">Genera el cuadro final para visualizar el árbol esquemático de campeonas.</p>`;
+        return;
+      }
+
+      const rondasObj = datosMatch2Servidor.rondas;
+      const totalRondasM2 = Object.keys(rondasObj).length;
+      if (rondaMatch2Seleccionada > totalRondasM2) rondaMatch2Seleccionada = totalRondasM2;
+
+      const partidosRondaSel = rondasObj[`ronda_${rondaMatch2Seleccionada}`] || [];
+      let mitad = Math.ceil(partidosRondaSel.length / 2) || 1;
+      let ladoIzq = partidosRondaSel.slice(0, mitad);
+      let ladoDer = partidosRondaSel.slice(mitad);
+
+      let botonesRondaHtml = '';
+      for (let r = 1; r <= totalRondasM2; r++) {
+        let btnActive = r === rondaMatch2Seleccionada;
+        let rName = r === totalRondasM2 && partidosRondaSel.length === 1 ? `R${r} (Gran Final)` : `Ronda ${r}`;
+        botonesRondaHtml += `
+          <button onclick="seleccionarRondaMatch2(${r})" class="px-2.5 py-1 rounded-lg text-[10px] font-orbitron font-bold transition ${btnActive ? 'bg-amber-500 text-slate-950 shadow' : 'bg-femDark-900 text-slate-400 hover:text-white'}">
+            ${rName}
+          </button>
+        `;
+      }
+
+      let renderMatchCardM2 = (p, labelIdx) => {
+        if (!p) return '';
+        let g = p.ganador !== 'Pendiente';
+        return `
+          <div class="bg-femDark-900 border border-amber-500/40 p-2 rounded-xl text-[10px] space-y-1 shadow">
+            <div class="flex justify-between text-[8px] text-amber-400 font-bold">
+              <span>FINAL #${labelIdx}</span>
+              <span>${g ? '👑 ' + escapeHTML(p.ganador) : ''}</span>
+            </div>
+            <div class="flex items-center gap-1.5 font-bold text-pink-300 truncate">
+              <img src="${getAvatarForTeam(p.equipo1)}" class="w-4 h-4 rounded-full object-cover shrink-0 border border-femPink-400/50">
+              <span class="truncate">${escapeHTML(p.equipo1)}</span>
+            </div>
+            <div class="flex items-center gap-1.5 font-bold text-purple-300 truncate">
+              <img src="${getAvatarForTeam(p.equipo2)}" class="w-4 h-4 rounded-full object-cover shrink-0 border border-femPurple-500/50">
+              <span class="truncate">${escapeHTML(p.equipo2)}</span>
+            </div>
+          </div>
+        `;
+      };
+
+      let cuerpoGraficoHtml = '';
+
+      if (partidosRondaSel.length === 1) {
+        let pFinal = partidosRondaSel[0];
+        cuerpoGraficoHtml = `
+          <div class="flex flex-col items-center justify-center p-6 bg-femDark-900 border border-amber-400/60 rounded-2xl text-center space-y-4 shadow-inner">
+            <span class="text-xs font-orbitron font-black text-amber-400 uppercase">👑 GRAN FINAL ABSOLUTA DEL TORNEO</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center w-full">
+              <div class="bg-femDark-950 p-3 rounded-xl border border-femPink-500/50 font-bold text-pink-300 flex items-center justify-center gap-2">
+                <img src="${getAvatarForTeam(pFinal.equipo1)}" class="w-7 h-7 rounded-full object-cover">
+                <span class="truncate">${escapeHTML(pFinal.equipo1)}</span>
+              </div>
+              <div class="text-amber-400 font-orbitron font-black text-sm">VS</div>
+              <div class="bg-femDark-950 p-3 rounded-xl border border-femPurple-500/50 font-bold text-purple-300 flex items-center justify-center gap-2">
+                <img src="${getAvatarForTeam(pFinal.equipo2)}" class="w-7 h-7 rounded-full object-cover">
+                <span class="truncate">${escapeHTML(pFinal.equipo2)}</span>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-slate-800 w-full">
+              <span class="text-[9px] text-slate-400 uppercase font-orbitron block">CAMPEONA DEL TORNEO FEMENINO</span>
+              <span class="text-base font-orbitron font-black text-amber-400">${pFinal.ganador !== 'Pendiente' ? '👑 ' + escapeHTML(pFinal.ganador) : 'EN DISPUTA'}</span>
+            </div>
+          </div>
+        `;
+      } else {
+        cuerpoGraficoHtml = `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start relative">
+            <div class="space-y-4">
+              <h5 class="text-[9px] font-orbitron font-bold text-amber-400 text-center uppercase mb-1">◀ LLAVE IZQUIERDA (R${rondaMatch2Seleccionada})</h5>
+        `;
+
+        for (let i = 0; i < ladoIzq.length; i += 2) {
+          let p1 = ladoIzq[i];
+          let p2 = ladoIzq[i + 1];
+          let gan1 = p1 && p1.ganador !== 'Pendiente' ? p1.ganador : 'Pendiente';
+          let gan2 = p2 && p2.ganador !== 'Pendiente' ? p2.ganador : 'Pendiente';
+
+          cuerpoGraficoHtml += `
+            <div class="flex items-center gap-2">
+              <div class="flex-1 space-y-2">
+                ${renderMatchCardM2(p1, i + 1)}
+                ${renderMatchCardM2(p2, i + 2)}
+              </div>
+              ${p2 ? `<div class="w-3 h-20 bracket-pair-amber-left shrink-0 hidden md:block"></div>` : ''}
+              <div class="bg-femDark-900 border border-amber-500/40 p-2 rounded-xl text-[9px] font-bold text-amber-300 w-32 text-center shrink-0 hidden md:block shadow">
+                <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Avanzan a R${rondaMatch2Seleccionada + 1}</span>
+                <div class="mt-1 space-y-1 text-left">
+                  <div class="flex items-center gap-1 truncate text-white">
+                    <img src="${getAvatarForTeam(gan1)}" class="w-3.5 h-3.5 rounded-full object-cover">
+                    <span class="truncate">${escapeHTML(gan1)}</span>
+                  </div>
+                  ${p2 ? `
+                  <div class="flex items-center gap-1 truncate text-white">
+                    <img src="${getAvatarForTeam(gan2)}" class="w-3.5 h-3.5 rounded-full object-cover">
+                    <span class="truncate">${escapeHTML(gan2)}</span>
+                  </div>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        cuerpoGraficoHtml += `
+            </div>
+            <div class="space-y-4">
+              <h5 class="text-[9px] font-orbitron font-bold text-amber-400 text-center uppercase mb-1">LLAVE DERECHA (R${rondaMatch2Seleccionada}) ▶</h5>
+        `;
+
+        for (let i = 0; i < ladoDer.length; i += 2) {
+          let p1 = ladoDer[i];
+          let p2 = ladoDer[i + 1];
+          let gan1 = p1 && p1.ganador !== 'Pendiente' ? p1.ganador : 'Pendiente';
+          let gan2 = p2 && p2.ganador !== 'Pendiente' ? p2.ganador : 'Pendiente';
+
+          cuerpoGraficoHtml += `
+            <div class="flex items-center gap-2">
+              <div class="bg-femDark-900 border border-amber-500/40 p-2 rounded-xl text-[9px] font-bold text-amber-300 w-32 text-center shrink-0 hidden md:block shadow">
+                <span class="text-[7px] text-slate-400 block uppercase font-orbitron">Avanzan a R${rondaMatch2Seleccionada + 1}</span>
+                <div class="mt-1 space-y-1 text-left">
+                  <div class="flex items-center gap-1 truncate text-white">
+                    <img src="${getAvatarForTeam(gan1)}" class="w-3.5 h-3.5 rounded-full object-cover">
+                    <span class="truncate">${escapeHTML(gan1)}</span>
+                  </div>
+                  ${p2 ? `
+                  <div class="flex items-center gap-1 truncate text-white">
+                    <img src="${getAvatarForTeam(gan2)}" class="w-3.5 h-3.5 rounded-full object-cover">
+                    <span class="truncate">${escapeHTML(gan2)}</span>
+                  </div>` : ''}
+                </div>
+              </div>
+              ${p2 ? `<div class="w-3 h-20 bracket-pair-amber-right shrink-0 hidden md:block"></div>` : ''}
+              <div class="flex-1 space-y-2">
+                ${renderMatchCardM2(p1, mitad + i + 1)}
+                ${renderMatchCardM2(p2, mitad + i + 2)}
+              </div>
+            </div>
+          `;
+        }
+
+        cuerpoGraficoHtml += `
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between border-b border-amber-500/30 pb-3 gap-2">
+          <div>
+            <span class="font-orbitron font-black text-xs text-amber-400 uppercase tracking-wider">ÁRBOL ESQUEMÁTICO DE CAMPEONAS</span>
+            <p class="text-[10px] text-slate-400">Ronda ${rondaMatch2Seleccionada} de Fase Final</p>
+          </div>
+          <div class="flex gap-1 bg-femDark-900 p-1 rounded-xl border border-amber-500/30">
+            ${botonesRondaHtml}
+          </div>
+        </div>
+
+        <div id="arbol-match2-captura-area" class="bg-femDark-950 p-4 rounded-2xl border border-amber-500/20 space-y-4">
+          <div class="text-center border-b border-amber-500/20 pb-2 flex justify-between items-center px-2">
+            <span class="font-orbitron font-black text-[10px] text-amber-400">FEMALE CHAMPIONSHIP</span>
+            <h4 class="font-orbitron font-black text-xs text-white uppercase tracking-widest">FASE FINAL &bull; RONDA ${rondaMatch2Seleccionada}</h4>
+            <span class="font-orbitron font-black text-[10px] text-femPink-400">MATCH 2</span>
+          </div>
+          ${cuerpoGraficoHtml}
+        </div>
+      `;
+    }
+
+    function declararGanadoraMatch2(rondaNum, idx, ganadora) {
+      db.ref(`${RUTA_TORNEO}/match2/rondas/ronda_${rondaNum}/${idx}`).update({ ganador: ganadora }, () => {
         confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
-        db.ref(`${RUTA_TORNEO}/match2`).update({ granCampeona: ganadora });
-        mostrarToast(`¡${ganadora} es la Gran Campeona!`, "success");
+        let rondasObj = datosMatch2Servidor.rondas || {};
+        let partidosRonda = rondasObj[`ronda_${rondaNum}`] || [];
+        if (partidosRonda.length === 1) {
+          db.ref(`${RUTA_TORNEO}/match2`).update({ granCampeona: ganadora });
+          mostrarToast(`¡${ganadora} es la Gran Campeona del Torneo!`, "success");
+        } else {
+          mostrarToast(`Ganadora registrada en Match 2: ${ganadora}`, "success");
+        }
       });
     }
 
     function tomarCapturaMatch2() {
-      const area = document.getElementById('match2-cuadro-container');
+      const areaId = subVistaMatch2 === 'arbol' ? 'arbol-match2-captura-area' : 'match2-cuadro-container';
+      const area = document.getElementById(areaId);
       if (!area) return;
 
       mostrarToast("Generando captura...", "info");
       html2canvas(area, { backgroundColor: '#05030a', scale: 2 }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `Finalistas-Match2.png`;
+        link.download = `Finalistas-Match2-${subVistaMatch2}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
         mostrarToast("¡Captura descargada!", "success");
@@ -1580,6 +1860,7 @@
           jugadorasCacheObj = {};
           rondasBloquesCache = {};
           rondaSeleccionada = 1;
+          rondaMatch2Seleccionada = 1;
 
           document.getElementById('teams-list-container').innerHTML = '<p class="text-xs text-slate-500 italic col-span-full text-center py-6">No hay registros guardados en tiempo real aún...</p>';
           document.getElementById('count-registered-teams').innerText = '0';
