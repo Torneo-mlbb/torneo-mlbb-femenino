@@ -193,7 +193,10 @@
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
     <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[780px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
-      <div class="absolute inset-0 bg-gradient-to-br from-femDark-950 via-femPurple-900/50 to-femDark-950 z-0"></div>
+      <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none z-0">
+        <source src="video-heroe-mlbb.mp4" type="video/mp4">
+      </video>
+      <div class="absolute inset-0 bg-gradient-to-br from-femDark-950/85 via-femPurple-900/60 to-femDark-950/90 z-0"></div>
       <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-30"></div>
       
       <div class="relative z-10 w-full max-w-4xl text-center space-y-5 flex flex-col items-center">
@@ -219,7 +222,7 @@
           <div class="absolute inset-0 bg-femPink-500/20 rounded-full blur-3xl -z-10 transform scale-105"></div>
           <model-viewer
             id="guini-viewer"
-            src="guini.glb"
+            src="guini.glb?v=2"
             alt="Guinevere Athena Asamiya 3D"
             autoplay
             camera-controls
@@ -567,21 +570,7 @@
         if (!animaciones || animaciones.length === 0) return;
 
         guiniViewer.animationName = animaciones[0];
-
-        function vigilarSegundoDiez() {
-          const actual = guiniViewer.currentTime;
-          const duracion = guiniViewer.duration;
-          const tiempoObjetivo = duracion > 0 ? Math.min(10, duracion - 0.05) : 10;
-
-          if (duracion > 0 && actual >= tiempoObjetivo) {
-            guiniViewer.pause();
-            guiniViewer.currentTime = tiempoObjetivo;
-            return;
-          }
-          requestAnimationFrame(vigilarSegundoDiez);
-        }
-
-        requestAnimationFrame(vigilarSegundoDiez);
+        guiniViewer.play();
       });
     }
 
