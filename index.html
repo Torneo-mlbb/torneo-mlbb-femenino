@@ -192,11 +192,11 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow relative z-10">
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
-    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[720px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
+    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[780px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
       <div class="absolute inset-0 bg-gradient-to-br from-femDark-950 via-femPurple-900/50 to-femDark-950 z-0"></div>
       <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-30"></div>
       
-      <div class="relative z-10 w-full max-w-3xl text-center space-y-5 flex flex-col items-center">
+      <div class="relative z-10 w-full max-w-4xl text-center space-y-5 flex flex-col items-center">
         <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-femPink-500/20 via-femPurple-500/20 to-femPink-500/20 border border-femPink-400/50 px-5 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.3)]">
           <span class="w-2.5 h-2.5 rounded-full bg-femPink-400 animate-ping"></span>
           <span class="text-femPink-300 text-xs font-orbitron font-bold uppercase tracking-widest">INSCRIPCIÓN LIBRE Y GRATUITA</span>
@@ -215,8 +215,8 @@
           Demuestra tu nivel competitivo. Registra tus datos de MLBB, accede a tu sala de chat privada y compite en el árbol esquemático oficial.
         </p>
 
-        <div class="relative my-1 w-full max-w-md sm:max-w-lg flex flex-col items-center justify-center">
-          <div class="absolute inset-0 bg-femPink-500/20 rounded-full blur-3xl -z-10 transform scale-110"></div>
+        <div class="relative my-1 w-full max-w-xl sm:max-w-2xl flex flex-col items-center justify-center">
+          <div class="absolute inset-0 bg-femPink-500/20 rounded-full blur-3xl -z-10 transform scale-105"></div>
           <model-viewer
             id="guini-viewer"
             src="guini.glb"
@@ -225,14 +225,14 @@
             camera-controls
             disable-pan
             camera-target="auto auto auto"
-            camera-orbit="0deg 85deg 145%"
-            min-camera-orbit="auto auto 100%"
-            max-camera-orbit="auto auto 220%"
-            field-of-view="42deg"
+            camera-orbit="0deg 85deg 210%"
+            min-camera-orbit="auto auto 130%"
+            max-camera-orbit="auto auto 280%"
+            field-of-view="48deg"
             shadow-intensity="1"
             exposure="1.15"
             interaction-prompt="none"
-            class="w-full h-96 sm:h-[460px] cursor-grab active:cursor-grabbing">
+            class="w-full h-[460px] sm:h-[560px] cursor-grab active:cursor-grabbing">
           </model-viewer>
           <span class="text-[10px] text-femPink-300/80 font-orbitron tracking-widest uppercase -mt-2 flex items-center gap-1.5">
             <i class="fa-solid fa-rotate"></i> Arrastra para girar en 360°
@@ -568,24 +568,20 @@
 
         guiniViewer.animationName = animaciones[0];
 
-        function puntoPoseFinalSeguro(duracion, objetivo) {
-          return Math.min(objetivo, duracion - 0.1);
-        }
-
-        function vigilarPoseFinal() {
+        function vigilarSegundoDiez() {
           const actual = guiniViewer.currentTime;
           const duracion = guiniViewer.duration;
-          const puntoPoseQuieta = duracion * 0.76;
+          const tiempoObjetivo = duracion > 0 ? Math.min(10, duracion - 0.05) : 10;
 
-          if (duracion > 0 && actual >= puntoPoseFinalSeguro(duracion, puntoPoseQuieta)) {
+          if (duracion > 0 && actual >= tiempoObjetivo) {
             guiniViewer.pause();
-            guiniViewer.currentTime = puntoPoseQuieta;
+            guiniViewer.currentTime = tiempoObjetivo;
             return;
           }
-          requestAnimationFrame(vigilarPoseFinal);
+          requestAnimationFrame(vigilarSegundoDiez);
         }
 
-        requestAnimationFrame(vigilarPoseFinal);
+        requestAnimationFrame(vigilarSegundoDiez);
       });
     }
 
