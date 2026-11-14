@@ -80,7 +80,7 @@
     }
     model-viewer {
       --poster-color: transparent;
-      filter: drop-shadow(0 0 28px rgba(236, 72, 153, 0.55));
+      filter: drop-shadow(0 0 35px rgba(236, 72, 153, 0.65));
       outline: none;
     }
     .bracket-pair-left {
@@ -192,63 +192,69 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow relative z-10">
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
-    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[780px] flex flex-col justify-center items-center p-6 sm:p-10 transition-all duration-500">
-      <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none z-0">
+    <section id="mode-selector-section" class="relative w-full rounded-3xl overflow-hidden border border-femPink-500/40 shadow-[0_0_80px_rgba(236,72,153,0.25)] bg-femDark-950 min-h-[760px] flex items-center p-6 sm:p-10 lg:p-12 transition-all duration-500">
+      <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover object-right opacity-80 pointer-events-none z-0">
         <source src="video-heroe-mlbb.mp4" type="video/mp4">
       </video>
-      <div class="absolute inset-0 bg-gradient-to-br from-femDark-950/85 via-femPurple-900/60 to-femDark-950/90 z-0"></div>
-      <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-30"></div>
+
+      <div class="absolute inset-0 bg-gradient-to-r from-femDark-950 via-femDark-950/85 to-transparent pointer-events-none z-0"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-femDark-950 via-transparent to-femDark-950/60 pointer-events-none z-0"></div>
+      <div class="absolute inset-0 scanline-bg pointer-events-none z-0 opacity-20"></div>
       
-      <div class="relative z-10 w-full max-w-4xl text-center space-y-5 flex flex-col items-center">
-        <div class="inline-flex items-center gap-2.5 bg-gradient-to-r from-femPink-500/20 via-femPurple-500/20 to-femPink-500/20 border border-femPink-400/50 px-5 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.3)]">
-          <span class="w-2.5 h-2.5 rounded-full bg-femPink-400 animate-ping"></span>
-          <span class="text-femPink-300 text-xs font-orbitron font-bold uppercase tracking-widest">INSCRIPCIÓN LIBRE Y GRATUITA</span>
-        </div>
-
-        <div class="space-y-2">
-          <h2 id="scramble-title" class="text-4xl sm:text-6xl lg:text-7xl font-orbitron font-black text-white tracking-tight uppercase leading-none drop-shadow-[0_10px_30px_rgba(236,72,153,0.5)]">
-            TORNEO FEMENINO
-          </h2>
-          <p class="text-xs sm:text-sm font-orbitron font-bold text-femPink-400 glitch-subtext uppercase">
-            MOBILE LEGENDS: BANG BANG &bull; EDITION 1VS1
-          </p>
-        </div>
-
-        <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto font-medium leading-relaxed">
-          Demuestra tu nivel competitivo. Registra tus datos de MLBB, accede a tu sala de chat privada y compite en el árbol esquemático oficial.
-        </p>
-
-        <div class="relative my-1 w-full max-w-xl sm:max-w-2xl flex flex-col items-center justify-center">
-          <div class="absolute inset-0 bg-femPink-500/20 rounded-full blur-3xl -z-10 transform scale-105"></div>
+      <div class="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-6 flex flex-col items-center justify-center relative order-2 lg:order-1">
+          <div class="absolute inset-0 bg-femPink-500/25 rounded-full blur-3xl -z-10 transform scale-110"></div>
           <model-viewer
             id="guini-viewer"
-            src="guini.glb?v=2"
-            alt="Guinevere Athena Asamiya 3D"
+            src="guini.glb?v=3"
+            alt="Lunox 3D"
             autoplay
             camera-controls
             disable-pan
             camera-target="auto auto auto"
-            camera-orbit="0deg 85deg 310%"
-            min-camera-orbit="auto auto 180%"
-            max-camera-orbit="auto auto 420%"
-            field-of-view="55deg"
-            shadow-intensity="1"
-            exposure="1.15"
+            camera-orbit="0deg 85deg 165%"
+            min-camera-orbit="auto auto 110%"
+            max-camera-orbit="auto auto 280%"
+            field-of-view="48deg"
+            shadow-intensity="1.2"
+            exposure="1.2"
             interaction-prompt="none"
-            class="w-full h-[460px] sm:h-[560px] cursor-grab active:cursor-grabbing">
+            class="w-full h-[520px] sm:h-[630px] cursor-grab active:cursor-grabbing">
           </model-viewer>
-          <span class="text-[10px] text-femPink-300/80 font-orbitron tracking-widest uppercase -mt-2 flex items-center gap-1.5">
-            <i class="fa-solid fa-rotate"></i> Arrastra para girar en 360°
+          <span class="text-[10px] text-femPink-300 font-orbitron tracking-widest uppercase -mt-3 flex items-center gap-1.5 bg-femDark-950/70 px-3 py-1 rounded-full border border-femPink-500/30">
+            <i class="fa-solid fa-rotate"></i> Arrastra para girar a Lunox en 360°
           </span>
         </div>
 
-        <div class="w-full max-w-md pt-2">
-          <button onclick="seleccionarModalidad('1v1')" class="w-full group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-femPink-500 via-femPink-600 to-femPurple-600 font-orbitron font-black text-slate-950 uppercase tracking-wider text-sm sm:text-base rounded-2xl hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(236,72,153,0.6)] cursor-pointer overflow-hidden border border-femPink-300/40">
-            <span class="relative z-10 flex items-center gap-3">
-              ✨ REGISTRARME GRATIS <i class="fa-solid fa-bolt text-slate-950 animate-pulse"></i>
-            </span>
-          </button>
+        <div class="lg:col-span-6 text-center lg:text-left space-y-5 flex flex-col items-center lg:items-start order-1 lg:order-2">
+          <div class="inline-flex items-center gap-2.5 bg-femDark-950/80 border border-femPink-400/50 px-5 py-1.5 rounded-full backdrop-blur-md shadow-[0_0_20px_rgba(236,72,153,0.35)]">
+            <span class="w-2.5 h-2.5 rounded-full bg-femPink-400 animate-ping"></span>
+            <span class="text-femPink-300 text-xs font-orbitron font-bold uppercase tracking-widest">INSCRIPCIÓN LIBRE Y GRATUITA</span>
+          </div>
+
+          <div class="space-y-2">
+            <h2 id="scramble-title" class="text-4xl sm:text-5xl xl:text-6xl font-orbitron font-black text-white tracking-tight uppercase leading-none drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
+              TORNEO FEMENINO
+            </h2>
+            <p class="text-xs sm:text-sm font-orbitron font-bold text-femPink-400 glitch-subtext uppercase drop-shadow">
+              MOBILE LEGENDS: BANG BANG &bull; EDITION 1VS1
+            </p>
+          </div>
+
+          <p class="text-xs sm:text-sm text-slate-200 max-w-lg font-medium leading-relaxed bg-femDark-950/60 p-4 rounded-2xl border border-femPink-500/20 backdrop-blur-sm">
+            Demuestra tu nivel competitivo. Registra tus datos de MLBB, accede a tu sala de chat privada y compite en el árbol esquemático oficial.
+          </p>
+
+          <div class="w-full max-w-md pt-2">
+            <button onclick="seleccionarModalidad('1v1')" class="w-full group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-femPink-500 via-femPink-600 to-femPurple-600 font-orbitron font-black text-slate-950 uppercase tracking-wider text-sm sm:text-base rounded-2xl hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(236,72,153,0.7)] cursor-pointer overflow-hidden border border-femPink-300/40">
+              <span class="relative z-10 flex items-center gap-3">
+                ✨ REGISTRARME GRATIS <i class="fa-solid fa-bolt text-slate-950 animate-pulse"></i>
+              </span>
+            </button>
+          </div>
         </div>
+
       </div>
     </section>
 
@@ -570,6 +576,7 @@
         if (!animaciones || animaciones.length === 0) return;
 
         guiniViewer.animationName = animaciones[0];
+        guiniViewer.currentTime = 0;
         guiniViewer.play();
       });
     }
